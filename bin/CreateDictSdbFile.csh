@@ -10,8 +10,8 @@ endif
 
 set d = "$1"
 
-if (! -e dict-mmcif_ddl/mmcif_ddl.dic ) then 
-   echo "Missing DDL file dict-mmcif_ddl/mmcif_ddl.dic"
+if (! -e dicts/dict-mmcif_ddl/mmcif_ddl.dic ) then 
+   echo "Missing DDL file dicts/dict-mmcif_ddl/mmcif_ddl.dic"
    exit 1
 endif
 
@@ -23,11 +23,11 @@ rm -f ./$d.sdb
 
 # If PDB exchange dictionary, do extended checks by specifying -ec flag
 if ("$d" == "mmcif_pdbx" ) then
-    ../bin/DictToSdb -ddlFile ../dict-mmcif_ddl/mmcif_ddl.dic \
-    -dictFile ../dict-$d/$d.dic -dictSdbFile $d.sdb >& $log
+    ../bin/DictToSdb -ddlFile ../dicts/dict-mmcif_ddl/mmcif_ddl.dic \
+    -dictFile ../dicts/dict-$d/$d.dic -dictSdbFile $d.sdb >& $log
 else
-    ../bin/DictToSdb -ddlFile ../dict-mmcif_ddl/mmcif_ddl.dic \
-    -dictFile ../dict-$d/$d.dic -dictSdbFile $d.sdb  >& $log
+    ../bin/DictToSdb -ddlFile ../dicts/dict-mmcif_ddl/mmcif_ddl.dic \
+    -dictFile ../dicts/dict-$d/$d.dic -dictSdbFile $d.sdb  >& $log
 endif
 
 chmod 644 $d.sdb
