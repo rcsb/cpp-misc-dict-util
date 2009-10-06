@@ -79,6 +79,8 @@ static vector<string> QueryCol1;
 static vector<string> QueryCol2;      
 static string ColumnName;
 static bool Verbose = false;
+static DicFile* dictFileP = NULL;
+static string dictVersion;
 
 static void PrepareQueries(const string& op);
 static void ProcessBlock(string& idCode, CifFile* fobjIn,
@@ -87,7 +89,7 @@ static void ProcessTable(ISTable& inTable, Block& outBlock);
 static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
   const string& srcFile);
-static void ProcessInOut(const Args& args, DicFile* dict);
+static void ProcessInOut(const Args& args, const string& inCifFileName);
 static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
   CifFile* fobjSrc);
 
@@ -104,7 +106,7 @@ static ISTable* GetOutTable(Block& outBlock, const string& catName);
 static void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
   const string& rColName);
 static void add_audit_conform(CifFile* fobj, const string& version);
-static void StripFile(CifFile* fobjOut);
+static void StripFile(CifFile& outCifFile);
 static void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
   const bool iReorder);
 
@@ -270,62 +272,75 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile)
 
 }
 
+// CifTranslator
+// CifTranslator::CifTranslator(dictSdbFileName)
+// items, aliases, dictVersion, dictFileP
 
+// CifTranslator::
 int main(int argc, char* argv[])
 {
-    try
+    //try
     {
         Args args;
         GetArgs(args, argc, argv);
 
         Verbose = args.verbose;
 
-        DicFile* dictFileP = GetDictFile(NULL, string(), args.dicSdbFileName,
-          Verbose);
+        dictFileP = GetDictFile(NULL, string(), args.dicSdbFileName, Verbose);
 
-        ProcessInOut(args, dictFileP);
+        Block& block = dictFileP->GetBlock(dictFileP->GetFirstBlockName());
+
+        items = block.GetTablePtr("item");
+        aliases = block.GetTablePtr("item_aliases");
+
+        if ((items == NULL) || (aliases == NULL))
+        {
+            cerr << "Dictionary tables for items and aliases are missing." << endl;
+        }
+
+        if (Verbose)
+        {
+            cerr << " ALIAS TABLE " << endl << endl;
+            cout << (*aliases);
+            cerr << " ITEMS TABLE " << endl << endl;
+            cout << (*items);
+        }
+
+        items->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
+
+        aliases->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
+        aliases->SetFlags("alias_name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
+
+        ISTable* dictionaryP = block.GetTablePtr("dictionary");
+        dictVersion = (*dictionaryP)(0, "version");
+
+        PrepareQueries(args.op);
+
+        vector<string> fileNames;
+        GetFileNames(fileNames, args.inFileList);
+
+        for (unsigned int i = 0; i < fileNames.size(); ++i)
+        {
+            ProcessInOut(args, fileNames[i]);
+        }
 
         delete (dictFileP);
 
         cerr  << "INFO - Done " << endl;
     }
+#ifdef VLAD_DEL
     catch (const exception& exc)
     {
         cerr << exc.what();
 
         return (1);
     }
+#endif
 }
 
 
-void ProcessInOut(const Args& args, DicFile* dict)
+void ProcessInOut(const Args& args, const string& inCifFileName)
 {
-    Block& block = dict->GetBlock(dict->GetFirstBlockName());
-
-    items = block.GetTablePtr("item");
-    aliases = block.GetTablePtr("item_aliases");
-
-    if ((items == NULL) || (aliases == NULL))
-    {
-        cerr << "Dictionary tables for items and aliases are missing." << endl;
-    }
-
-    if (Verbose)
-    {
-        cerr << " ALIAS TABLE " << endl << endl;
-        cout << (*aliases);
-        cerr << " ITEMS TABLE " << endl << endl;
-        cout << (*items);
-    }
-
-    items->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
-
-    aliases->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
-    aliases->SetFlags("alias_name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
-
-    ISTable* dictionaryP = block.GetTablePtr("dictionary");
-    const string& dictVersion = (*dictionaryP)(0, "version");
-
     // Data integration data files  
     CifFile* fobjCit = NULL;
     CifFile* fobjNam = NULL;
@@ -338,116 +353,112 @@ void ProcessInOut(const Args& args, DicFile* dict)
           args.namFile, args.srcFile);
     }
 
-    PrepareQueries(args.op);
+    cerr << "INFO - Translating file " << inCifFileName << endl;
 
-    vector<string> fileNames;
-    GetFileNames(fileNames, args.inFileList);
+    CifFile* fobjIn = new CifFile(Verbose);
 
-    for (unsigned int i = 0; i < fileNames.size(); ++i)
+    CifParser* cifParserR = new CifParser(fobjIn, Verbose);
+
+    string diags;
+
+    cifParserR->Parse(inCifFileName, diags);
+
+    delete (cifParserR);
+
+    cerr << "INFO - Read file " << inCifFileName << endl;
+
+    if (!diags.empty())
     {
-        cerr << "INFO - Translating file " << fileNames[i] << endl;
+        cerr << "Diags for file "<< inCifFileName << "  = " << diags <<
+          endl;
+        diags.clear();
+    }
 
-        string outFileCif = fileNames[i] + ".tr";
+    if (args.iCheckIn)
+    {
+        cerr << "INFO - Checking file " << inCifFileName << endl;
+        string diagFile = inCifFileName + ".diag";
+        fobjIn->DataChecking(*dictFileP, diagFile);
+    }
 
-        CifFile* fobjIn = new CifFile(Verbose);
- 
-        CifParser* cifParserR = new CifParser(fobjIn, Verbose);
+    CifFile* fobjOut = new CifFile(Verbose,
+      Char::eCASE_SENSITIVE, 132);
 
-        string diags;
+    vector<string> blockNamesIn;
+    fobjIn->GetBlockNames(blockNamesIn);
 
-        cifParserR->Parse(fileNames[i], diags);
+    if (Verbose)
+    {
+        cerr << "INFO - nBlocks =  " << blockNamesIn.size() << endl;
+        cerr << "INFO -   idOpt =  " << args.idOpt << endl;
+    }
 
-        delete (cifParserR);
+    string idCode;
 
-        cerr << "INFO - Read file " << fileNames[i] << endl;
+    for (unsigned int ib = 0; ib < blockNamesIn.size(); ++ib)
+    {
+        cerr << "INFO - Block  " << ib << " of " <<
+          blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
 
-        if (!diags.empty())
+        ProcessBlock(idCode, fobjIn, blockNamesIn[ib], fobjOut,
+          args.idOpt);
+    }
+
+    if ((fobjCit != NULL) && (fobjNam != NULL) && (fobjSrc != NULL))
+    {
+        add_stuff(fobjOut, fobjCit, fobjNam, fobjSrc);
+    }
+
+    add_audit_conform(fobjOut, dictVersion);
+
+    if (args.iStrip)
+    {
+        StripFile(*fobjOut);
+    }
+
+    string outFileCif;
+
+    if (args.iRename && !idCode.empty())
+    {
+        // Rename output file following idcode semantics.
+        outFileCif = idCode;
+        String::LowerCase(outFileCif);
+        outFileCif += ".cif";
+
+        // Check if the output and input file are the same
+        string relInFileName;
+        RcsbFile::RelativeFileName(relInFileName, inCifFileName);
+
+        if (relInFileName == outFileCif)
         {
-            cerr << "Diags for file "<< fileNames[i] << "  = " << diags <<
-              endl;
-            diags.clear();
+            cerr << "ERROR - Cannot rename file \"" << relInFileName <<
+              "\" to \"" << outFileCif << "\". File \"" << inCifFileName <<
+              "\" not processed." << endl;
+
+            delete (fobjOut);
+            delete (fobjIn);
+
+            return;
         }
+    }
+    else
+    {
+        outFileCif = inCifFileName + ".tr";
+    }
 
-        if (args.iCheckIn)
-        {
-            cerr << "INFO - Checking file " << fileNames[i] << endl;
-            string diagFile = fileNames[i] + ".diag";
-            fobjIn->DataChecking(*dict, diagFile);
-        }
+    if (args.iCheckOut)
+    {
+        cerr << "INFO - Checking file " << outFileCif << endl;
+        string diagFile = outFileCif + ".diag";
+        fobjOut->DataChecking(*dictFileP, diagFile);
+    }
 
-        CifFile* fobjOut = new CifFile(Verbose,
-          Char::eCASE_SENSITIVE, 132);
+    fobjOut->RenameFirstBlock(idCode);
 
-        vector<string> blockNamesIn;
-        fobjIn->GetBlockNames(blockNamesIn);
+    WriteOutFile(fobjOut, outFileCif, args.iReorder);
 
-        if (Verbose)
-        {
-            cerr << "INFO - nBlocks =  " << blockNamesIn.size() << endl;
-            cerr << "INFO -   idOpt =  " << args.idOpt << endl;
-        }
-
-        string idCode;
-
-        for (unsigned int ib = 0; ib < blockNamesIn.size(); ++ib)
-        {
-            cerr << "INFO - Block  " << ib << " of " <<
-              blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
-
-            ProcessBlock(idCode, fobjIn, blockNamesIn[ib], fobjOut,
-              args.idOpt);
-        }
-
-        if ((fobjCit != NULL) && (fobjNam != NULL) && (fobjSrc != NULL))
-        {
-            add_stuff(fobjOut, fobjCit, fobjNam, fobjSrc);
-        }
-
-        if (args.iRename && !idCode.empty())
-        {
-            // Rename output file following idcode semantics.
-            outFileCif = idCode;
-            String::LowerCase(outFileCif);
-            outFileCif += ".cif";
-
-            // Check if the output and input file are the same
-            string relInFileName;
-            RcsbFile::RelativeFileName(relInFileName, fileNames[i]);
-
-            if (relInFileName == outFileCif)
-            {
-                cerr << "ERROR - Cannot rename file \"" << relInFileName <<
-                  "\" to \"" << outFileCif << "\". File \"" << fileNames[i] <<
-                  "\" not processed." << endl;
-
-                delete (fobjOut);
-                delete (fobjIn);
-
-                continue;
-            }
-        }
-
-        add_audit_conform(fobjOut, dictVersion);
-
-        if (args.iStrip)
-        {
-            StripFile(fobjOut);
-        }
-
-        if (args.iCheckOut)
-        {
-            cerr << "INFO - Checking file " << outFileCif << endl;
-            string diagFile = outFileCif + ".diag";
-            fobjOut->DataChecking(*dict, diagFile);
-        }
-
-        fobjOut->RenameFirstBlock(idCode);
-
-        WriteOutFile(fobjOut, outFileCif, args.iReorder);
-
-        delete (fobjOut);
-        delete (fobjIn);
-    } // for (all files in the list)
+    delete (fobjOut);
+    delete (fobjIn);
 }
 
 
@@ -694,15 +705,15 @@ void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
 }
 
 
-void StripFile(CifFile* fobjOut)
+void StripFile(CifFile& fobjOut)
 {
-    vector<string> outBlockNames;
-    fobjOut->GetBlockNames(outBlockNames);
+    vector<string> outBlocksNames;
+    fobjOut.GetBlockNames(outBlocksNames);
 
-    for (unsigned int ib=0; ib < outBlockNames.size(); ib++)
+    for (unsigned int ib = 0; ib < outBlocksNames.size(); ++ib)
     {
-        const string& bName = outBlockNames[ib];
-        Block& outBlock = fobjOut->GetBlock(bName);
+        const string& bName = outBlocksNames[ib];
+        Block& outBlock = fobjOut.GetBlock(bName);
         if (bName.empty())
         {
             continue;
@@ -710,7 +721,7 @@ void StripFile(CifFile* fobjOut)
 
         vector<string> tableList;
         outBlock.GetTableNames(tableList);
-        for (unsigned int it=0; it < tableList.size(); it++)
+        for (unsigned int it = 0; it < tableList.size(); ++it)
         {
             if (String::IsCiEqual(tableList[it], "entry"))
                 continue;
@@ -722,11 +733,13 @@ void StripFile(CifFile* fobjOut)
                 continue;
             }
 
+            // Table has one row
+
             unsigned int nBlank = 0;
 
             const vector<string>& aRow = t->GetRow(0);
 
-            for (unsigned int ic=0; ic < aRow.size(); ++ic)
+            for (unsigned int ic = 0; ic < aRow.size(); ++ic)
             {
                 if (CifString::IsEmptyValue(aRow[ic]))
                 {
