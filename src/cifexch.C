@@ -83,8 +83,7 @@ static bool Verbose = false;
 static void PrepareQueries(const string& op);
 static void ProcessBlock(string& idCode, CifFile* fobjIn,
   const string& blockName, CifFile* fobjOut, const string& idOpt);
-static void ProcessTable(Block& inBlock, const string& tableName,
-  Block& outBlock);
+static void ProcessTable(ISTable& inTable, Block& outBlock);
 static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
   const string& srcFile);
@@ -100,9 +99,10 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
 static void update_entry_ids(CifFile* fobj, const string& blockId,
   const string& idName);
 static void GetCatAndAttr(string& rCatName, string& rColName,
-  const string& cs);
-static void ProcCatAndAttr(Block& outBlock, ISTable* inTableP,
-  const string& rCatName, const string& rColName, const string& colName);
+  const string& catName, const string& attribName);
+static ISTable* GetOutTable(Block& outBlock, const string& catName);
+static void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
+  const string& rColName);
 static void add_audit_conform(CifFile* fobj, const string& version);
 static void StripFile(CifFile* fobjOut);
 static void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
@@ -514,37 +514,53 @@ void ProcessBlock(string& idCode, CifFile* fobjIn, const string& blockName,
 
     for (unsigned int it=0; it < tableList.size(); it++)
     {
-        ProcessTable(inBlock, tableList[it], outBlock);
+        ISTable* inTableP = inBlock.GetTablePtr(tableList[it]);
+
+        ProcessTable(*inTableP, outBlock);
     }
 }
 
 
-void ProcessTable(Block& inBlock, const string& tableName, Block& outBlock)
+void ProcessTable(ISTable& inTable, Block& outBlock)
 {
-    if (Verbose) cerr << "INFO - Table " << tableName << endl;
-
-    ISTable* t = inBlock.GetTablePtr(tableName);
-    unsigned int nCols = t->GetNumColumns();
-    const vector<string>& colNames = t->GetColumnNames();
-
-    for (unsigned int ic=0; ic < nCols; ic++)
+    if (Verbose)
     {
-        string cs;
-        CifString::MakeCifItem(cs, tableName, colNames[ic]);
-        String::LowerCase(cs);
+        cerr << "INFO - Table " << inTable.GetName() << endl;
+    }
 
+    const vector<string>& colNames = inTable.GetColumnNames();
+
+    for (unsigned int colInd = 0; colInd < colNames.size(); ++colInd)
+    {
         string rColName;
         string rCatName;
 
-        GetCatAndAttr(rCatName, rColName, cs);
+        GetCatAndAttr(rCatName, rColName, inTable.GetName(), colNames[colInd]);
 
         if (rCatName.empty())
+        {
+            if (Verbose)
+            {
+                string cs;
+                CifString::MakeCifItem(cs, inTable.GetName(), colNames[colInd]);
+                String::LowerCase(cs);
+
+                cerr << "WARNING - Translator skipping item "<< cs 
+                  << ".  Item is NOT in dictionary." << endl;
+            }
+
             continue;
+        }
 
-        ProcCatAndAttr(outBlock, t, rCatName, rColName,
-          colNames[ic]);
+        ISTable* outTableP = GetOutTable(outBlock, rCatName);
+
+        vector<string> inCol;
+        inTable.GetColumn(inCol, colNames[colInd]);
+
+        ProcCatAndAttr(*outTableP, inCol, rColName);
+
+        outBlock.WriteTable(outTableP);
     }
-
 }
 
 
@@ -601,8 +617,12 @@ void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
 }
 
 
-void GetCatAndAttr(string& rCatName, string& rColName, const string& cs)
+void GetCatAndAttr(string& rCatName, string& rColName, const string& catName,
+  const string& attribName)
 {
+    string cs;
+    CifString::MakeCifItem(cs, catName, attribName);
+    String::LowerCase(cs);
 
     vector<string> queryTarget1;      
 
@@ -621,9 +641,7 @@ void GetCatAndAttr(string& rCatName, string& rColName, const string& cs)
         unsigned int queryResult2 = items->FindFirst(queryTarget2, QueryCol2);
         if (queryResult2 == items->GetNumRows())
         {
-            if (Verbose)
-                cerr << "WARNING - Translator skipping item "<< cs 
-                  << ".  Item is NOT in dictionary." << endl;
+            return;
         }
         else
         {
@@ -638,48 +656,41 @@ void GetCatAndAttr(string& rCatName, string& rColName, const string& cs)
         CifString::GetItemFromCifItem(rColName, aliasName);
         CifString::GetCategoryFromCifItem(rCatName, aliasName);
     }
-
 }
 
 
-void ProcCatAndAttr(Block& outBlock, ISTable* inTableP, const string& rCatName,
-  const string& rColName, const string& colName)
+ISTable* GetOutTable(Block& outBlock, const string& catName)
 {
-
-    vector<string> colData;
-    inTableP->GetColumn(colData, colName);
-
-    ISTable* tAlias = NULL;
-    bool iExistTab = outBlock.IsTablePresent(rCatName);
-    if (iExistTab)
+    if (outBlock.IsTablePresent(catName))
     {
-        tAlias = outBlock.GetTablePtr(rCatName);
-        if (tAlias->IsColumnPresent(rColName))
-        {
-            // Overwrite any existing column ...
-            string rCifItem;
-            CifString::MakeCifItem(rCifItem, rCatName, rColName);
-            cerr << "WARNING - Alias " << rCifItem <<
-              " maps to existing column" << endl;
-
-            tAlias->FillColumn(rColName, colData);
-        }
-        else
-        {
-            // Copy column to existing table 
-            tAlias->AddColumn(rColName, colData);
-        }
+        return (outBlock.GetTablePtr(catName));
     }
     else
     {
         // Create new table for alias column.
-        tAlias = new ISTable(rCatName);
-
-        tAlias->AddColumn(rColName, colData);
+        return (new ISTable(catName));
     }
+}
 
-    outBlock.WriteTable(tAlias);
 
+void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
+  const string& rColName)
+{
+    if (outTable.IsColumnPresent(rColName))
+    {
+        // Overwrite any existing column ...
+        string rCifItem;
+        CifString::MakeCifItem(rCifItem, outTable.GetName(), rColName);
+        cerr << "WARNING - Alias " << rCifItem <<
+          " maps to existing column" << endl;
+
+        outTable.FillColumn(rColName, inCol);
+    }
+    else
+    {
+        // Copy column to existing table 
+        outTable.AddColumn(rColName, inCol);
+    }
 }
 
 
