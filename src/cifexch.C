@@ -355,24 +355,10 @@ void ProcessInOut(const Args& args, const string& inCifFileName)
 
     cerr << "INFO - Translating file " << inCifFileName << endl;
 
-    CifFile* fobjIn = new CifFile(Verbose);
+    CifFile* fobjIn = ParseCif(inCifFileName, Verbose);
 
-    CifParser* cifParserR = new CifParser(fobjIn, Verbose);
-
-    string diags;
-
-    cifParserR->Parse(inCifFileName, diags);
-
-    delete (cifParserR);
-
+    // VLAD - Shouldn't this go above the ParseCif line
     cerr << "INFO - Read file " << inCifFileName << endl;
-
-    if (!diags.empty())
-    {
-        cerr << "Diags for file "<< inCifFileName << "  = " << diags <<
-          endl;
-        diags.clear();
-    }
 
     if (args.iCheckIn)
     {
@@ -579,52 +565,11 @@ void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
   const string& srcFile)
 {
-    fobjCit = new CifFile(Verbose, Char::eCASE_SENSITIVE, 132);
+    fobjCit = ParseCif(citFile, Verbose, Char::eCASE_SENSITIVE, 132);
 
-    CifParser* cifParserR = new CifParser(fobjCit, Verbose);
+    fobjNam = ParseCif(namFile, Verbose, Char::eCASE_SENSITIVE, 132);
 
-    string diags;
-
-    cifParserR->Parse(citFile, diags);
-
-    delete(cifParserR);
-
-    if (!diags.empty())
-    {
-        cerr << "Diags for file "<< citFile << "  = " << diags
-          << endl;
-        diags.clear();
-    }
-
-    fobjNam = new CifFile(Verbose, Char::eCASE_SENSITIVE, 132);
-
-    cifParserR = new CifParser(fobjNam, Verbose);
-
-    cifParserR->Parse(namFile, diags);
-
-    delete(cifParserR);
-
-    if (!diags.empty())
-    {
-        cerr << "Diags for file "<< namFile << "  = " << diags <<
-          endl;
-        diags.clear();
-    }
-
-    fobjSrc = new CifFile(Verbose, Char::eCASE_SENSITIVE, 512);
-
-    cifParserR = new CifParser(fobjSrc, Verbose);
-
-    cifParserR->Parse(srcFile, diags);
-
-    delete(cifParserR);
-
-    if (!diags.empty())
-    {
-        cerr << "Diags for file "<< srcFile << "  = " <<
-          diags << endl;
-        diags.clear();
-    }
+    fobjSrc = ParseCif(srcFile, Verbose, Char::eCASE_SENSITIVE, 512);
 }
 
 
