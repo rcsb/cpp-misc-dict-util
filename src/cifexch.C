@@ -10,8 +10,6 @@
 #include "CifString.h"
 #include "CifFile.h"
 #include "DicFile.h"
-#include "DICParserBase.h"
-#include "CifParserBase.h"
 #include "CifFileUtil.h"
 
 

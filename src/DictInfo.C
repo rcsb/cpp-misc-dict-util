@@ -6,7 +6,6 @@
 #include "CifDataInfo.h"
 #include "CifParentChild.h"
 #include "DicFile.h"
-#include "DICParserBase.h"
 #include "CifFileUtil.h"
 
 
