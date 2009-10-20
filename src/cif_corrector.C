@@ -60,6 +60,14 @@ int main(int argc, char* argv[])
 
             CifFile* cifFileP = ParseCif(opts.inCifFileName);
 
+            const string& parsingDiags = cifFileP->GetParsingDiags();
+
+            if (!parsingDiags.empty())
+            {
+                cout << "Diags for file " << cifFileP->GetSrcFileName() <<
+                  "  = " << parsingDiags << endl;
+            }
+
             CifFile* configFileP = CifCorrector::CreateConfigFile();
 
             cout << "Begin: CIF corrector log for file \"" <<

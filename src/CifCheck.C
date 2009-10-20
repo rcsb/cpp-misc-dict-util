@@ -110,6 +110,14 @@ int main(int argc, char *argv[])
 
             CifFile* cifFileP = ParseCif(localFileName);
 
+            const string& parsingDiags = cifFileP->GetParsingDiags();
+
+            if (!parsingDiags.empty())
+            {
+                cout << "Diags for file " << cifFileP->GetSrcFileName() <<
+                  "  = " << parsingDiags << endl;
+            }
+
             cout << "Checking the CIF file " << localFileName <<
               " against the dictionary ..." << endl;
 

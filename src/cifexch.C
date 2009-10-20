@@ -355,6 +355,14 @@ void ProcessInOut(const Args& args, const string& inCifFileName)
 
     CifFile* fobjIn = ParseCif(inCifFileName, Verbose);
 
+    const string& parsingDiags = fobjIn->GetParsingDiags();
+
+    if (!parsingDiags.empty())
+    {
+        cout << "Diags for file " << fobjIn->GetSrcFileName() << "  = " <<
+          parsingDiags << endl;
+    }
+
     // VLAD - Shouldn't this go above the ParseCif line
     cerr << "INFO - Read file " << inCifFileName << endl;
 
