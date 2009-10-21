@@ -87,7 +87,8 @@ static void ProcessTable(ISTable& inTable, Block& outBlock);
 static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
   const string& srcFile);
-static void ProcessInOut(const Args& args, const string& inCifFileName);
+static CifFile* ProcessInOut(const Args& args, CifFile& inCifFile,
+  string& idCode);
 static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
   CifFile* fobjSrc);
 
@@ -319,7 +320,76 @@ int main(int argc, char* argv[])
 
         for (unsigned int i = 0; i < fileNames.size(); ++i)
         {
-            ProcessInOut(args, fileNames[i]);
+            const string& inCifFileName = fileNames[i];
+
+            cerr << "INFO - Translating file " << inCifFileName << endl;
+
+            CifFile* fobjIn = ParseCif(inCifFileName, Verbose);
+
+            const string& parsingDiags = fobjIn->GetParsingDiags();
+
+            if (!parsingDiags.empty())
+            {
+                cout << "Diags for file " << fobjIn->GetSrcFileName() <<
+                  "  = " << parsingDiags << endl;
+            }
+
+            // VLAD - Shouldn't this go above the ParseCif line
+            cerr << "INFO - Read file " << inCifFileName << endl;
+
+            if (args.iCheckIn)
+            {
+                cerr << "INFO - Checking file " << inCifFileName << endl;
+                string diagFile = inCifFileName + ".diag";
+                fobjIn->DataChecking(*dictFileP, diagFile);
+            }
+
+            string idCode;
+            CifFile* fobjOut = ProcessInOut(args, *fobjIn, idCode);
+
+            string outFileCif;
+
+            if (args.iRename && !idCode.empty())
+            {
+                // Rename output file following idcode semantics.
+                outFileCif = idCode;
+                String::LowerCase(outFileCif);
+                outFileCif += ".cif";
+
+                // Check if the output and input file are the same
+                string relInFileName;
+                RcsbFile::RelativeFileName(relInFileName, inCifFileName);
+
+                if (relInFileName == outFileCif)
+                {
+                    cerr << "ERROR - Cannot rename file \"" << relInFileName <<
+                      "\" to \"" << outFileCif << "\". File \"" <<
+                      inCifFileName << "\" not processed." << endl;
+
+                    delete (fobjOut);
+                    delete (fobjIn);
+
+                    continue;
+                }
+            }
+            else
+            {
+                outFileCif = inCifFileName + ".tr";
+            }
+
+            if (args.iCheckOut)
+            {
+                cerr << "INFO - Checking file " << outFileCif << endl;
+                string diagFile = outFileCif + ".diag";
+                fobjOut->DataChecking(*dictFileP, diagFile);
+            }
+
+            fobjOut->RenameFirstBlock(idCode);
+
+            WriteOutFile(fobjOut, outFileCif, args.iReorder);
+
+            delete (fobjOut);
+            delete (fobjIn);
         }
 
         delete (dictFileP);
@@ -337,7 +407,7 @@ int main(int argc, char* argv[])
 }
 
 
-void ProcessInOut(const Args& args, const string& inCifFileName)
+CifFile* ProcessInOut(const Args& args, CifFile& inCifFile, string& idCode)
 {
     // Data integration data files  
     CifFile* fobjCit = NULL;
@@ -351,33 +421,10 @@ void ProcessInOut(const Args& args, const string& inCifFileName)
           args.namFile, args.srcFile);
     }
 
-    cerr << "INFO - Translating file " << inCifFileName << endl;
-
-    CifFile* fobjIn = ParseCif(inCifFileName, Verbose);
-
-    const string& parsingDiags = fobjIn->GetParsingDiags();
-
-    if (!parsingDiags.empty())
-    {
-        cout << "Diags for file " << fobjIn->GetSrcFileName() << "  = " <<
-          parsingDiags << endl;
-    }
-
-    // VLAD - Shouldn't this go above the ParseCif line
-    cerr << "INFO - Read file " << inCifFileName << endl;
-
-    if (args.iCheckIn)
-    {
-        cerr << "INFO - Checking file " << inCifFileName << endl;
-        string diagFile = inCifFileName + ".diag";
-        fobjIn->DataChecking(*dictFileP, diagFile);
-    }
-
-    CifFile* fobjOut = new CifFile(Verbose,
-      Char::eCASE_SENSITIVE, 132);
+    CifFile* fobjOut = new CifFile(Verbose, Char::eCASE_SENSITIVE, 132);
 
     vector<string> blockNamesIn;
-    fobjIn->GetBlockNames(blockNamesIn);
+    inCifFile.GetBlockNames(blockNamesIn);
 
     if (Verbose)
     {
@@ -385,14 +432,12 @@ void ProcessInOut(const Args& args, const string& inCifFileName)
         cerr << "INFO -   idOpt =  " << args.idOpt << endl;
     }
 
-    string idCode;
-
     for (unsigned int ib = 0; ib < blockNamesIn.size(); ++ib)
     {
         cerr << "INFO - Block  " << ib << " of " <<
           blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
 
-        ProcessBlock(idCode, fobjIn, blockNamesIn[ib], fobjOut,
+        ProcessBlock(idCode, &inCifFile, blockNamesIn[ib], fobjOut,
           args.idOpt);
     }
 
@@ -408,49 +453,7 @@ void ProcessInOut(const Args& args, const string& inCifFileName)
         StripFile(*fobjOut);
     }
 
-    string outFileCif;
-
-    if (args.iRename && !idCode.empty())
-    {
-        // Rename output file following idcode semantics.
-        outFileCif = idCode;
-        String::LowerCase(outFileCif);
-        outFileCif += ".cif";
-
-        // Check if the output and input file are the same
-        string relInFileName;
-        RcsbFile::RelativeFileName(relInFileName, inCifFileName);
-
-        if (relInFileName == outFileCif)
-        {
-            cerr << "ERROR - Cannot rename file \"" << relInFileName <<
-              "\" to \"" << outFileCif << "\". File \"" << inCifFileName <<
-              "\" not processed." << endl;
-
-            delete (fobjOut);
-            delete (fobjIn);
-
-            return;
-        }
-    }
-    else
-    {
-        outFileCif = inCifFileName + ".tr";
-    }
-
-    if (args.iCheckOut)
-    {
-        cerr << "INFO - Checking file " << outFileCif << endl;
-        string diagFile = outFileCif + ".diag";
-        fobjOut->DataChecking(*dictFileP, diagFile);
-    }
-
-    fobjOut->RenameFirstBlock(idCode);
-
-    WriteOutFile(fobjOut, outFileCif, args.iReorder);
-
-    delete (fobjOut);
-    delete (fobjIn);
+    return (fobjOut);
 }
 
 
