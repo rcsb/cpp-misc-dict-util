@@ -60,12 +60,28 @@ int main(int argc, char *argv[])
         DicFile* ddlFileP = GetDictFile(NULL, opts.ddlFileName, string(),
           false, UPDATE_MODE);
 
+        const string& ddlParsingDiags = ddlFileP->GetParsingDiags();
+
+        if (!ddlParsingDiags.empty())
+        {
+            cout << "Dictionary file \"" << ddlFileP->GetSrcFileName() <<
+              "\" parsing info = " << ddlParsingDiags << endl;
+        }
+
         cout << "Checking the DDL file against itself ..." << endl;
 
         CheckDict(ddlFileP, ddlFileP, opts.ddlFileName);
 
         DicFile* dictFileP = GetDictFile(ddlFileP, opts.dictFileName,
           string(), false, UPDATE_MODE);
+
+        const string& dictParsingDiags = dictFileP->GetParsingDiags();
+
+        if (!dictParsingDiags.empty())
+        {
+            cout << "Dictionary file \"" << dictFileP->GetSrcFileName() <<
+              "\" parsing info = " << dictParsingDiags << endl;
+        }
 
         Block& block = dictFileP->GetBlock(dictFileP->GetFirstBlockName());
 

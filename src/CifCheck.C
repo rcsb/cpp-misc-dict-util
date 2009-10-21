@@ -71,11 +71,27 @@ int main(int argc, char *argv[])
 
             DicFile* ddlFileP = GetDictFile(NULL, opts.ddlFileName);
 
+            const string& ddlParsingDiags = ddlFileP->GetParsingDiags();
+    
+            if (!ddlParsingDiags.empty())
+            {
+                cout << "Dictionary file \"" << ddlFileP->GetSrcFileName() <<
+                  "\" parsing info = " << ddlParsingDiags << endl;
+            }
+
             cout << "Checking the DDL file against itself ..." << endl;
 
             CheckDict(ddlFileP, ddlFileP, opts.ddlFileName);
 
             dictFileP = GetDictFile(ddlFileP, opts.dictFileName);
+
+            const string& dictParsingDiags = dictFileP->GetParsingDiags();
+    
+            if (!dictParsingDiags.empty())
+            {
+                cout << "Dictionary file \"" << dictFileP->GetSrcFileName() <<
+                  "\" parsing info = " << dictParsingDiags << endl;
+            }
 
             cout << "Checking the dictionary file against the DDL ..." << endl;
 
