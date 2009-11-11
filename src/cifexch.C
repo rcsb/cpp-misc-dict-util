@@ -81,14 +81,13 @@ static DicFile* dictFileP = NULL;
 static string dictVersion;
 
 static void PrepareQueries(const string& op);
-static void ProcessBlock(string& idCode, CifFile* fobjIn,
-  const string& blockName, CifFile* fobjOut, const string& idOpt);
+static void ProcessBlock(CifFile* fobjIn, const string& blockName,
+  CifFile* fobjOut, const string& idOpt);
 static void ProcessTable(ISTable& inTable, Block& outBlock);
 static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
   const string& srcFile);
-static CifFile* ProcessInOut(const Args& args, CifFile& inCifFile,
-  string& idCode);
+static CifFile* ProcessInOut(const Args& args, CifFile& inCifFile);
 static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
   CifFile* fobjSrc);
 
@@ -278,7 +277,7 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile)
 // CifTranslator::
 int main(int argc, char* argv[])
 {
-    //try
+    try
     {
         Args args;
         GetArgs(args, argc, argv);
@@ -294,7 +293,8 @@ int main(int argc, char* argv[])
 
         if ((items == NULL) || (aliases == NULL))
         {
-            cerr << "Dictionary tables for items and aliases are missing." << endl;
+            cerr << "Dictionary tables for items and aliases are missing." <<
+              endl;
         }
 
         if (Verbose)
@@ -308,7 +308,8 @@ int main(int argc, char* argv[])
         items->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
 
         aliases->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
-        aliases->SetFlags("alias_name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
+        aliases->SetFlags("alias_name", ISTable::DT_STRING |
+          ISTable::CASE_INSENSE);
 
         ISTable* dictionaryP = block.GetTablePtr("dictionary");
         dictVersion = (*dictionaryP)(0, "version");
@@ -344,8 +345,28 @@ int main(int argc, char* argv[])
                 fobjIn->DataChecking(*dictFileP, diagFile);
             }
 
+            CifFile* fobjOut = ProcessInOut(args, *fobjIn);
+
             string idCode;
-            CifFile* fobjOut = ProcessInOut(args, *fobjIn, idCode);
+
+            const string& blockName = fobjOut->GetFirstBlockName();
+
+            fobjIn->GetAttributeValueIf(idCode, blockName, "database_2",
+              "database_code", "database_id", args.idOpt);
+            if (idCode.empty())
+            {
+                cerr << "ERROR - Cannot get " << args.idOpt <<
+                  " id code for " << blockName << endl;
+                continue;
+            }
+
+            String::UpperCase(idCode);
+
+            if (Verbose)
+                cerr << "INFO - idCode is " << idCode << " block name " <<
+                  blockName << endl;
+
+            update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
 
             string outFileCif;
 
@@ -396,18 +417,16 @@ int main(int argc, char* argv[])
 
         cerr  << "INFO - Done " << endl;
     }
-#ifdef VLAD_DEL
     catch (const exception& exc)
     {
         cerr << exc.what();
 
         return (1);
     }
-#endif
 }
 
 
-CifFile* ProcessInOut(const Args& args, CifFile& inCifFile, string& idCode)
+CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
 {
     // Data integration data files  
     CifFile* fobjCit = NULL;
@@ -437,8 +456,7 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile, string& idCode)
         cerr << "INFO - Block  " << ib << " of " <<
           blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
 
-        ProcessBlock(idCode, &inCifFile, blockNamesIn[ib], fobjOut,
-          args.idOpt);
+        ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt);
     }
 
     if ((fobjCit != NULL) && (fobjNam != NULL) && (fobjSrc != NULL))
@@ -477,29 +495,10 @@ void PrepareQueries(const string& op)
 }
 
 
-void ProcessBlock(string& idCode, CifFile* fobjIn, const string& blockName,
-  CifFile* fobjOut, const string& idOpt)
+void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
+  const string& idOpt)
 {
-    idCode.clear();
-
     Block& inBlock = fobjIn->GetBlock(blockName);
-
-    fobjIn->GetAttributeValueIf(idCode, blockName, "database_2",
-      "database_code", "database_id", idOpt);
-    if (idCode.empty())
-    {
-        cerr << "ERROR - Cannot get " << idOpt << " id code for " <<
-          blockName << endl;
-        return;
-    }
-
-    String::UpperCase(idCode);
-
-    if (Verbose)
-        cerr << "INFO - idCode is " << idCode << " block name " <<
-          blockName << endl;
-
-    update_entry_ids(fobjIn, blockName, idCode);
 
     if (Verbose)
     {
@@ -1175,6 +1174,28 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     fobj->SetAttributeValue(blockId, "pdbx_phasing_dm", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "pdbx_point_symmetry", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "pdbx_re_refinement", "entry_id", idName);
+
+    fobj->SetAttributeValue(blockId, "pdbx_database_proc", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_database_status", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_refine", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_constraints", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_details", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_ensemble", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_ensemble_rms", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_force_constants", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_refine", "entry_id",
+      idName);
+    fobj->SetAttributeValue(blockId, "pdbx_nmr_representative", "entry_id",
+      idName);
+
     fobj->SetAttributeValue(blockId, "phasing_MAD", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "phasing_MIR", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "phasing_averaging", "entry_id", idName);
@@ -1228,5 +1249,6 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     {
       fobj->SetAttributeValue(blockId, "database", "ndb_code_PDB", pdbID);
     }
+
 }
 
