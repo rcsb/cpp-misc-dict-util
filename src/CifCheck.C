@@ -141,8 +141,8 @@ int main(int argc, char *argv[])
 
             delete (cifFileP);
 
-            if (localFileName != fileNames[fileI])
-              remove(localFileName.c_str());
+            //if (localFileName != fileNames[fileI])
+            //  remove(localFileName.c_str());
         }
 
         delete (dictFileP);
