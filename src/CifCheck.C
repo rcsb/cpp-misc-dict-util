@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
             if (!parsingDiags.empty())
             {
                 cout << "Diags for file " << cifFileP->GetSrcFileName() <<
-                  "  = " << parsingDiags << endl;
+                  "  = " << endl << parsingDiags << endl;
             }
 
             cout << "Checking the CIF file " << localFileName <<
