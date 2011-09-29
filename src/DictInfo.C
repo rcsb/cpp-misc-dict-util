@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include <exception>
 #include <string>
 #include <iostream>
