@@ -1127,8 +1127,6 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     fobj->SetAttributeValue(blockId, "em_2d_projection_selection", "entry_id",
       idName);
     fobj->SetAttributeValue(blockId, "em_3d_fitting", "entry_id", idName);
-    fobj->SetAttributeValue(blockId, "em_3d_fitting_list", "pdb_entry_id",
-      idName);
     fobj->SetAttributeValue(blockId, "em_3d_reconstruction", "entry_id",
       idName);
     fobj->SetAttributeValue(blockId, "em_assembly", "entry_id", idName);
