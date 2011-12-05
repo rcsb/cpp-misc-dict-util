@@ -565,6 +565,15 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
         vector<string> inCol;
         inTable.GetColumn(inCol, colNames[colInd]);
 
+        if ((outTableP->GetNumRows() != 0) && (outTableP->GetNumRows() !=
+          inCol.size()))
+        {
+            cerr << "ERROR - Different number of rows in category \"" <<
+              inTable.GetName() << "\" and in category \"" << rCatName <<
+              "\"" << endl;
+            continue;
+        }
+
         ProcCatAndAttr(*outTableP, inCol, rColName);
 
         outBlock.WriteTable(outTableP);
