@@ -326,7 +326,10 @@ int main(int argc, char* argv[])
         {
             const string& inCifFileName = fileNames[i];
 
-            cerr << "INFO - Translating file " << inCifFileName << endl;
+            if (Verbose)
+            {
+                cerr << "INFO - Translating file " << inCifFileName << endl;
+            }
 
             CifFile* fobjIn = ParseCif(inCifFileName, Verbose);
 
@@ -339,11 +342,17 @@ int main(int argc, char* argv[])
             }
 
             // VLAD - Shouldn't this go above the ParseCif line
-            cerr << "INFO - Read file " << inCifFileName << endl;
+            if (Verbose)
+            {
+                cerr << "INFO - Read file " << inCifFileName << endl;
+            }
 
             if (args.iCheckIn)
             {
-                cerr << "INFO - Checking file " << inCifFileName << endl;
+                if (Verbose)
+                {
+                    cerr << "INFO - Checking file " << inCifFileName << endl;
+                }
                 string diagFile = inCifFileName + ".diag";
                 fobjIn->DataChecking(*dictFileP, diagFile);
             }
@@ -366,8 +375,10 @@ int main(int argc, char* argv[])
             String::UpperCase(idCode);
 
             if (Verbose)
+            {
                 cerr << "INFO - idCode is " << idCode << " block name " <<
                   blockName << endl;
+            }
 
             update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
 
@@ -403,7 +414,10 @@ int main(int argc, char* argv[])
 
             if (args.iCheckOut)
             {
-                cerr << "INFO - Checking file " << outFileCif << endl;
+                if (Verbose)
+                {
+                    cerr << "INFO - Checking file " << outFileCif << endl;
+                }
                 string diagFile = outFileCif + ".diag";
                 fobjOut->DataChecking(*dictFileP, diagFile);
             }
@@ -418,7 +432,10 @@ int main(int argc, char* argv[])
 
         delete (dictFileP);
 
-        cerr  << "INFO - Done " << endl;
+        if (Verbose)
+        {
+            cerr  << "INFO - Done " << endl;
+        }
     }
     catch (const exception& exc)
     {
@@ -456,8 +473,11 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
 
     for (unsigned int ib = 0; ib < blockNamesIn.size(); ++ib)
     {
-        cerr << "INFO - Block  " << ib << " of " <<
-          blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
+        if (Verbose)
+        {
+            cerr << "INFO - Block  " << ib << " of " <<
+              blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
+        }
 
         ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt);
     }
@@ -733,7 +753,10 @@ void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
 
     if (iReorder)
     {
-        cerr << "INFO - Reordering file " << outFileCif << endl;
+        if (Verbose)
+        {
+            cerr << "INFO - Reordering file " << outFileCif << endl;
+        }
 
         vector<string> catList;
         for (unsigned int i = 0; true; ++i)
