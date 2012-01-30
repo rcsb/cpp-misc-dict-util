@@ -58,6 +58,7 @@ BASE_MAIN_FILES = cifexch.ext \
                   mk-schema-map-dict.ext \
                   CifCheck.ext \
                   cif_corrector.ext \
+                  sf_corrector.ext \
                   DictInfo.ext \
                   DictToSdb.ext
 
