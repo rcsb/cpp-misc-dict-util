@@ -22,8 +22,8 @@ set log = "$d.log"
 rm -f ./$d.sdb
 
 # If PDB exchange dictionary, do extended checks by specifying -ec flag
-if ("$d" == "mmcif_pdbx" ) then
-    ../bin/DictToSdb -ddlFile ../dicts/dict-mmcif_ddl/mmcif_ddl.dic \
+if ("$d" == "mmcif_pdbx_v40" ) then
+    ../bin/DictToSdb -ec -ddlFile ../dicts/dict-mmcif_ddl/mmcif_ddl.dic \
     -dictFile ../dicts/dict-$d/$d.dic -dictSdbFile $d.sdb >& $log
 else
     ../bin/DictToSdb -ddlFile ../dicts/dict-mmcif_ddl/mmcif_ddl.dic \
