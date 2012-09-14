@@ -26,7 +26,7 @@ class CmdLineOpts
     string ddlFileName;
     string dictFileName;
     string dictSdbFileName;
-    bool extraChecks;
+    bool extraDictChecks;
 
     string progName;
 
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
         cout << "Checking the dictionary file against the DDL ..." << endl;
 
-        CheckDict(dictFileP, ddlFileP, opts.dictFileName, opts.extraChecks);
+        CheckDict(dictFileP, ddlFileP, opts.dictFileName, opts.extraDictChecks);
 
         string sdbFileName;
         if (opts.dictSdbFileName.empty())
@@ -134,7 +134,7 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
         throw InvalidOptionsException();
     }
 
-    extraChecks = false;
+    extraDictChecks = false;
 
     for (unsigned int i = 1; i < argc; ++i)
     {
@@ -157,7 +157,7 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
             }
             else if (strcmp(argv[i], "-ec") == 0)
             {
-                extraChecks = true;
+                extraDictChecks = true;
             }
             else
             {

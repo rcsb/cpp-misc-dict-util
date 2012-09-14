@@ -27,6 +27,7 @@ class CmdLineOpts
     string dictSdbFileName;
     string dictFileName;
     string ddlFileName;
+    bool extraCifChecks;
     string progName;
 
     CmdLineOpts(unsigned int argc, char* argv[]);
@@ -138,7 +139,7 @@ int main(int argc, char *argv[])
             cout << "Checking the CIF file " << localFileName <<
               " against the dictionary ..." << endl;
 
-            CheckCif(cifFileP, dictFileP, localFileName);
+            CheckCif(cifFileP, dictFileP, localFileName, opts.extraCifChecks);
 
             delete (cifFileP);
 
@@ -216,6 +217,8 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
         throw InvalidOptionsException();
     }
 
+    extraCifChecks = false;
+
     for (unsigned int i = 1; i < argc; ++i)
     {
         if (argv[i][0] == '-')
@@ -244,6 +247,10 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
             {
                 i++;
                 ddlFileName = argv[i];
+            }
+            else if (strcmp(argv[i], "-ec_pdbx") == 0)
+            {
+                extraCifChecks = true;
             }
             else
             {
@@ -293,7 +300,7 @@ void CmdLineOpts::Usage()
 {
     cerr << endl << "Usage:" << endl << endl;
     cerr << progName << endl;
-    cerr << "  -f <CIF file> | -l <CIF files list>" << endl;
+    cerr << "  [-ec_pdbx] -f <CIF file> | -l <CIF files list>" << endl;
     cerr << "  -dictSdb <dictionary SDB file> | "
       << endl;
     cerr << "  -dict <dictionary ASCII file> -ddl <DDL ASCII file>" << endl;
