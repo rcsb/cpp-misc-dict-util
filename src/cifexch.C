@@ -42,6 +42,12 @@ struct Args
 };
 
 
+static const char* skip_categories[] =
+{
+    "chem_comp_angle", "chem_comp_atom", "chem_comp_bond", "chem_comp_chir",
+    "chem_comp_plane", "chem_comp_plane_atom", "chem_comp_tor", ""
+};
+
 static const char* category_name[] =
 {
     "entry", "audit", "audit_conform", "database", "database_2",
@@ -86,6 +92,7 @@ static string dictVersion;
 static void PrepareQueries(const string& op);
 static void ProcessBlock(CifFile* fobjIn, const string& blockName,
   CifFile* fobjOut, const string& idOpt);
+static bool SkipTable(const string& tableName);
 static void ProcessTable(ISTable& inTable, Block& outBlock);
 static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
@@ -544,8 +551,37 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
     {
         ISTable* inTableP = inBlock.GetTablePtr(tableList[it]);
 
-        ProcessTable(*inTableP, outBlock);
+        if (!SkipTable(inTableP->GetName()))
+        {
+            ProcessTable(*inTableP, outBlock);
+        }
+        else
+        {
+            cerr << "INFO - Skipping table \"" << inTableP->GetName() <<
+              "\"" << endl;
+        }
     }
+}
+
+
+bool SkipTable(const string& tableName)
+{
+    for (unsigned int i = 0; true; ++i)
+    {
+        if (strlen(skip_categories[i]) > 0)
+        {
+            if (string(skip_categories[i]) == tableName)
+            {
+                return (true);
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return (false);
 }
 
 
