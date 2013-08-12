@@ -7,7 +7,6 @@
 #include <string>
 
 #include "RcsbFile.h"
-#include "CifParentChild.h"
 #include "CifFile.h"
 #include "DicFile.h"
 #include "CifFileUtil.h"
@@ -83,12 +82,6 @@ int main(int argc, char *argv[])
             cout << "Dictionary file \"" << dictFileP->GetSrcFileName() <<
               "\" parsing info = " << dictParsingDiags << endl;
         }
-
-        Block& block = dictFileP->GetBlock(dictFileP->GetFirstBlockName());
-
-        CifParentChild cifParentChild(block);
-
-        cifParentChild.WriteGroupTables(block);
 
         cout << "Checking the dictionary file against the DDL ..." << endl;
 
