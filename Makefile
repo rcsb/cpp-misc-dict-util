@@ -55,6 +55,7 @@ M_AGR_LIB = $(M_LIB_DIR)/$(AGR_LIB)
 
 # Base main file names. Must have ".ext" at the end of the file.
 BASE_MAIN_FILES = cifexch.ext \
+                  cifexch2.ext \
                   mk-schema-map-dict.ext \
                   CifCheck.ext \
                   cif_corrector.ext \
