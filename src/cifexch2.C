@@ -1,5 +1,5 @@
 /*
- *  File:        cifexch.C
+ *  File:        cifexch2.C
  */
 
 
@@ -42,11 +42,13 @@ struct Args
 };
 
 
+/*
 static const char* skip_categories[] =
 {
     "chem_comp_angle", "chem_comp_atom", "chem_comp_bond", "chem_comp_chir",
     "chem_comp_plane", "chem_comp_plane_atom", "chem_comp_tor", ""
 };
+*/
 
 static const char* category_name[] =
 {
@@ -82,8 +84,14 @@ static const char* category_name[] =
 
 static ISTable* items = NULL;
 static ISTable* aliases = NULL;
+
+static ISTable* pdbxCatContext = NULL;
+static ISTable* pdbxItemContext = NULL;
+
 static vector<string> QueryCol1;
 static vector<string> QueryCol2;      
+static vector<string> QueryCat;
+static vector<string> QueryItem;
 static string ColumnName;
 static bool Verbose = false;
 static DicFile* dictFileP = NULL;
@@ -94,13 +102,14 @@ static void ProcessBlock(CifFile* fobjIn, const string& blockName,
   CifFile* fobjOut, const string& idOpt);
 static bool SkipTable(const string& tableName);
 static void ProcessTable(ISTable& inTable, Block& outBlock);
-static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
-  CifFile*& fobjSrc, const string& citFile, const string& namFile,
-  const string& srcFile);
+//static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
+//  CifFile*& fobjSrc, const string& citFile, const string& namFile,
+//  const string& srcFile);
 static CifFile* ProcessInOut(const Args& args, CifFile& inCifFile);
-static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
-  CifFile* fobjSrc);
+//static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
+//  CifFile* fobjSrc);
 
+/*
 static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
   const string& dataAttrib, const string& targetCategory,
   const string& targetAttribute, const string& bName,
@@ -108,13 +117,14 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
 
 static void update_entry_ids(CifFile* fobj, const string& blockId,
   const string& idName);
-static void GetCatAndAttr(string& rCatName, string& rColName,
-  const string& catName, const string& attribName);
+*/
+//static void GetCatAndAttr(string& rCatName, string& rColName,
+//  const string& catName, const string& attribName);
 static ISTable* GetOutTable(Block& outBlock, const string& catName);
-static void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
-  const string& rColName);
-static void add_audit_conform(CifFile* fobj, const string& version);
-static void StripFile(CifFile& outCifFile);
+//static void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
+//  const string& rColName);
+//static void add_audit_conform(CifFile* fobj, const string& version);
+//static void StripFile(CifFile& outCifFile);
 static void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
   const bool iReorder);
 
@@ -301,12 +311,16 @@ int main(int argc, char* argv[])
         items = block.GetTablePtr("item");
         aliases = block.GetTablePtr("item_aliases");
 
+        pdbxCatContext = block.GetTablePtr("pdbx_category_context");
+        pdbxItemContext = block.GetTablePtr("pdbx_item_context");
+
         if ((items == NULL) || (aliases == NULL))
         {
             cerr << "Dictionary tables for items and aliases are missing." <<
               endl;
         }
 
+        /*
         if (Verbose)
         {
             cerr << " ALIAS TABLE " << endl << endl;
@@ -314,8 +328,10 @@ int main(int argc, char* argv[])
             cerr << " ITEMS TABLE " << endl << endl;
             cout << (*items);
         }
+        */
 
-        items->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
+        // VLAD - EXAMINE THIS LINE
+        //items->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
 
         aliases->SetFlags("name", ISTable::DT_STRING | ISTable::CASE_INSENSE);
         aliases->SetFlags("alias_name", ISTable::DT_STRING |
@@ -323,6 +339,9 @@ int main(int argc, char* argv[])
 
         ISTable* dictionaryP = block.GetTablePtr("dictionary");
         dictVersion = (*dictionaryP)(0, "version");
+
+        QueryCat.push_back("category_id");
+        QueryItem.push_back("item_name");
 
         PrepareQueries(args.op);
 
@@ -368,6 +387,7 @@ int main(int argc, char* argv[])
 
             string idCode;
 
+/*
             const string& blockName = fobjOut->GetFirstBlockName();
 
             fobjIn->GetAttributeValueIf(idCode, blockName, "database_2",
@@ -389,6 +409,7 @@ int main(int argc, char* argv[])
 
             update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
 
+*/
             string outFileCif;
 
             if (args.iRename && !idCode.empty())
@@ -429,7 +450,7 @@ int main(int argc, char* argv[])
                 fobjOut->DataChecking(*dictFileP, diagFile);
             }
 
-            fobjOut->RenameFirstBlock(idCode);
+            // VLAD???? fobjOut->RenameFirstBlock(idCode);
 
             WriteOutFile(fobjOut, outFileCif, args.iReorder);
 
@@ -455,6 +476,7 @@ int main(int argc, char* argv[])
 
 CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
 {
+    /*
     // Data integration data files  
     CifFile* fobjCit = NULL;
     CifFile* fobjNam = NULL;
@@ -466,6 +488,7 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
         GetDataIntegrationFiles(fobjCit, fobjNam, fobjSrc, args.citFile,
           args.namFile, args.srcFile);
     }
+    */
 
     CifFile* fobjOut = new CifFile(Verbose, Char::eCASE_SENSITIVE, 132);
 
@@ -489,6 +512,7 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
         ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt);
     }
 
+/*
     if ((fobjCit != NULL) && (fobjNam != NULL) && (fobjSrc != NULL))
     {
         add_stuff(fobjOut, fobjCit, fobjNam, fobjSrc);
@@ -500,7 +524,7 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
     {
         StripFile(*fobjOut);
     }
-
+*/
     return (fobjOut);
 }
 
@@ -537,6 +561,7 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
     }
 
     fobjOut->AddBlock(blockName);     
+
     Block& outBlock = fobjOut->GetBlock(blockName);
     if (blockName.empty())
     {
@@ -566,21 +591,37 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
 
 bool SkipTable(const string& tableName)
 {
-    for (unsigned int i = 0; true; ++i)
+    cerr << "INFO - Process table \"" << tableName <<
+      "\"" << endl;
+
+    // See if the category is local
+
+    vector<string> queryTarget1;
+    queryTarget1.push_back(tableName);
+
+    unsigned int queryResult1 = pdbxCatContext->FindFirst(queryTarget1,
+      QueryCat);
+
+    if (queryResult1 != pdbxCatContext->GetNumRows())
     {
-        if (strlen(skip_categories[i]) > 0)
+        const string& type = (*pdbxCatContext)(queryResult1, "type");
+
+        if (type.find("LOCAL") != string::npos)
         {
-            if (string(skip_categories[i]) == tableName)
-            {
-                return (true);
-            }
+            // Local
+            cerr << "INFO - Category " << tableName << " is defined local." \
+              << endl;
+            return true;
         }
         else
-        {
-            break;
-        }
-    }
+            cerr << "INFO - Category " << tableName << " is defined public." \
+              << endl;
+    } 
 
+    cerr << "INFO - Category " << tableName << " does not have context." \
+      " Treated as public." << endl;
+
+    // All other cases are public.
     return (false);
 }
 
@@ -596,6 +637,9 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
 
     for (unsigned int colInd = 0; colInd < colNames.size(); ++colInd)
     {
+// VLAD - EXAMINE IF BELOW FUNCTIONALITY SHOULD BE INCLUDED TO CATCH ITEMS
+// THAT ARE NOT IN THE DICTIONARY
+/*
         string rColName;
         string rCatName;
 
@@ -615,12 +659,47 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
 
             continue;
         }
+*/
 
-        ISTable* outTableP = GetOutTable(outBlock, rCatName);
+        ISTable* outTableP = GetOutTable(outBlock, inTable.GetName());
+
+        // See if column (attribute or item) is local. If yes, skip it.
+
+        string itemName;
+        CifString::MakeCifItem(itemName, inTable.GetName(), colNames[colInd]);
+        String::LowerCase(itemName);
+
+        vector<string> queryTarget1;
+        queryTarget1.push_back(itemName);
+
+        unsigned int queryResult1 = pdbxItemContext->FindFirst(queryTarget1,
+          QueryItem);
+
+        if (queryResult1 != pdbxItemContext->GetNumRows())
+        {
+            const string& type = (*pdbxItemContext)(queryResult1, "type");
+
+            if (type.find("LOCAL") != string::npos)
+            {
+                // Local
+                cerr << "INFO - " << itemName << " is defined local item" \
+                  << endl;
+                continue;
+            }
+            else
+                cerr << "INFO - Item " << itemName << " is defined public." \
+                  << endl;
+        }
+
+        cerr << "INFO - Item " << itemName << " does not have context."\
+          " Treated as public." << endl;
+
+        // All other cases are public.
 
         vector<string> inCol;
         inTable.GetColumn(inCol, colNames[colInd]);
 
+        /*
         if ((outTableP->GetNumRows() != 0) && (outTableP->GetNumRows() !=
           inCol.size()))
         {
@@ -629,14 +708,16 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
               "\"" << endl;
             continue;
         }
+        */
 
-        ProcCatAndAttr(*outTableP, inCol, rColName);
-
+        outTableP->AddColumn(colNames[colInd], inCol);
+ 
         outBlock.WriteTable(outTableP);
     }
 }
 
 
+/*
 void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
   CifFile*& fobjSrc, const string& citFile, const string& namFile,
   const string& srcFile)
@@ -647,8 +728,9 @@ void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
 
     fobjSrc = ParseCif(srcFile, Verbose, Char::eCASE_SENSITIVE, 512);
 }
+*/
 
-
+/*
 void GetCatAndAttr(string& rCatName, string& rColName, const string& catName,
   const string& attribName)
 {
@@ -689,7 +771,7 @@ void GetCatAndAttr(string& rCatName, string& rColName, const string& catName,
         CifString::GetCategoryFromCifItem(rCatName, aliasName);
     }
 }
-
+*/
 
 ISTable* GetOutTable(Block& outBlock, const string& catName)
 {
@@ -705,6 +787,7 @@ ISTable* GetOutTable(Block& outBlock, const string& catName)
 }
 
 
+/*
 void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
   const string& rColName)
 {
@@ -724,8 +807,9 @@ void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
         outTable.AddColumn(rColName, inCol);
     }
 }
+*/
 
-
+/*
 void StripFile(CifFile& fobjOut)
 {
     vector<string> outBlocksNames;
@@ -781,7 +865,7 @@ void StripFile(CifFile& fobjOut)
         } // for (all tables in the block)
     } // for (all blocks in the file)
 }
-
+*/
 
 void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
   const bool iReorder)
@@ -815,6 +899,7 @@ void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
 }
 
 
+/*
 void add_audit_conform(CifFile* fobj, const string& version)
 {
 
@@ -837,8 +922,9 @@ void add_audit_conform(CifFile* fobj, const string& version)
     block.WriteTable(tN);
 
 }
+*/
 
-
+/*
 void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
   CifFile* fobjSrc)
 {
@@ -1128,8 +1214,9 @@ void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
 
     cerr << "INFO - Completed integration step for " << bName << endl;
 }
+*/
 
-
+/*
 static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobjData,
   const string& dataAttribute, const string& targetCategory,
   const string& targetAttribute, const string& bName, const string& entityID,
@@ -1320,4 +1407,4 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     }
 
 }
-
+*/
