@@ -115,9 +115,10 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
   const string& targetAttribute, const string& bName,
   const string& entityID, const string& chainID);
 
+*/
 static void update_entry_ids(CifFile* fobj, const string& blockId,
   const string& idName);
-*/
+
 //static void GetCatAndAttr(string& rCatName, string& rColName,
 //  const string& catName, const string& attribName);
 static ISTable* GetOutTable(Block& outBlock, const string& catName);
@@ -387,7 +388,6 @@ int main(int argc, char* argv[])
 
             string idCode;
 
-/*
             const string& blockName = fobjOut->GetFirstBlockName();
 
             fobjIn->GetAttributeValueIf(idCode, blockName, "database_2",
@@ -409,7 +409,6 @@ int main(int argc, char* argv[])
 
             update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
 
-*/
             string outFileCif;
 
             if (args.iRename && !idCode.empty())
@@ -450,7 +449,7 @@ int main(int argc, char* argv[])
                 fobjOut->DataChecking(*dictFileP, diagFile);
             }
 
-            // VLAD???? fobjOut->RenameFirstBlock(idCode);
+            fobjOut->RenameFirstBlock(idCode);
 
             WriteOutFile(fobjOut, outFileCif, args.iReorder);
 
@@ -1261,7 +1260,7 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobjData,
     } 
 
 }
-
+*/
 
 void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
 {
@@ -1407,4 +1406,4 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     }
 
 }
-*/
+
