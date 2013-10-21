@@ -17,11 +17,10 @@
 
 
 using std::exception;
-using std::cout;
+using std::ifstream;
 using std::cerr;
 using std::getline;
 using std::endl;
-using std::ifstream;
 
 
 struct Args
@@ -31,6 +30,7 @@ struct Args
     string inFileList;
     string inFile;
     string outFile;
+    string logFile;
     bool iCheckIn;
     bool iReorder;
     bool iRename;
@@ -137,8 +137,9 @@ static void usage(const string& pname)
     cerr << pname << ": " << endl 
       << "         usage = -dicSdb <filename>" << endl
       << "                 -op in|out -v (verbose)" << endl
-      << "                 -inlist <filename> | -input <filename> " <<   endl
-      << "                 [-output <filename>] " <<   endl
+      << "                 -inlist <filename> | -input <inputFileName> " << endl
+      << "                 [-output <outFileName>] " <<   endl
+      << "                 [-log <logFileName>] " <<   endl
       << "                 -pdbids | -ndbids | -rcsbids " <<   endl
       << "                 -reorder  " <<   endl
       << "                 -checkin  " <<   endl
@@ -207,6 +208,12 @@ static void GetArgs(Args& args, int argc, char* argv[])
             i++;
             argVal = string(argv[i]);
             args.outFile = argVal;          
+        }
+        else if (argVal == "-log")
+        {
+            i++;
+            argVal = string(argv[i]);
+            args.logFile = argVal;          
         }
         else if (argVal == "-checkin")
         {
@@ -345,6 +352,11 @@ int main(int argc, char* argv[])
 
         Verbose = args.verbose;
 
+        if (!args.logFile.empty())
+        {
+            freopen(args.logFile.c_str(), "w", stderr);
+        }
+
         dictFileP = GetDictFile(NULL, string(), args.dicSdbFileName, Verbose);
 
         Block& block = dictFileP->GetBlock(dictFileP->GetFirstBlockName());
@@ -404,7 +416,7 @@ int main(int argc, char* argv[])
 
             if (!parsingDiags.empty())
             {
-                cout << "Diags for file " << fobjIn->GetSrcFileName() <<
+                cerr << "Diags for file " << fobjIn->GetSrcFileName() <<
                   "  = " << parsingDiags << endl;
             }
 
