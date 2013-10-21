@@ -29,6 +29,8 @@ struct Args
     string dicSdbFileName;
     string op;
     string inFileList;
+    string inFile;
+    string outFile;
     bool iCheckIn;
     bool iReorder;
     bool iRename;
@@ -135,7 +137,8 @@ static void usage(const string& pname)
     cerr << pname << ": " << endl 
       << "         usage = -dicSdb <filename>" << endl
       << "                 -op in|out -v (verbose)" << endl
-      << "                 -inlist <filename>  " <<   endl
+      << "                 -inlist <filename> | -input <filename> " <<   endl
+      << "                 [-output <filename>] " <<   endl
       << "                 -pdbids | -ndbids | -rcsbids " <<   endl
       << "                 -reorder  " <<   endl
       << "                 -checkin  " <<   endl
@@ -192,6 +195,18 @@ static void GetArgs(Args& args, int argc, char* argv[])
             i++;
             argVal = string(argv[i]);
             args.inFileList = argVal;          
+        }
+        else if (argVal == "-input")
+        {
+            i++;
+            argVal = string(argv[i]);
+            args.inFile = argVal;          
+        }
+        else if (argVal == "-output")
+        {
+            i++;
+            argVal = string(argv[i]);
+            args.outFile = argVal;          
         }
         else if (argVal == "-checkin")
         {
@@ -257,6 +272,24 @@ static void GetArgs(Args& args, int argc, char* argv[])
   if (args.op.empty())
     exit(1);
 
+  if (!args.inFileList.empty() && !args.inFile.empty())
+  {
+    usage(pname);
+    exit(1);
+  }
+
+  if (!args.inFileList.empty() && !args.outFile.empty())
+  {
+    usage(pname);
+    exit(1);
+  }
+
+  if (args.inFileList.empty() && !args.inFile.empty() && args.outFile.empty())
+  {
+    usage(pname);
+    exit(1);
+  }
+
   if ((args.op == "in") || (args.op == "out"))
   {
     if (args.dicSdbFileName.empty())
@@ -269,10 +302,17 @@ static void GetArgs(Args& args, int argc, char* argv[])
 }
 
 
-static void GetFileNames(vector<string>& fileNames, const string& lFile)
+static void GetFileNames(vector<string>& fileNames, const string& lFile,
+  const string& file)
 {
 
     fileNames.clear();
+
+    if (!file.empty())
+    {
+        fileNames.push_back(file);
+        return;
+    }
 
     ifstream infile(lFile.c_str());
 
@@ -347,7 +387,7 @@ int main(int argc, char* argv[])
         PrepareQueries(args.op);
 
         vector<string> fileNames;
-        GetFileNames(fileNames, args.inFileList);
+        GetFileNames(fileNames, args.inFileList, args.inFile);
 
         for (unsigned int i = 0; i < fileNames.size(); ++i)
         {
@@ -436,7 +476,14 @@ int main(int argc, char* argv[])
             }
             else
             {
-                outFileCif = inCifFileName + ".tr";
+                if (!args.outFile.empty())
+                {
+                    outFileCif = args.outFile;
+                }
+                else
+                {
+                    outFileCif = inCifFileName + ".tr";
+                }
             }
 
             if (args.iCheckOut)
