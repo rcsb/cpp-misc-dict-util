@@ -725,7 +725,6 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
 
         string itemName;
         CifString::MakeCifItem(itemName, inTable.GetName(), colNames[colInd]);
-        String::LowerCase(itemName);
 
         vector<string> queryTarget1;
         queryTarget1.push_back(itemName);
