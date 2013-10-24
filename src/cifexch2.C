@@ -18,6 +18,7 @@
 
 using std::exception;
 using std::ifstream;
+using std::cout;
 using std::cerr;
 using std::getline;
 using std::endl;
@@ -30,7 +31,7 @@ struct Args
     string inFileList;
     string inFile;
     string outFile;
-    string logFile;
+    string inDiagLogFileName;
     bool iCheckIn;
     bool iReorder;
     bool iRename;
@@ -139,7 +140,7 @@ static void usage(const string& pname)
       << "                 -op in|out -v (verbose)" << endl
       << "                 -inlist <filename> | -input <inputFileName> " << endl
       << "                 [-output <outFileName>] " <<   endl
-      << "                 [-log <logFileName>] " <<   endl
+      << "                 [-indiaglog <inDiagLogFileName>] " <<   endl
       << "                 -pdbids | -ndbids | -rcsbids " <<   endl
       << "                 -reorder  " <<   endl
       << "                 -checkin  " <<   endl
@@ -209,11 +210,11 @@ static void GetArgs(Args& args, int argc, char* argv[])
             argVal = string(argv[i]);
             args.outFile = argVal;          
         }
-        else if (argVal == "-log")
+        else if (argVal == "-indiaglog")
         {
             i++;
             argVal = string(argv[i]);
-            args.logFile = argVal;          
+            args.inDiagLogFileName = argVal;          
         }
         else if (argVal == "-checkin")
         {
@@ -352,11 +353,6 @@ int main(int argc, char* argv[])
 
         Verbose = args.verbose;
 
-        if (!args.logFile.empty())
-        {
-            freopen(args.logFile.c_str(), "w", stderr);
-        }
-
         dictFileP = GetDictFile(NULL, string(), args.dicSdbFileName, Verbose);
 
         Block& block = dictFileP->GetBlock(dictFileP->GetFirstBlockName());
@@ -416,7 +412,7 @@ int main(int argc, char* argv[])
 
             if (!parsingDiags.empty())
             {
-                cerr << "Diags for file " << fobjIn->GetSrcFileName() <<
+                cout << "Diags for file " << fobjIn->GetSrcFileName() <<
                   "  = " << parsingDiags << endl;
             }
 
@@ -432,7 +428,17 @@ int main(int argc, char* argv[])
                 {
                     cerr << "INFO - Checking file " << inCifFileName << endl;
                 }
-                string diagFile = inCifFileName + ".diag";
+
+                string diagFile;
+                if (!args.inFile.empty() && !args.inDiagLogFileName.empty())
+                {
+                    diagFile = args.inDiagLogFileName;
+                }
+                else
+                {
+                    diagFile = inCifFileName + ".diag";
+                }
+
                 fobjIn->DataChecking(*dictFileP, diagFile);
             }
 
