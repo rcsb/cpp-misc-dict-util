@@ -128,7 +128,7 @@ static ISTable* GetOutTable(Block& outBlock, const string& catName);
 //static void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
 //  const string& rColName);
 //static void add_audit_conform(CifFile* fobj, const string& version);
-//static void StripFile(CifFile& outCifFile);
+static void StripFile(CifFile& outCifFile);
 static void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
   const bool iReorder);
 
@@ -584,11 +584,11 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
 
     add_audit_conform(fobjOut, dictVersion);
 
+*/
     if (args.iStrip)
     {
         StripFile(*fobjOut);
     }
-*/
     return (fobjOut);
 }
 
@@ -872,7 +872,6 @@ void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
 }
 */
 
-/*
 void StripFile(CifFile& fobjOut)
 {
     vector<string> outBlocksNames;
@@ -928,7 +927,6 @@ void StripFile(CifFile& fobjOut)
         } // for (all tables in the block)
     } // for (all blocks in the file)
 }
-*/
 
 void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
   const bool iReorder)
