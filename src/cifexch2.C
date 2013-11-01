@@ -91,6 +91,8 @@ static ISTable* aliases = NULL;
 static ISTable* pdbxCatContext = NULL;
 static ISTable* pdbxItemContext = NULL;
 
+static ISTable* categories = NULL;
+
 static vector<string> QueryCol1;
 static vector<string> QueryCol2;      
 static vector<string> QueryCat;
@@ -104,6 +106,8 @@ static void PrepareQueries(const string& op);
 static void ProcessBlock(CifFile* fobjIn, const string& blockName,
   CifFile* fobjOut, const string& idOpt);
 static bool SkipTable(const string& tableName);
+static bool IsCatDefinedInRef(const string& catName, ISTable& catTable);
+static bool IsItemDefinedInRef(const string& itemName, ISTable& refItemTable);
 static void ProcessTable(ISTable& inTable, Block& outBlock);
 //static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
 //  CifFile*& fobjSrc, const string& citFile, const string& namFile,
@@ -362,6 +366,8 @@ int main(int argc, char* argv[])
 
         pdbxCatContext = block.GetTablePtr("pdbx_category_context");
         pdbxItemContext = block.GetTablePtr("pdbx_item_context");
+
+        categories = block.GetTablePtr("category");
 
         if ((items == NULL) || (aliases == NULL))
         {
@@ -658,6 +664,15 @@ bool SkipTable(const string& tableName)
     cerr << "INFO - Process table \"" << tableName <<
       "\"" << endl;
 
+    // See if category is defined in dictionary
+    if (!IsCatDefinedInRef(tableName, *categories))
+    {
+        cerr << "INFO - Category \"" << tableName <<
+          "\" is not defined in the dictionary" << endl;
+
+        return true;     
+    }
+
     // See if the category is local
 
     vector<string> queryTarget1;
@@ -734,6 +749,15 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
 
         vector<string> queryTarget1;
         queryTarget1.push_back(itemName);
+
+        // See if item is defined in the dictionary
+        if (!IsItemDefinedInRef(itemName, *items))
+        {
+            cerr << "INFO - Item \"" << itemName << "\" is not defined in "\
+              "the dictionary" << endl;
+
+            continue;
+        }
 
         unsigned int queryResult1 = pdbxItemContext->FindFirst(queryTarget1,
           QueryItem);
@@ -1467,6 +1491,64 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     {
       fobj->SetAttributeValue(blockId, "database", "ndb_code_PDB", pdbID);
     }
+
+}
+
+
+bool IsCatDefinedInRef(const string& catName, ISTable& catTable)
+{
+
+    /*
+    ** For a category, method looks into dictionary ("category" table)
+    ** to find out whether it exists or not.
+    */
+
+    vector<string> keyTarget;
+    keyTarget.push_back(catName);
+
+    vector<string> keyList;
+    keyList.push_back("id");
+
+    unsigned int catIndex = catTable.FindFirst(keyTarget, keyList);
+    if (catIndex == catTable.GetNumRows())
+    {
+        return(false);
+    }
+
+    return(true);
+   
+}
+
+
+bool IsItemDefinedInRef(const string& itemName, ISTable& refItemTable)
+{
+
+    /*
+    ** For an item, method looks into dictionary ("item" table)
+    ** to find out whether the item is defined in the category or not.
+    */
+
+    bool found = false;
+
+    vector<string> refItemList;
+    refItemList.push_back("category_id");
+    refItemList.push_back("name");
+
+    string catName;
+    CifString::GetCategoryFromCifItem(catName, itemName);
+
+    vector<string> refItemTarget;
+    refItemTarget.push_back(catName);
+    refItemTarget.push_back(itemName);
+
+    unsigned int index = refItemTable.FindFirst(refItemTarget, refItemList);
+
+    if (index != refItemTable.GetNumRows())
+    {
+        found = true;
+    }
+
+    return(found);
 
 }
 
