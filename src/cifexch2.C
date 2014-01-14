@@ -1418,6 +1418,8 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
 
     fobj->SetAttributeValue(blockId, "pdbx_database_proc", "entry_id",
       idName);
+    fobj->SetAttributeValue(blockId, "pdbx_entry_details", "entry_id",
+      idName);
     fobj->SetAttributeValue(blockId, "pdbx_database_status", "entry_id",
       idName);
     fobj->SetAttributeValue(blockId, "pdbx_refine", "entry_id",
