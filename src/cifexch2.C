@@ -1379,10 +1379,12 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
       "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_euler_angle_distribution", "entry_id",
       idName);
+    fobj->SetAttributeValue(blockId, "em_experiment", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_image_scans", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_imaging", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_sample_preparation", "entry_id",
       idName);
+    fobj->SetAttributeValue(blockId, "em_single_particle_entity", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_vitrification", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "entry_link", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "exptl", "entry_id", idName);
