@@ -26,6 +26,7 @@ using std::endl;
 
 struct Args
 {
+    string pdbxDicSdbFileName;
     string dicSdbFileName;
     string op;
     string inFileList;
@@ -99,8 +100,9 @@ static vector<string> QueryCat;
 static vector<string> QueryItem;
 static string ColumnName;
 static bool Verbose = false;
+static DicFile* pdbxDictFileP = NULL;
 static DicFile* dictFileP = NULL;
-static string dictVersion;
+static string pdbxDictVersion;
 
 static void PrepareQueries(const string& op);
 static void ProcessBlock(CifFile* fobjIn, const string& blockName,
@@ -131,7 +133,7 @@ static void update_entry_ids(CifFile* fobj, const string& blockId,
 static ISTable* GetOutTable(Block& outBlock, const string& catName);
 //static void ProcCatAndAttr(ISTable& outTable, const vector<string>& inCol,
 //  const string& rColName);
-//static void add_audit_conform(CifFile* fobj, const string& version);
+static void add_audit_conform(CifFile* fobj, const string& version);
 static void StripFile(CifFile& outCifFile);
 static void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
   const bool iReorder);
@@ -189,6 +191,12 @@ static void GetArgs(Args& args, int argc, char* argv[])
             i++;
             argVal = string(argv[i]);
             args.dicSdbFileName = argVal;          
+        }
+        else if (argVal == "-pdbxDicSdb")
+        {
+            i++;
+            argVal = string(argv[i]);
+            args.pdbxDicSdbFileName = argVal;          
         }
         else if (argVal == "-op")
         {
@@ -284,6 +292,12 @@ static void GetArgs(Args& args, int argc, char* argv[])
   if (args.op.empty())
     exit(1);
 
+  if (args.pdbxDicSdbFileName.empty())
+  {
+    usage(pname);
+    exit(1);
+  }
+
   if (!args.inFileList.empty() && !args.inFile.empty())
   {
     usage(pname);
@@ -345,7 +359,7 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile,
 
 // CifTranslator
 // CifTranslator::CifTranslator(dictSdbFileName)
-// items, aliases, dictVersion, dictFileP
+// items, aliases, pdbxDictVersion, dictFileP
 
 // CifTranslator::
 int main(int argc, char* argv[])
@@ -356,6 +370,12 @@ int main(int argc, char* argv[])
         GetArgs(args, argc, argv);
 
         Verbose = args.verbose;
+
+        pdbxDictFileP = GetDictFile(NULL, string(), args.pdbxDicSdbFileName,
+          Verbose);
+
+        Block& pdbxBlock = 
+          pdbxDictFileP->GetBlock(pdbxDictFileP->GetFirstBlockName());
 
         dictFileP = GetDictFile(NULL, string(), args.dicSdbFileName, Verbose);
 
@@ -392,8 +412,8 @@ int main(int argc, char* argv[])
         aliases->SetFlags("alias_name", ISTable::DT_STRING |
           ISTable::CASE_INSENSE);
 
-        ISTable* dictionaryP = block.GetTablePtr("dictionary");
-        dictVersion = (*dictionaryP)(0, "version");
+        ISTable* pdbxDictionaryP = pdbxBlock.GetTablePtr("dictionary");
+        pdbxDictVersion = (*pdbxDictionaryP)(0, "version");
 
         QueryCat.push_back("category_id");
         QueryItem.push_back("item_name");
@@ -528,6 +548,7 @@ int main(int argc, char* argv[])
             delete (fobjIn);
         }
 
+        delete (pdbxDictFileP);
         delete (dictFileP);
 
         if (Verbose)
@@ -587,10 +608,10 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
     {
         add_stuff(fobjOut, fobjCit, fobjNam, fobjSrc);
     }
-
-    add_audit_conform(fobjOut, dictVersion);
-
 */
+
+    add_audit_conform(fobjOut, pdbxDictVersion);
+
     if (args.iStrip)
     {
         StripFile(*fobjOut);
@@ -984,7 +1005,6 @@ void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
 }
 
 
-/*
 void add_audit_conform(CifFile* fobj, const string& version)
 {
 
@@ -1007,7 +1027,6 @@ void add_audit_conform(CifFile* fobj, const string& version)
     block.WriteTable(tN);
 
 }
-*/
 
 /*
 void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
