@@ -42,7 +42,9 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile);
 static void localizeFile(const string& fileName, string& localFileName);
 
 static bool isPrintable(const char ch);
+static bool isCarriageReturn(char ch);
 static void charToAsciiHexString(const char oneChar, string& asciiHexString);
+
 
 int main(int argc, char *argv[])
 {
@@ -56,20 +58,18 @@ int main(int argc, char *argv[])
 
         for (unsigned int charI = 0; charI < str.size(); ++charI)
         {
+            if (isCarriageReturn(str[charI]))
+            {
+                cerr << "ERROR: Windows carriage return in line# " << lineNo \
+                  << ", pos# " << charI + 1 << endl;
+
+                continue;
+            }
+
             if (!isPrintable(str[charI]))
             {
                 string asciiHexString;
                 charToAsciiHexString(str[charI], asciiHexString);
-                //unsigned int maxUnsignedInt = std::numeric_limits<unsigned int>::max();
-                //unsigned int mask = maxUnsignedInt & 0xFF;
-                //unsigned int asciiCode = str[charI] & mask;
-                //std::stringstream strStream;
-                //strStream << std::setw(2) << std::hex 
-                //  << asciiCode;
-                //cerr << "ERROR: Non-printable character in line# " << lineNo 
-                //  << ", pos# " << charI + 1 << ", hex code 0x" 
-                //  << strStream.str() << "bla" << std::setfill('0') << std::setw(2) << std::hex 
-                //  << static_cast<unsigned int>(asciiCode) << endl;
                 cerr << "ERROR: Non-printable character in line# " << lineNo \
                   << ", pos# " << charI + 1 << ", hex code 0x" \
                   << asciiHexString << endl;
@@ -215,8 +215,14 @@ bool isPrintable(char ch)
       (asciiCode >= 123 && asciiCode <= 126) || \
       (asciiCode == 32) || \
       (asciiCode >= 9 && asciiCode <= 13));
+}
 
-    //return true;
+
+bool isCarriageReturn(char ch)
+{
+    unsigned int asciiCode = ch;
+
+    return asciiCode == 13;
 }
 
 
@@ -225,27 +231,17 @@ void charToAsciiHexString(const char oneChar, string& asciiHexString)
     asciiHexString.clear();
 
     string maxAsciiStr = "FF";
-    std::istringstream buffer(maxAsciiStr);
 
+    std::istringstream buffer(maxAsciiStr);
     unsigned int mask;
     buffer >> std::hex >> mask;
 
-    unsigned int maxUnsignedInt = std::numeric_limits<unsigned int>::max();
-
-    //unsigned int mask = maxUnsignedInt & 0xFF;
-    //unsigned int mask = maxUnsignedInt & mask;
     unsigned int asciiCode = oneChar & mask;
 
-    cerr  << "one char:" << std::dec << oneChar << endl;
-    cerr  << "maxUnsignedInt:" << maxUnsignedInt << endl;
-    cerr  << "mask:" << mask << endl;
-
     std::stringstream strStream;
-    //strStream << std::setw(2) << std::hex << asciiCode;
     strStream << std::setw(maxAsciiStr.size()) << std::hex << asciiCode;
 
     asciiHexString = strStream.str();
-
 }
 
 
