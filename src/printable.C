@@ -24,13 +24,11 @@ using std::getline;
 class CmdLineOpts
 {
   public:
-    string cifFileListName;
-    string cifFileName;
-    string dictSdbFileName;
-    string dictFileName;
-    string ddlFileName;
-    bool extraCifChecks;
     string progName;
+
+    bool strip;
+    string inFileName;
+    string outFileName;
 
     CmdLineOpts(unsigned int argc, char* argv[]);
 
@@ -38,50 +36,20 @@ class CmdLineOpts
 };
 
 
-static void GetFileNames(vector<string>& fileNames, const string& lFile);
+//static void GetFileNames(vector<string>& fileNames, const string& lFile);
 
-static void localizeFile(const string& fileName, string& localFileName);
+//static void localizeFile(const string& fileName, string& localFileName);
 
+static void printable(std::istream& inStream, std::ostream& outStream);
 
 int main(int argc, char *argv[])
 {
-    string str;
 
-    unsigned int lineNo = 1;
-
-    while (!std::cin.eof())
-    {
-        std::getline(std::cin, str);
-
-        for (unsigned int charI = 0; charI < str.size(); ++charI)
-        {
-            if (Char::IsCarriageReturn(str[charI]))
-            {
-                cerr << "ERROR: Windows carriage return in line# " << lineNo \
-                  << ", pos# " << charI + 1 << endl;
-
-                continue;
-            }
-
-            if (!Char::IsPrintable(str[charI]))
-            {
-                string asciiHexString;
-                Char::AsciiCodeInHex(str[charI], asciiHexString);
-                cerr << "ERROR: Non-printable character in line# " << lineNo \
-                  << ", pos# " << charI + 1 << ", hex code 0x" \
-                  << asciiHexString << endl;
-            }
-        }
-
-        ++lineNo;
-
-        cout << "Line: " << str << endl;
-    }
+    printable(std::cin, std::cout);
 
     return 0;
 
-
-
+/*
     try
     {
         // Parse command line arguments.
@@ -196,9 +164,48 @@ int main(int argc, char *argv[])
 
         return (1);
     }
+*/
 }
 
 
+void printable(std::istream& inStream, std::ostream& outStream)
+{
+    string str;
+
+    unsigned int lineNo = 1;
+
+    while (!inStream.eof())
+    {
+        std::getline(inStream, str);
+
+        for (unsigned int charI = 0; charI < str.size(); ++charI)
+        {
+            if (Char::IsCarriageReturn(str[charI]))
+            {
+                cerr << "ERROR: Windows carriage return in line# " << lineNo \
+                  << ", pos# " << charI + 1 << endl;
+
+                continue;
+            }
+
+            if (!Char::IsPrintable(str[charI]))
+            {
+                string asciiHexString;
+                Char::AsciiCodeInHex(str[charI], asciiHexString);
+                cerr << "ERROR: Non-printable character in line# " << lineNo \
+                  << ", pos# " << charI + 1 << ", hex code 0x" \
+                  << asciiHexString << endl;
+            }
+        }
+
+        ++lineNo;
+
+        outStream << "Line: " << str << endl;
+    }
+}
+
+
+/*
 void localizeFile(const string& fileName, string& localFileName)
 {
   // if the file name contains path information make a local copy
@@ -223,8 +230,9 @@ void localizeFile(const string& fileName, string& localFileName)
   cout << "Local file name " << localFileName << endl;
   if (cBuf.size() > 0) system(cBuf.c_str());
 }
+*/
 
-
+/*
 static void GetFileNames(vector<string>& fileNames, const string& lFile)
 {
     fileNames.clear();
@@ -244,52 +252,38 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile)
 
     infile.close();
 }
-
+*/
 
 CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
 {
     progName = argv[0];
 
-    if (argc < 2)
+    if (argc < 1)
     {
         Usage();
         throw InvalidOptionsException();
     }
 
-    extraCifChecks = false;
+    strip = false;
 
     for (unsigned int i = 1; i < argc; ++i)
     {
         if (argv[i][0] == '-')
         {
-            if (strcmp(argv[i], "-l") == 0)
+            if (strcmp(argv[i], "-s") == 0)
             {
                 i++;
-                cifFileListName = argv[i];
+                strip = true;
             }
-            else if (strcmp(argv[i], "-f") == 0)
+            else if (strcmp(argv[i], "-i") == 0)
             {
                 i++;
-                cifFileName = argv[i];
+                inFileName = argv[i];
             }
-            else if (strcmp(argv[i], "-dictSdb") == 0)
+            else if (strcmp(argv[i], "-o") == 0)
             {
                 i++;
-                dictSdbFileName = argv[i];
-            }
-            else if (strcmp(argv[i], "-dict") == 0)
-            {
-                i++;
-                dictFileName = argv[i];
-            }
-            else if (strcmp(argv[i], "-ddl") == 0)
-            {
-                i++;
-                ddlFileName = argv[i];
-            }
-            else if (strcmp(argv[i], "-ec_pdbx") == 0)
-            {
-                extraCifChecks = true;
+                outFileName = argv[i];
             }
             else
             {
@@ -304,6 +298,7 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
         }
     }
 
+    /*
     if (cifFileListName.empty() && cifFileName.empty())
     {
         Usage();
@@ -332,6 +327,7 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
             throw InvalidOptionsException();
         }
     }
+    */
 }
 
 
@@ -339,9 +335,6 @@ void CmdLineOpts::Usage()
 {
     cerr << endl << "Usage:" << endl << endl;
     cerr << progName << endl;
-    cerr << "  [-ec_pdbx] -f <CIF file> | -l <CIF files list>" << endl;
-    cerr << "  -dictSdb <dictionary SDB file> | "
-      << endl;
-    cerr << "  -dict <dictionary ASCII file> -ddl <DDL ASCII file>" << endl;
+    cerr << "  [-s] [-in <input file>] [-out <output file>]" << endl;
 }
 
