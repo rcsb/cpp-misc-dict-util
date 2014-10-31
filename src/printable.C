@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iomanip>
+#include <istream>
+#include <ostream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,10 +16,13 @@
 
 
 using std::exception;
+using std::istream;
+using std::ostream;
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::ifstream;
+using std::ofstream;
 using std::getline;
 
 
@@ -44,19 +49,36 @@ static void printable(std::istream& inStream, std::ostream& outStream);
 
 int main(int argc, char *argv[])
 {
-
-    printable(std::cin, std::cout);
-
-    return 0;
-
-/*
     try
     {
         // Parse command line arguments.
         CmdLineOpts opts(argc, argv);
 
+        
+        istream* inStreamP = &std::cin;
+        ostream* outStreamP = &std::cout;
+
+        ifstream inFile;
+        if (!opts.inFileName.empty())
+        {
+            inFile.open(opts.inFileName.c_str());
+            inStreamP = &inFile;
+        }
+
+        ofstream outFile;
+        if (!opts.outFileName.empty())
+        {
+            outFile.open(opts.outFileName.c_str());
+            outStreamP = &outFile;
+        }
+ 
         // CheckArgs();
 
+        printable(*inStreamP, *outStreamP);
+
+        return 0;
+
+        /*
         vector<string> fileNames;
 
         if (!opts.cifFileName.empty())
@@ -108,7 +130,7 @@ int main(int argc, char *argv[])
 
             delete (ddlFileP);
 
-            cout << endl;
+
         }
         else
         {
@@ -157,6 +179,7 @@ int main(int argc, char *argv[])
         delete (dictFileP);
 
         cout << "End of CIF files checking." << endl;
+    */
     }
     catch (const exception& exc)
     {
@@ -164,7 +187,6 @@ int main(int argc, char *argv[])
 
         return (1);
     }
-*/
 }
 
 
@@ -200,7 +222,7 @@ void printable(std::istream& inStream, std::ostream& outStream)
 
         ++lineNo;
 
-        outStream << "Line: " << str << endl;
+        //outStream << "Line: " << str << endl;
     }
 }
 
@@ -254,9 +276,12 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile)
 }
 */
 
+
 CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
 {
     progName = argv[0];
+
+    cerr << argc;
 
     if (argc < 1)
     {
@@ -335,6 +360,6 @@ void CmdLineOpts::Usage()
 {
     cerr << endl << "Usage:" << endl << endl;
     cerr << progName << endl;
-    cerr << "  [-s] [-in <input file>] [-out <output file>]" << endl;
+    cerr << "  [-s] [-i <input file>] [-o <output file>]" << endl;
 }
 
