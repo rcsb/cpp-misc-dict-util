@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "GenString.h"
 #include "RcsbFile.h"
 #include "CifFile.h"
 #include "DicFile.h"
@@ -41,10 +42,6 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile);
 
 static void localizeFile(const string& fileName, string& localFileName);
 
-static bool isPrintable(const char ch);
-static bool isCarriageReturn(char ch);
-static void charToAsciiHexString(const char oneChar, string& asciiHexString);
-
 
 int main(int argc, char *argv[])
 {
@@ -58,7 +55,7 @@ int main(int argc, char *argv[])
 
         for (unsigned int charI = 0; charI < str.size(); ++charI)
         {
-            if (isCarriageReturn(str[charI]))
+            if (Char::IsCarriageReturn(str[charI]))
             {
                 cerr << "ERROR: Windows carriage return in line# " << lineNo \
                   << ", pos# " << charI + 1 << endl;
@@ -66,10 +63,10 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            if (!isPrintable(str[charI]))
+            if (!Char::IsPrintable(str[charI]))
             {
                 string asciiHexString;
-                charToAsciiHexString(str[charI], asciiHexString);
+                Char::AsciiCodeInHex(str[charI], asciiHexString);
                 cerr << "ERROR: Non-printable character in line# " << lineNo \
                   << ", pos# " << charI + 1 << ", hex code 0x" \
                   << asciiHexString << endl;
@@ -199,49 +196,6 @@ int main(int argc, char *argv[])
 
         return (1);
     }
-}
-
-
-bool isPrintable(char ch)
-{
-    unsigned int asciiCode = ch;
-
-    return ((asciiCode >= 48 && asciiCode <= 57) || \
-      (asciiCode >= 97 && asciiCode <= 122) || \
-      (asciiCode >= 65 && asciiCode <= 90) || \
-      (asciiCode >= 33 && asciiCode <= 47) || \
-      (asciiCode >= 58 && asciiCode <= 64) || \
-      (asciiCode >= 91 && asciiCode <= 96) || \
-      (asciiCode >= 123 && asciiCode <= 126) || \
-      (asciiCode == 32) || \
-      (asciiCode >= 9 && asciiCode <= 13));
-}
-
-
-bool isCarriageReturn(char ch)
-{
-    unsigned int asciiCode = ch;
-
-    return asciiCode == 13;
-}
-
-
-void charToAsciiHexString(const char oneChar, string& asciiHexString)
-{
-    asciiHexString.clear();
-
-    string maxAsciiStr = "FF";
-
-    std::istringstream buffer(maxAsciiStr);
-    unsigned int mask;
-    buffer >> std::hex >> mask;
-
-    unsigned int asciiCode = oneChar & mask;
-
-    std::stringstream strStream;
-    strStream << std::setw(maxAsciiStr.size()) << std::hex << asciiCode;
-
-    asciiHexString = strStream.str();
 }
 
 

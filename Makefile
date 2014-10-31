@@ -61,7 +61,8 @@ BASE_MAIN_FILES = cifexch.ext \
                   cif_corrector.ext \
                   sf_corrector.ext \
                   DictInfo.ext \
-                  DictToSdb.ext
+                  DictToSdb.ext \
+                  printable.ext
 
 # Main source files. Replace ".ext" with ".C"
 SRC_MAIN_FILES = ${BASE_MAIN_FILES:.ext=.C}
