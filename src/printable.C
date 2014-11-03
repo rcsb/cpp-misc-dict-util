@@ -18,6 +18,7 @@
 using std::exception;
 using std::istream;
 using std::ostream;
+using std::cin;
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -54,9 +55,10 @@ int main(int argc, char *argv[])
         // Parse command line arguments.
         CmdLineOpts opts(argc, argv);
 
-        
-        istream* inStreamP = &std::cin;
-        ostream* outStreamP = &std::cout;
+        // CheckArgs();
+
+        istream* inStreamP = &cin;
+        ostream* outStreamP = &cout;
 
         ifstream inFile;
         if (!opts.inFileName.empty())
@@ -72,9 +74,18 @@ int main(int argc, char *argv[])
             outStreamP = &outFile;
         }
  
-        // CheckArgs();
-
         printable(*inStreamP, *outStreamP);
+
+        if (!opts.inFileName.empty())
+        {
+            inFile.close();
+        }
+
+        if (!opts.outFileName.empty())
+        {
+            outFile.close();
+            outStreamP = &outFile;
+        }
 
         return 0;
 
@@ -205,7 +216,7 @@ void printable(std::istream& inStream, std::ostream& outStream)
             if (Char::IsCarriageReturn(str[charI]))
             {
                 cerr << "ERROR: Windows carriage return in line# " << lineNo \
-                  << ", pos# " << charI + 1 << endl;
+                  << ", position# " << charI + 1 << endl;
 
                 continue;
             }
@@ -215,7 +226,7 @@ void printable(std::istream& inStream, std::ostream& outStream)
                 string asciiHexString;
                 Char::AsciiCodeInHex(str[charI], asciiHexString);
                 cerr << "ERROR: Non-printable character in line# " << lineNo \
-                  << ", pos# " << charI + 1 << ", hex code 0x" \
+                  << ", position# " << charI + 1 << ", hex code 0x" \
                   << asciiHexString << endl;
             }
         }
@@ -280,8 +291,6 @@ static void GetFileNames(vector<string>& fileNames, const string& lFile)
 CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
 {
     progName = argv[0];
-
-    cerr << argc;
 
     if (argc < 1)
     {
