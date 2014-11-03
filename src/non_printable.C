@@ -102,7 +102,7 @@ void non_printable(std::istream& inStream, std::ostream& outStream, bool strip)
 
     while (!inStream.eof())
     {
-        if (lineNo != 1)
+        if (strip && (lineNo != 1))
         {
             outStream << endl;
         }
@@ -139,7 +139,10 @@ void non_printable(std::istream& inStream, std::ostream& outStream, bool strip)
             }
         }
 
-        outStream << str;
+        if (strip)
+        {
+            outStream << str;
+        }
 
         ++lineNo;
     }
@@ -163,7 +166,7 @@ int main(int argc, char *argv[])
         }
 
         ofstream outFile;
-        if (!opts.outFileName.empty())
+        if (opts.strip && !opts.outFileName.empty())
         {
             outFile.open(opts.outFileName.c_str());
             outStreamP = &outFile;
@@ -176,7 +179,7 @@ int main(int argc, char *argv[])
             inFile.close();
         }
 
-        if (!opts.outFileName.empty())
+        if (opts.strip && !opts.outFileName.empty())
         {
             outFile.close();
             outStreamP = &outFile;
