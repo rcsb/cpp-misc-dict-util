@@ -46,7 +46,8 @@ class CmdLineOpts
 
 //static void localizeFile(const string& fileName, string& localFileName);
 
-static void printable(std::istream& inStream, std::ostream& outStream);
+static void printable(std::istream& inStream, std::ostream& outStream,
+  bool strip);
 
 int main(int argc, char *argv[])
 {
@@ -74,7 +75,7 @@ int main(int argc, char *argv[])
             outStreamP = &outFile;
         }
  
-        printable(*inStreamP, *outStreamP);
+        printable(*inStreamP, *outStreamP, opts.strip);
 
         if (!opts.inFileName.empty())
         {
@@ -201,7 +202,7 @@ int main(int argc, char *argv[])
 }
 
 
-void printable(std::istream& inStream, std::ostream& outStream)
+void printable(std::istream& inStream, std::ostream& outStream, bool strip)
 {
     string str;
 
@@ -209,7 +210,15 @@ void printable(std::istream& inStream, std::ostream& outStream)
 
     while (!inStream.eof())
     {
+        if (lineNo != 1)
+        {
+            outStream << endl;
+        }
+ 
         std::getline(inStream, str);
+
+        //DEBUG
+        //cerr << "str: " << str << endl;
 
         for (unsigned int charI = 0; charI < str.size(); ++charI)
         {
@@ -217,6 +226,11 @@ void printable(std::istream& inStream, std::ostream& outStream)
             {
                 cerr << "ERROR: Windows carriage return in line# " << lineNo \
                   << ", position# " << charI + 1 << endl;
+
+                if (strip)
+                {
+                    str.erase(charI, 1);
+                }
 
                 continue;
             }
@@ -228,12 +242,17 @@ void printable(std::istream& inStream, std::ostream& outStream)
                 cerr << "ERROR: Non-printable character in line# " << lineNo \
                   << ", position# " << charI + 1 << ", hex code 0x" \
                   << asciiHexString << endl;
+
+                if (strip)
+                {
+                    str.erase(charI, 1);
+                }
             }
         }
 
-        ++lineNo;
+        outStream << str;
 
-        //outStream << "Line: " << str << endl;
+        ++lineNo;
     }
 }
 
@@ -306,7 +325,6 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
         {
             if (strcmp(argv[i], "-s") == 0)
             {
-                i++;
                 strip = true;
             }
             else if (strcmp(argv[i], "-i") == 0)
