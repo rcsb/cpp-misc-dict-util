@@ -71,6 +71,11 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
                 i++;
                 outFileName = argv[i];
             }
+            else if (strcmp(argv[i], "-h") == 0)
+            {
+                Usage();
+                throw InvalidOptionsException();
+            }
             else
             {
                 Usage();
