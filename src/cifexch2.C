@@ -252,6 +252,10 @@ static void GetArgs(Args& args, int argc, char* argv[])
         {
             args.idOpt = "RCSB";
         }
+        else if (argVal == "-emdbids")
+        {
+            args.idOpt = "EMDB";
+        }
         else if (argVal == "-checkout")
         {
             args.iCheckOut = true;
