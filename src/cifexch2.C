@@ -1501,6 +1501,7 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     fobj->SetAttributeValue(blockId, "struct_mon_details", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "symmetry", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "pdbx_version", "entry_id", idName);
+    fobj->SetAttributeValue(blockId, "pdbx_soln_scatter", "entry_id", idName);
 
     // Make db codes consistent
     string ndbID;
