@@ -710,11 +710,12 @@ bool SkipTable(const string& tableName)
     {
         const string& type = (*pdbxCatContext)(queryResult1, "type");
 
-        if (type.find("LOCAL") != string::npos)
+        if ((type.find("LOCAL") != string::npos) ||
+          (type.find("DEPRECATED") != string::npos))
         {
             // Local
-            cerr << "INFO - Category " << tableName << " is defined local." \
-              << endl;
+            cerr << "INFO - Category " << tableName << " is defined"\
+              " local or deprecated." << endl;
             return true;
         }
         else
@@ -791,11 +792,12 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
         {
             const string& type = (*pdbxItemContext)(queryResult1, "type");
 
-            if (type.find("LOCAL") != string::npos)
+            if ((type.find("LOCAL") != string::npos) ||
+              (type.find("DEPRECATED") != string::npos))
             {
                 // Local
-                cerr << "INFO - " << itemName << " is defined local item" \
-                  << endl;
+                cerr << "INFO - Item " << itemName << " is defined"\
+                  " local or deprecated. " << endl;
                 continue;
             }
             else
