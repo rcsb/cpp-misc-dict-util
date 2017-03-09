@@ -7,15 +7,13 @@
 #
 #rm -f *.log
 #
-# Add on some extra stuff defining the schema defintion for NDB ...
-#
-cat ../../mmcif/mmcif_pdbx_v40.dic sql-fragment.dic > tmp.dic
+cat ../../mmcif/mmcif_pdbx_v5_rc.dic sql-fragment.dic > tmp.dic
 
 ../bin/DictToSdb -ddlFile ../../mmcif/mmcif_ddl.dic \
   -dictFile tmp.dic -dictSdbFile tmp.sdb
 #
-../bin/mk-schema-map-dict  -dictSdbFile tmp.sdb  -op standard \
-  -o schema_map_pdbx_v40.cif
+../bin/mk-schema-map-dict -dictSdbFile tmp.sdb  -op standard \
+  -o schema_map_pdbx_v5_rc.cif
 
 #
 ##
