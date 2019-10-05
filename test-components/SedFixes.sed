@@ -8,11 +8,12 @@ s/\(chem_comp.*pdbx_synonyms.*0 0\) 80 \(.*\)/\1 512 \2/
 s/\(chem_comp.*pdbx_model_coordinates_db_code.*0 0\) 80 \(.*\)/\1 30 \2/
 s/\(chem_comp.*pdbx_subcomponent_list.*0 0\) 200 \(.*\)/\1 80 \2/
 s/\(chem_comp.*pdbx_release_status.*0 0\) 80 \(.*\)/\1 8  \2/
+s/\(chem_comp.*pdbx_stnd_atom_id.*0 0\) 80 \(.*\)/\1 6  \2/
 ## PDBX_CHEM_COMP_DESCRIPTOR
-s/\(pdbx_chem_comp_descriptor descriptor.*0 0\) 200 \(.*\)/\1 2048 \2/
+s/\(pdbx_chem_comp_descriptor.*descriptor.*0 0\) 200 \(.*\)/\1 2048 \2/
 #
 # PDBX_CHEM_COMP_IDENTIFIER
-s/\(pdbx_chem_comp_identifier identifier.*0 0\) 200 \(.*\)/\1 2048 \2/
+s/\(pdbx_chem_comp_identifier.*identifier.*0 0\) 200 \(.*\)/\1 2048 \2/
 #
 # PDBX_CHEM_COMP_AUDIT
 s/\(pdbx_chem_comp_audit.*action_type.*1 1\) 10 \(.*\)/\1 80 \2/
