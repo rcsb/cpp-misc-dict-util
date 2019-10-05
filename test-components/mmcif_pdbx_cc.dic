@@ -3382,6 +3382,19 @@ save__pdbx_chem_comp_atom_edit.edit_atom_value
     _item_type.code               line
      save_
 
+save__chem_comp_atom.pdbx_stnd_atom_id
+    _item_description.description
+;              A standard identifier for the atom. This data item is used when
+               IUPAC/IUBMB nomenclature exists for labeling atoms.
+;
+    _item.name                    '_chem_comp_atom.pdbx_stnd_atom_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               line
+    _pdbx_item_context.type       WWPDB_LOCAL
+    _pdbx_item_context.item_name  '_chem_comp_atom.pdbx_stnd_atom_id'
+     save_
+
 
 ##############################
 ## PDBX_CHEM_COMP_BOND_EDIT ##
