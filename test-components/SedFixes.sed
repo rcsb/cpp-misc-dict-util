@@ -18,4 +18,4 @@ s/\(pdbx_chem_comp_identifier.*identifier.*0 0\) 200 \(.*\)/\1 2048 \2/
 # PDBX_CHEM_COMP_AUDIT
 s/\(pdbx_chem_comp_audit.*action_type.*1 1\) 10 \(.*\)/\1 80 \2/
 # PDBX_CHEM_COMP_SYNONYMS
-s/\(pdbx_chem_comp_synonyms.*name .*1 1\) 200 \(.*\)/\1 1024 \2/
+s/\(pdbx_chem_comp_synonyms.*name .*0 0\) 200 \(.*\)/\1 1024 \2/
