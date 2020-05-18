@@ -1,0 +1,23 @@
+# 
+loop_
+ _rcsb_tableinfo.tablename
+ _rcsb_tableinfo.description
+ _rcsb_tableinfo.type
+ _rcsb_tableinfo.table_serial_no
+ _rcsb_tableinfo.group_name
+ _rcsb_tableinfo.WWW_Selection_Criteria
+ _rcsb_tableinfo.WWW_Report_Criteria
+  summary 'summary data' 1 1 STRUCTURE 1 1
+#
+ loop_
+ _rcsb_columninfo.tablename
+ _rcsb_columninfo.columnname
+ _rcsb_columninfo.description
+ _rcsb_columninfo.example
+ _rcsb_columninfo.type
+ _rcsb_columninfo.table_serial_no
+ _rcsb_columninfo.column_serial_no
+ _rcsb_columninfo.WWW_Selection_Criteria
+ _rcsb_columninfo.WWW_Report_Criteria
+  summary  id 'id code' 'id1, id2' 1 1 1 1 1
+#
