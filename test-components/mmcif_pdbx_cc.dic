@@ -4068,3 +4068,115 @@ save__pdbx_chem_comp_atom_related.related_type
     _item_linked.parent_name      '_pdbx_chem_comp_related.relationship_type'
 save_
 
+save_pdbx_chem_comp_feature
+    _category.description
+;             Additional features associated with the chemical component.
+;
+    _category.id                  'pdbx_chem_comp_feature'
+    _category.mandatory_code      no
+     loop_
+    _category_key.name            '_pdbx_chem_comp_feature.comp_id'
+                                  '_pdbx_chem_comp_feature.type'
+                                  '_pdbx_chem_comp_feature.value'
+                                  '_pdbx_chem_comp_feature.source'
+#
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+                                 'chem_comp_dictionary_group'
+                                 'pdbx_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 - 
+;
+;
+     loop_
+    _pdbx_chem_comp_feature.comp_id
+    _pdbx_chem_comp_feature.type
+    _pdbx_chem_comp_feature.value
+    _pdbx_chem_comp_feature.source
+	00X   'ENZYME INHIBITED'    'ASPARTIC PROTEINASE'                     PDB
+        00X   'FUNCTION'            'Transistion-state analogue inhibitor'    PDB
+        00X   'STRUCTURE IMAGE URL' 'http://journals.iucr.org/00X.jpg'        IUCR
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+save__pdbx_chem_comp_feature.comp_id
+    _item_description.description
+;              The component identifier for this feature.
+;
+    _item.name                  '_pdbx_chem_comp_feature.comp_id'
+    _item.category_id            pdbx_chem_comp_feature
+    _item.mandatory_code         yes
+    _item_type.code              ucode
+     loop_
+    _item_examples.case          
+     'ABC'  'ATP'
+    _item_linked.child_name	'_pdbx_chem_comp_feature.comp_id'
+    _item_linked.parent_name    '_chem_comp.id'
+     save_
+
+
+save__pdbx_chem_comp_feature.type
+    _item_description.description
+;              The component feature type.
+;
+    _item.name                  '_pdbx_chem_comp_feature.type'
+    _item.category_id            pdbx_chem_comp_feature
+    _item.mandatory_code         yes
+    _item_type.code              line
+     loop_
+    _item_examples.case          
+     'FUNCTION'
+     'ENZYME INHIBITED'
+     'STRUCTURE IMAGE URL'
+     'CARBOHYDRATE ANOMER'
+     'CARBOHYDRATE ISOMER'
+     'CARBOHYDRATE RING'
+     save_
+
+save__pdbx_chem_comp_feature.support
+    _item_description.description
+;            The supporting evidence for this feature.
+;
+    _item.name                  '_pdbx_chem_comp_feature.support'
+    _item.category_id            pdbx_chem_comp_feature
+    _item.mandatory_code         no
+    _item_type.code              text
+     loop_
+    _item_examples.case          
+     'Biological assay'
+     'Data obtained from PNAS August 17, 1999 vol. 96 no. 17 9586-9590'
+     save_
+
+save__pdbx_chem_comp_feature.value
+    _item_description.description
+;              The component feature value.
+;
+    _item.name                  '_pdbx_chem_comp_feature.value'
+    _item.category_id            pdbx_chem_comp_feature
+    _item.mandatory_code         yes
+    _item_type.code              text
+     save_
+
+
+save__pdbx_chem_comp_feature.source
+    _item_description.description
+;              The information source for the component feature.
+;
+    _item.name                  '_pdbx_chem_comp_feature.source'
+    _item.category_id            pdbx_chem_comp_feature
+    _item.mandatory_code         yes
+    _item_type.code              line
+     loop_
+    _item_examples.case          
+        'PDB'
+        'CHEBI'
+        'DRUGBANK'
+        'PUBCHEM'
+     save_
+
