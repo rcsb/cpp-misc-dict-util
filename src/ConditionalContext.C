@@ -4,6 +4,7 @@
 #include <exception>
 #include <vector>
 #include <time.h>
+#include <string.h> // For memset declaration
 
 #include "CifString.h"
 #include "ConditionalContext.h"
