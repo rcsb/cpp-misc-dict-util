@@ -8,12 +8,14 @@
 
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
 #include "RcsbFile.h"
 #include "CifString.h"
 #include "CifFile.h"
 #include "DicFile.h"
 #include "CifFileUtil.h"
+#include "ConditionalContext.h"
 
 
 using std::exception;
@@ -107,10 +109,10 @@ static string pdbxDictVersion;
 static void PrepareQueries(const string& op);
 static void ProcessBlock(CifFile* fobjIn, const string& blockName,
   CifFile* fobjOut, const string& idOpt);
-static bool SkipTable(const string& tableName);
+static bool SkipTable(const string& tableName, ConditionalContext &cctx);
 static bool IsCatDefinedInRef(const string& catName, ISTable& catTable);
 static bool IsItemDefinedInRef(const string& itemName, ISTable& refItemTable);
-static void ProcessTable(ISTable& inTable, Block& outBlock);
+static void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx);
 //static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
 //  CifFile*& fobjSrc, const string& citFile, const string& namFile,
 //  const string& srcFile);
@@ -390,7 +392,7 @@ int main(int argc, char* argv[])
 
         pdbxCatContext = block.GetTablePtr("pdbx_category_context");
         pdbxItemContext = block.GetTablePtr("pdbx_item_context");
-
+	
         categories = block.GetTablePtr("category");
 
         if ((items == NULL) || (aliases == NULL))
@@ -667,13 +669,15 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
     vector<string> tableList;
     inBlock.GetTableNames(tableList);
 
+    ConditionalContext cctx = ConditionalContext(inBlock, dictFileP);
+
     for (unsigned int it=0; it < tableList.size(); it++)
     {
         ISTable* inTableP = inBlock.GetTablePtr(tableList[it]);
 
-        if (!SkipTable(inTableP->GetName()))
+        if (!SkipTable(inTableP->GetName(), cctx))
         {
-            ProcessTable(*inTableP, outBlock);
+	    ProcessTable(*inTableP, outBlock, cctx);
         }
         else
         {
@@ -684,7 +688,7 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
 }
 
 
-bool SkipTable(const string& tableName)
+bool SkipTable(const string& tableName, ConditionalContext &cctx)
 {
     cerr << "INFO - Process table \"" << tableName <<
       "\"" << endl;
@@ -700,6 +704,19 @@ bool SkipTable(const string& tableName)
 
     // See if the category is local
 
+    // ConditionalCOntext
+    if (cctx.HaveConditionalTableContext(tableName)) {
+      if (cctx.SkipTable(tableName)) {
+	cerr << "INFO - Category " << tableName << " is skipped due to ConditionalContext" << endl;
+	return true;
+      }
+      else {
+	cerr << "INFO - Category " << tableName << " is public by ConditionalContext" << endl;
+	return false;
+      }
+    }
+
+    // Fallback to older mechanism
     vector<string> queryTarget1;
     queryTarget1.push_back(tableName);
 
@@ -731,7 +748,7 @@ bool SkipTable(const string& tableName)
 }
 
 
-void ProcessTable(ISTable& inTable, Block& outBlock)
+void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
 {
     if (Verbose)
     {
@@ -739,6 +756,8 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
     }
 
     const vector<string>& colNames = inTable.GetColumnNames();
+
+    vector<unsigned int> delRow; // Rows to delete at end
 
     for (unsigned int colInd = 0; colInd < colNames.size(); ++colInd)
     {
@@ -785,34 +804,67 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
             continue;
         }
 
-        unsigned int queryResult1 = pdbxItemContext->FindFirst(queryTarget1,
-          QueryItem);
+	// ConditionalCOntext
+	bool haveConditionalCtx = false;
+	if (cctx.HaveConditionalItemContext(itemName)) {
+	  if (cctx.SkipItem(itemName)) {
+	    cerr << "INFO - item " << itemName << " is skipped due to ConditionalContext" << endl;
+	    continue;
+	  }
+	  else {
+	    cerr << "INFO - item " << itemName << " is public by ConditionalContext" << endl;
+	    haveConditionalCtx = true;
+	  }
+	}
 
-        if (queryResult1 != pdbxItemContext->GetNumRows())
-        {
-            const string& type = (*pdbxItemContext)(queryResult1, "type");
+	if (!haveConditionalCtx) {
+	  unsigned int queryResult1 = pdbxItemContext->FindFirst(queryTarget1,
+								 QueryItem);
 
-            if ((type.find("LOCAL") != string::npos) ||
-              (type.find("DEPRECATED") != string::npos))
-            {
-                // Local
-                cerr << "INFO - Item " << itemName << " is defined"\
-                  " local or deprecated. " << endl;
-                continue;
-            }
-            else
+	  if (queryResult1 != pdbxItemContext->GetNumRows())
+	    {
+	      const string& type = (*pdbxItemContext)(queryResult1, "type");
+
+	      if ((type.find("LOCAL") != string::npos) ||
+		  (type.find("DEPRECATED") != string::npos))
+		{
+		  // Local
+		  cerr << "INFO - Item " << itemName << " is defined"	\
+		    " local or deprecated. " << endl;
+		  continue;
+		}
+	      else
                 cerr << "INFO - Item " << itemName << " is defined public." \
-                  << endl;
-        }
+		     << endl;
+	    }
 
-        cerr << "INFO - Item " << itemName << " does not have context."\
-          " Treated as public." << endl;
+	  cerr << "INFO - Item " << itemName << " does not have context." \
+	    " Treated as public." << endl;
+	}
 
         // All other cases are public.
 
         vector<string> inCol;
         inTable.GetColumn(inCol, colNames[colInd]);
 
+	// We need to suppress item values if request by context. Whole column suppression already handled.
+	if (haveConditionalCtx) {
+	  for (unsigned int row = 0 ; row < inCol.size(); row++) {
+	    ConditionalContextItemAction actionType = cctx.GetConditionalItemContext(itemName, row);
+	    if (actionType == eSuppressValue) {
+	      if (cctx.IsItemMandatory(itemName)) {
+		inCol[row] = ".";
+	      } else {
+		inCol[row] = "?";
+	      }
+	    }
+	    if (actionType == eSuppressRow) {
+	      delRow.push_back(row);
+	    }
+	  }
+	}
+	  
+	  
         /*
         if ((outTableP->GetNumRows() != 0) && (outTableP->GetNumRows() !=
           inCol.size()))
@@ -827,6 +879,13 @@ void ProcessTable(ISTable& inTable, Block& outBlock)
         outTableP->AddColumn(colNames[colInd], inCol);
  
         outBlock.WriteTable(outTableP);
+    }
+
+    // Need to cleanup outTableP by deleting rows -- this could delete category from output
+    if (delRow.size() != 0) {
+      ISTable* outTable2P = GetOutTable(outBlock, inTable.GetName());
+      outTable2P->DeleteRows(delRow);
+      outBlock.WriteTable(outTable2P);
     }
 }
 
