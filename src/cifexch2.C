@@ -8,7 +8,7 @@
 
 #include <exception>
 #include <iostream>
-#include <algorithm>
+#include <set>
 
 #include "RcsbFile.h"
 #include "CifString.h"
@@ -757,7 +757,7 @@ void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
 
     const vector<string>& colNames = inTable.GetColumnNames();
 
-    vector<unsigned int> delRow; // Rows to delete at end
+    std::set<unsigned int> delRow; // Rows to delete at end - unique list
 
     for (unsigned int colInd = 0; colInd < colNames.size(); ++colInd)
     {
@@ -859,7 +859,7 @@ void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
 	      }
 	    }
 	    if (actionType == eSuppressRow) {
-	      delRow.push_back(row);
+	      delRow.insert(row);
 	    }
 	  }
 	}
@@ -881,10 +881,21 @@ void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
         outBlock.WriteTable(outTableP);
     }
 
-    // Need to cleanup outTableP by deleting rows -- this could delete category from output
+    // Need to cleanup outTableP by deleting rows
+    // This could delete category from output
+
     if (delRow.size() != 0) {
+
+      // Convert rows to a vector
+      std::vector<unsigned int> delRowList;
+    
+      std::set<unsigned int>::iterator it;
+      for (it = delRow.begin(); it != delRow.end(); ++it) {
+	delRowList.push_back(*it);
+      }
+      
       ISTable* outTable2P = GetOutTable(outBlock, inTable.GetName());
-      outTable2P->DeleteRows(delRow);
+      outTable2P->DeleteRows(delRowList);
       outBlock.WriteTable(outTable2P);
     }
 }
