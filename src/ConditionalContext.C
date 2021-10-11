@@ -199,8 +199,6 @@ bool ConditionalContext::SkipItem(const string& itemName) {
 
     // Iterate rows
     for (unsigned int row = 0; row < tobj->GetNumRows(); row++) {
-      const string& val = (*tobj)(row, colName);
-
       bool ret = _evalConditionalList(contextId, false, tableName, colName, row);
 
       // If action is suppress-item - any true will suppress
@@ -253,8 +251,6 @@ ConditionalContextItemAction ConditionalContext::GetConditionalItemContext(const
 
     if (row >= tobj->GetNumRows())
       throw out_of_range("Invalid row ConditionalContext::GetConditionalItemContext");
-
-    const string& val = (*tobj)(row, colName);
 
     bool ret = _evalConditionalList(contextId, false, tableName, colName, row);
 
