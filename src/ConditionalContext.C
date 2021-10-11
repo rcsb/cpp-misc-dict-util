@@ -415,7 +415,7 @@ bool ConditionalContext::_evalConditional(const std::string &target_item_name, c
     vector<int> rows;
     rows.clear();
     if (catContext) {
-      for(int i = 0; i < tobj->GetNumRows(); i++) {
+      for(unsigned int i = 0; i < tobj->GetNumRows(); i++) {
 	rows.push_back(i);
       }
     } else {
