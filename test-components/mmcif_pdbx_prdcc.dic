@@ -1,0 +1,2349 @@
+data_mmcif_pdbx_cc.dic
+
+    _datablock.id                          mmcif_pdbx_cc.dic
+    _datablock.description
+;
+     This data block holds the Protein Data Bank Exchange Data dictionary
+                      chemical components subset
+;
+
+    _dictionary.title           mmcif_pdbx_cc.dic
+    _dictionary.datablock_id    mmcif_pdbx_cc.dic
+    _dictionary.version         1.001
+#
+     loop_
+    _dictionary_history.version
+    _dictionary_history.update
+    _dictionary_history.revision
+   1.001  2007-02-04
+;
+ Rollup update
+;
+   1.000  2006-09-06
+;
+ Initial revision.
+;
+
+###########################################################################
+#
+# File:  mmcif_pdbx-data.dic                                             
+# 
+#               Protein Data Bank Exchange Data Dictionary
+#
+#
+#                           Data Section 
+# 
+#                                                                        
+###########################################################################
+
+
+
+##################
+## SUB_CATEGORY ##
+##################
+
+     loop_
+    _sub_category.id
+    _sub_category.description
+              'cartesian_coordinate'
+;              The collection of x, y, and z components of a position specified
+               with reference to a Cartesian (orthogonal angstrom) coordinate
+               system.
+;
+              'cartesian_coordinate_esd'
+;              The collection of estimated standard deviations of the x, y, and
+               z components of a position specified with reference to a
+               Cartesian (orthogonal angstrom) coordinate system.
+;
+              'fractional_coordinate'
+;              The collection of x, y, and z components of a position specified
+               with reference to unit cell directions.
+;
+              'fractional_coordinate_esd'
+;              The collection of estimated standard deviations of the x, y, and
+               z components of a position specified with reference to unit cell
+               directions.
+;
+              'matrix'
+;              The collection of elements of a matrix.
+;
+               miller_index
+;              The collection of h, k, and l components of the Miller index of
+               a reflection.
+;
+              'cell_length'
+;              The collection of a, b, and c axis lengths of a unit cell.
+;
+              'cell_length_esd'
+;              The collection of estimated standard deviations of the a, b, and
+               c axis lengths of a unit cell.
+;
+              'cell_angle'
+;              The collection of alpha, beta, and gamma angles of a unit cell.
+;
+              'cell_angle_esd'
+;              The collection of estimated standard deviations of the alpha,
+               beta, and gamma angles of a unit cell.
+;
+              'mm_atom_site_auth_label'
+;              The collection of asym id, atom id, comp id and seq id
+               components of an author's alternative specification for
+               a macromolecular atom site.
+;
+              'mm_atom_site_label'
+;              The collection of alt id, asym id, atom id, comp id and seq id
+               components of the label for a macromolecular atom site.
+;
+              'vector'
+;              The collection of elements of a vector.
+;
+
+#########################
+## CATEGORY_GROUP_LIST ##
+#########################
+
+     loop_
+    _category_group_list.id
+    _category_group_list.parent_id
+    _category_group_list.description
+              'inclusive_group'   .
+;              Categories that belong to the macromolecular dictionary.
+;
+              'atom_group'
+              'inclusive_group'
+;              Categories that describe the properties of atoms.
+;
+             'array_data_group'
+             'inclusive_group'
+;             Categories that describe array data.
+;
+             'axis_group'
+             'inclusive_group'
+;             Categories that describe axes.
+;
+              'audit_group'
+              'inclusive_group'
+;              Categories that describe dictionary maintenance and
+               identification.
+;
+              'cell_group'
+              'inclusive_group'
+;              Categories that describe the unit cell.
+;
+              'chemical_group'
+              'inclusive_group'
+;              Categories that describe chemical properties and nomenclature.
+;
+              'chem_comp_group'
+              'inclusive_group'
+;              Categories that describe components of chemical structure.
+;
+              'chem_link_group'
+              'inclusive_group'
+;              Categories that describe links between components of
+               chemical structure.
+;
+              'citation_group'
+              'inclusive_group'
+;              Categories that provide bibliographic references.
+;
+              'computing_group'
+              'inclusive_group'
+;              Categories that describe the computational details of the
+               experiment.
+;
+              'compliance_group'
+              'inclusive_group'
+;              Categories that are included in this dictionary specifically to
+               comply with previous dictionaries.
+;
+              'database_group'
+              'inclusive_group'
+;              Categories that hold references to entries in databases that
+               contain related information.
+;
+              'diffrn_group'
+              'inclusive_group'
+;              Categories that describe details of the diffraction experiment.
+;
+              'em_group'
+              'inclusive_group'
+;              Categories that describe 3-dimensional electron microscopy.
+;
+              'entity_group'
+              'inclusive_group'
+;              Categories that describe chemical entities.
+;
+              'entry_group'
+              'inclusive_group'
+;              Categories that pertain to the entire data block.
+;
+              'exptl_group'
+              'inclusive_group'
+;              Categories that hold details of the experimental conditions.
+;
+              'geom_group'
+              'inclusive_group'
+;              Categories that hold details of molecular and crystal geometry.
+;
+              'iucr_group'
+              'inclusive_group'
+;              Categories that are used for manuscript submission and
+               internal processing by the staff of the International Union of
+               Crystallography.
+;
+              'pdb_group'
+              'inclusive_group'
+;              Categories that pertain to the file-format or data-processing
+               codes used by the Protein Data Bank.
+;
+              'phasing_group'
+              'inclusive_group'
+;              Categories that describe phasing.
+;
+              'refine_group'
+              'inclusive_group'
+;              Categories that describe refinement.
+;
+              'refln_group'
+              'inclusive_group'
+;              Categories that describe the details of reflection measurements.
+;
+              'struct_group'
+              'inclusive_group'
+;              Categories that contain details about the crystallographic
+               structure.
+;
+              'symmetry_group'
+              'inclusive_group'
+;              Categories that describe symmetry information.
+;
+             'pdbx_group'
+             'inclusive_group'
+;             Categories which are part of PDB data exchange protocol.
+;
+             'pdbx_erf_group'
+             'inclusive_group'
+;             Categories which are used by RCSB PDB to store derived
+              and computed data. 
+;
+             'ccp4_group'
+             'inclusive_group'
+;             Categories from the CCP4 harvest dictionary.
+;
+             'ndb_group'
+             'inclusive_group'
+;             Categories which are used by the Nucleic Acid Database.
+;
+             'rcsb_group'
+             'inclusive_group'
+;             Categories which are used internally by the RCSB PDB.
+;
+             'protein_production_group'
+             'inclusive_group'
+;             Categories which describe the details of protein production.
+;
+             'solution_scattering_group'
+             'inclusive_group'
+;             Categories which describe the details of solution scattering experiments.
+;
+
+
+####################
+## ITEM_TYPE_LIST ##
+####################
+#
+#
+#  The regular expressions defined here are not compliant
+#  with the POSIX 1003.2 standard as they include the
+#  '\n' and '\t' special characters.  These regular expressions
+#  have been tested using version 0.12 of Richard Stallman's
+#  GNU regular expression library in POSIX mode.
+#
+#                                                                            
+# For some data items, a standard syntax is assumed. The syntax is           
+#   described for each data item in the dictionary, but is summarized here:  
+#                                                                            
+#   Names:     The family name(s) followed by a comma, precedes the first    
+#              name(s) or initial(s).                                        
+#                                                                            
+#   Telephone numbers:                                                       
+#              The international code is given in brackets and any extension 
+#              number is preceded by 'ext'.                                  
+#                                                                            
+#   Dates:     In the form yyyy-mm-dd.                                       
+#                                                                            
+##############################################################################
+
+     loop_
+    _item_type_list.code
+    _item_type_list.primitive_code
+    _item_type_list.construct
+    _item_type_list.detail
+               code      char
+               '[_,.;:"&<>()/\{}'`~!@#$%A-Za-z0-9*|+-]*'
+;              code item types/single words ...
+;
+               ucode      uchar
+               '[_,.;:"&<>()/\{}'`~!@#$%A-Za-z0-9*|+-]*'
+;              code item types/single words  (case insensitive) ...
+;
+               line      char
+               '[][ \t_(),.;:"&<>/\{}'`~!@#$%?+=*A-Za-z0-9|^-]*'
+;              char item types / multi-word items ...
+;
+               uline      uchar
+               '[][ \t_(),.;:"&<>/\{}'`~!@#$%?+=*A-Za-z0-9|^-]*'
+;              char item types / multi-word items (case insensitive)...
+;
+               text      char
+               '[][ \n\t()_,.;:"&<>/\{}'`~!@#$%?+=*A-Za-z0-9|^-]*'
+;              text item types / multi-line text ...
+;
+               int       numb
+               '-?[0-9]+'
+;              int item types are the subset of numbers that are the negative 
+               or positive integers.
+;
+               float     numb
+          '-?(([0-9]+)[.]?|([0-9]*[.][0-9]+))([(][0-9]+[)])?([eE][+-]?[0-9]+)?'
+;              float item types are the subset of numbers that are the floating
+               numbers.
+;
+               name      uchar
+               '_[_A-Za-z0-9]+\.[][_A-Za-z0-9%-]+'
+;              name item types take the form...
+;
+               idname    uchar
+               '[_A-Za-z0-9]+'
+;              idname item types take the form...
+;
+               any       char
+               '.*'
+;              A catch all for items that may take any form...
+;
+               yyyy-mm-dd  char
+                '[0-9]?[0-9]?[0-9][0-9]-[0-9]?[0-9]-[0-9][0-9]'
+;
+               Standard format for CIF dates.
+;
+               uchar3    uchar
+              '[+]?[A-Za-z0-9][A-Za-z0-9][A-Za-z0-9]'
+;
+               data item for 3 character codes
+;
+               uchar1    uchar
+              '[+]?[A-Za-z0-9]'
+;
+               data item for 1 character codes
+;
+               symop    char
+               '([1-9]|[1-9][0-9]|1[0-8][0-9]|19[0-2])(_[1-9][1-9][1-9])?'
+;              symop item types take the form n_klm, where n refers to the
+               symmetry operation that is applied to the coordinates in the
+               ATOM_SITE category identified by _atom_site_label.  It must
+               match a number given in _symmetry_equiv_pos_site_id.
+
+               k, l, and m refer to the translations that are subsequently
+               applied to the symmetry transformed coordinates to generate
+               the atom used.  These translations (x,y,z) are related to
+               (k,l,m) by
+                     k = 5 + x
+                     l = 5 + y
+                     m = 5 + z
+               By adding 5 to the translations, the use of negative numbers
+               is avoided.
+;
+               atcode      char
+               '[][ _(),.;:"&<>/\{}'`~!@#$%?+=*A-Za-z0-9|^-]*'
+;              Character data type for atom names  ...
+;
+               yyyy-mm-dd:hh:mm  char
+    '[0-9]?[0-9]?[0-9][0-9]-[0-9]?[0-9](-[0-9]?[0-9])?(:[0-9]?[0-9]:[0-9][0-9])?'
+;
+               Standard format for CIF dates with optional time stamp.
+;
+               fax      uchar
+               '[_,.;:"&<>/\{}'`~!@#$%A-Za-z0-9*|+-]*'
+;              code item types/single words  (case insensitive) ...
+;
+               phone      uchar
+               '[_,.;:"&<>/\{}'`~!@#$%A-Za-z0-9*|+-]*'
+;              code item types/single words  (case insensitive) ...
+;
+               email      uchar
+               '[_,.;:"&<>/\{}'`~!@#$%A-Za-z0-9*|+-]*'
+;              code item types/single words  (case insensitive) ...
+;
+               int-range       numb
+               '-?[0-9]+(--?[0-9]+)?'
+;              int item types are the subset of numbers that are the negative 
+               or positive integers with optional range.
+;
+               float-range     numb
+ '-?(([0-9]+)[.]?|([0-9]*[.][0-9]+))([(][0-9]+[)])?([eE][+-]?[0-9]+)?(--?(([0-9]+)[.]?|([0-9]*[.][0-9]+))([(][0-9]+[)])?([eE][+-]?[0-9]+)?)?'
+;              int item types are the subset of numbers that are the floating
+               numbers.
+;
+              code30  char
+        '.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?.?'
+        'A string value, not allowed to exceed 30 characters.'
+#
+               binary    char
+;\n--CIF-BINARY-FORMAT-SECTION--\n\
+[][ \n\t()_,.;:"&<>/\{}'`~!@#$%?+=*A-Za-z0-9|^-]*\
+\n--CIF-BINARY-FORMAT-SECTION----
+;
+;              binary items are presented as MIME-like ascii-encoded
+               sections in an imgCIF.  In a CBF, raw octet streams
+               are used to convey the same information.
+;
+
+
+#####################
+## ITEM_UNITS_LIST ##
+#####################
+
+     loop_
+    _item_units_list.code
+    _item_units_list.detail
+#
+     'metres'                 'metres (metres)'
+     'centimetres'            'centimetres (metres * 10^( -2))'
+     'millimetres'            'millimetres (metres * 10^( -3))'
+     'nanometres'             'nanometres  (metres * 10^( -9))'
+     'angstroms'              'angstroms   (metres * 10^(-10))'
+     'picometres'             'picometres  (metres * 10^(-12))'
+     'femtometres'            'femtometres (metres * 10^(-15))'
+#
+     'reciprocal_metres'      'reciprocal metres (metres^(-1))'
+     'reciprocal_centimetres'
+        'reciprocal centimetres ((metres * 10^( -2))^(-1))'
+     'reciprocal_millimetres'
+        'reciprocal millimetres ((metres * 10^( -3))^(-1))'
+     'reciprocal_nanometres'
+        'reciprocal nanometres  ((metres * 10^( -9))^(-1))'
+     'reciprocal_angstroms'
+        'reciprocal angstroms   ((metres * 10^(-10))^(-1))'
+     'reciprocal_picometres'
+        'reciprocal picometres  ((metres * 10^(-12))^(-1))'
+#
+     'nanometres_squared'     'nanometres squared (metres * 10^( -9))^2'
+     'angstroms_squared'      'angstroms squared  (metres * 10^(-10))^2'
+     '8pi2_angstroms_squared' '8pi^2 * angstroms squared (metres * 10^(-10))^2'
+     'picometres_squared'     'picometres squared (metres * 10^(-12))^2'
+#
+     'nanometres_cubed'       'nanometres cubed (metres * 10^( -9))^3'
+     'angstroms_cubed'        'angstroms cubed  (metres * 10^(-10))^3'
+     'picometres_cubed'       'picometres cubed (metres * 10^(-12))^3'
+#
+     'kilopascals'            'kilopascals'
+     'gigapascals'            'gigapascals'
+#
+     'hours'                  'hours'
+     'minutes'                'minutes'
+     'seconds'                'seconds'
+     'microseconds'           'microseconds'
+#
+     'degrees'                'degrees (of arc)'
+#
+     'degrees_per_minute'     'degrees (of arc) per minute'
+#
+     'celsius'                'degrees (of temperature) Celsius'
+     'kelvins'                'degrees (of temperature) Kelvin'
+#
+     'electrons'              'electrons'
+#
+     'electrons_squared'      'electrons squared'
+#
+     'electrons_per_nanometres_cubed'
+; electrons per nanometres cubed (electrons/(metres * 10^( -9))^(-3))
+;
+     'electrons_per_angstroms_cubed'
+; electrons per angstroms cubed (electrons/(metres * 10^(-10))^(-3))
+;
+     'electrons_per_picometres_cubed'
+; electrons per picometres cubed (electrons/(metres * 10^(-12))^(-3))
+;
+     'kilowatts'              'kilowatts'
+     'milliamperes'           'milliamperes'
+     'kilovolts'              'kilovolts'
+#
+     'arbitrary'
+; arbitrary system of units.
+;
+#
+     'angstroms_degrees'      'angstroms * degrees'
+#
+     'degrees_squared'        'degrees squared'
+#
+     'mg_per_ml'              'milliliter per milligram'
+#
+     'ml_per_min'             'milliliter per minute'
+#
+     'milliliters'             'liter / 1000'
+#
+     'milligrams'             'grams / 1000'
+#
+     'megadaltons'            'megadaltons'
+     'microns_squared'        'microns squared'
+     'microns'                'microns'
+#     'millimeters'            'millimeters'
+     'electrons_angstrom_squared'   'electrons square angstrom'
+     'electron_volts'         'electron volts'
+#     'mg/ml'                  'mg per milliliter'
+     'millimolar'             'millimolar'
+     'megagrams_per_cubic_metre'       'megagrams per cubic metre' 
+     'pixels_per_millimetre'      'pixels per millimetre'
+     'counts'                 'counts'
+     'counts_per_photon'      'counts per photon'
+#
+     loop_
+    _item_units_conversion.from_code
+    _item_units_conversion.to_code
+    _item_units_conversion.operator
+    _item_units_conversion.factor
+###
+     'metres'                   'centimetres'              '*'   1.0E+02
+     'metres'                   'millimetres'              '*'   1.0E+03
+     'metres'                   'nanometres'               '*'   1.0E+09
+     'metres'                   'angstroms'                '*'   1.0E+10
+     'metres'                   'picometres'               '*'   1.0E+12
+     'metres'                   'femtometres'              '*'   1.0E+15
+
+     'centimetres'              'millimetres'              '*'   1.0E+01
+     'centimetres'              'nanometres'               '*'   1.0E+07
+     'centimetres'              'angstroms'                '*'   1.0E+08
+     'centimetres'              'picometres'               '*'   1.0E+10
+     'centimetres'              'femtometres'              '*'   1.0E+13
+#
+     'millimetres'              'centimetres'              '*'   1.0E-01
+     'millimetres'              'nanometres'               '*'   1.0E+06
+     'millimetres'              'angstroms'                '*'   1.0E+07
+     'millimetres'              'picometres'               '*'   1.0E+09
+     'millimetres'              'femtometres'              '*'   1.0E+12
+#
+     'nanometres'               'centimetres'              '*'   1.0E-07
+     'nanometres'               'millimetres'              '*'   1.0E-06
+     'nanometres'               'angstroms'                '*'   1.0E+01
+     'nanometres'               'picometres'               '*'   1.0E+03
+     'nanometres'               'femtometres'              '*'   1.0E+06
+#
+     'angstroms'                'centimetres'              '*'   1.0E-08
+     'angstroms'                'millimetres'              '*'   1.0E-07
+     'angstroms'                'nanometres'               '*'   1.0E-01
+     'angstroms'                'picometres'               '*'   1.0E+02
+     'angstroms'                'femtometres'              '*'   1.0E+05
+#
+     'picometres'               'centimetres'              '*'   1.0E-10
+     'picometres'               'millimetres'              '*'   1.0E-09
+     'picometres'               'nanometres'               '*'   1.0E-03
+     'picometres'               'angstroms'                '*'   1.0E-02
+     'picometres'               'femtometres'              '*'   1.0E+03
+#
+     'femtometres'              'centimetres'              '*'   1.0E-13
+     'femtometres'              'millimetres'              '*'   1.0E-12
+     'femtometres'              'nanometres'               '*'   1.0E-06
+     'femtometres'              'angstroms'                '*'   1.0E-05
+     'femtometres'              'picometres'               '*'   1.0E-03
+###
+     'reciprocal_centimetres'   'reciprocal_millimetres'   '*'   1.0E-01
+     'reciprocal_centimetres'   'reciprocal_nanometres'    '*'   1.0E-07
+     'reciprocal_centimetres'   'reciprocal_angstroms'     '*'   1.0E-08
+     'reciprocal_centimetres'   'reciprocal_picometres'    '*'   1.0E-10
+#
+     'reciprocal_millimetres'   'reciprocal_centimetres'   '*'   1.0E+01
+     'reciprocal_millimetres'   'reciprocal_nanometres'    '*'   1.0E-06
+     'reciprocal_millimetres'   'reciprocal_angstroms'     '*'   1.0E-07
+     'reciprocal_millimetres'   'reciprocal_picometres'    '*'   1.0E-09
+#
+     'reciprocal_nanometres'    'reciprocal_centimetres'   '*'   1.0E+07
+     'reciprocal_nanometres'    'reciprocal_millimetres'   '*'   1.0E+06
+     'reciprocal_nanometres'    'reciprocal_angstroms'     '*'   1.0E-01
+     'reciprocal_nanometres'    'reciprocal_picometres'    '*'   1.0E-03
+#
+     'reciprocal_angstroms'     'reciprocal_centimetres'   '*'   1.0E+08
+     'reciprocal_angstroms'     'reciprocal_millimetres'   '*'   1.0E+07
+     'reciprocal_angstroms'     'reciprocal_nanometres'    '*'   1.0E+01
+     'reciprocal_angstroms'     'reciprocal_picometres'    '*'   1.0E-02
+#
+     'reciprocal_picometres'    'reciprocal_centimetres'   '*'   1.0E+10
+     'reciprocal_picometres'    'reciprocal_millimetres'   '*'   1.0E+09
+     'reciprocal_picometres'    'reciprocal_nanometres'    '*'   1.0E+03
+     'reciprocal_picometres'    'reciprocal_angstroms'     '*'   1.0E+01
+###
+     'nanometres_squared'       'angstroms_squared'        '*'   1.0E+02
+     'nanometres_squared'       'picometres_squared'       '*'   1.0E+06
+#
+     'angstroms_squared'        'nanometres_squared'       '*'   1.0E-02
+     'angstroms_squared'        'picometres_squared'       '*'   1.0E+04
+     'angstroms_squared'        '8pi2_angstroms_squared'   '*'   78.9568
+
+#
+     'picometres_squared'       'nanometres_squared'       '*'   1.0E-06
+     'picometres_squared'       'angstroms_squared'        '*'   1.0E-04
+###
+     'nanometres_cubed'         'angstroms_cubed'          '*'   1.0E+03
+     'nanometres_cubed'         'picometres_cubed'         '*'   1.0E+09
+#
+     'angstroms_cubed'          'nanometres_cubed'         '*'   1.0E-03
+     'angstroms_cubed'          'picometres_cubed'         '*'   1.0E+06
+#
+     'picometres_cubed'         'nanometres_cubed'         '*'   1.0E-09
+     'picometres_cubed'         'angstroms_cubed'          '*'   1.0E-06
+###
+     'kilopascals'              'gigapascals'              '*'   1.0E-06
+     'gigapascals'              'kilopascals'              '*'   1.0E+06
+###
+     'hours'                    'minutes'                  '*'   6.0E+01
+     'hours'                    'seconds'                  '*'   3.6E+03
+     'hours'                    'microseconds'             '*'   3.6E+09
+#
+     'minutes'                  'hours'                    '/'   6.0E+01
+     'minutes'                  'seconds'                  '*'   6.0E+01
+     'minutes'                  'microseconds'             '*'   6.0E+07
+#
+     'seconds'                  'hours'                    '/'   3.6E+03
+     'seconds'                  'minutes'                  '/'   6.0E+01
+     'seconds'                  'microseconds'             '*'   1.0E+06
+#
+     'microseconds'             'hours'                    '/'   3.6E+09
+     'microseconds'             'minutes'                  '/'   6.0E+07
+     'microseconds'             'seconds'                  '/'   1.0E+06
+###
+     'celsius'                  'kelvins'                  '-'     273.0
+     'kelvins'                  'celsius'                  '+'     273.0
+###
+     'electrons_per_nanometres_cubed'
+     'electrons_per_angstroms_cubed'                       '*'   1.0E+03
+     'electrons_per_nanometres_cubed'
+     'electrons_per_picometres_cubed'                      '*'   1.0E+09
+#
+     'electrons_per_angstroms_cubed'
+     'electrons_per_nanometres_cubed'                      '*'   1.0E-03
+     'electrons_per_angstroms_cubed'
+     'electrons_per_picometres_cubed'                      '*'   1.0E+06
+#
+     'electrons_per_picometres_cubed'
+     'electrons_per_nanometres_cubed'                      '*'   1.0E-09
+     'electrons_per_picometres_cubed'
+     'electrons_per_angstroms_cubed'                       '*'   1.0E-06
+###
+ 
+### EOF mmcif_pdbx-data.dic
+
+
+###############
+## CHEM_COMP ##
+###############
+
+save_chem_comp
+    _category.description
+;              Data items in the CHEM_COMP category give details about each
+               of the chemical components from which the relevant chemical
+               structures can be constructed, such as name, mass or charge.
+
+               The related categories CHEM_COMP_ATOM, CHEM_COMP_BOND,
+               CHEM_COMP_ANGLE etc. describe the detailed geometry of these
+               chemical components.
+;
+    _category.id                  chem_comp
+    _category.mandatory_code      no
+    _category_key.name          '_chem_comp.id'
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 - based on PDB entry 5HVP and laboratory records for the
+                structure corresponding to PDB entry 5HVP.
+;
+;
+    loop_
+    _chem_comp.id
+    _chem_comp.model_source
+    _chem_comp.name
+      phe  '1987 Protin/Prolsq Ideals file' phenylalanine
+      val  '1987 Protin/Prolsq Ideals file' alanine
+    # - - - - data truncated for brevity - - - -
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+save__chem_comp.formula
+    _item_description.description
+;              The formula for the chemical component. Formulae are written
+               according to the following rules:
+
+               (1) Only recognized element symbols may be used.
+
+               (2) Each element symbol is followed by a 'count' number. A count
+                  of '1' may be omitted.
+
+               (3) A space or parenthesis must separate each cluster of
+                  (element symbol + count), but in general parentheses are
+                  not used.
+
+               (4) The order of elements depends on whether carbon is
+                  present or not. If carbon is present, the order should be:
+                  C, then H, then the other elements in alphabetical order
+                  of their symbol. If carbon is not present, the elements
+                  are listed purely in alphabetic order of their symbol. This
+                  is the 'Hill' system used by Chemical Abstracts.
+;
+    _item.name                  '_chem_comp.formula'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+    loop_
+    _item_examples.case          'C18 H19 N7 O8 S'
+     save_
+
+save__chem_comp.formula_weight
+    _item_description.description
+;              Formula mass in daltons of the chemical component.
+;
+    _item.name                  '_chem_comp.formula_weight'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    loop_
+    _item_range.maximum
+    _item_range.minimum            .    1.0
+                                  1.0   1.0
+    _item_type.code               float
+     save_
+
+save__chem_comp.id
+    _item_description.description
+;              The value of _chem_comp.id must uniquely identify each item in
+               the CHEM_COMP list.
+
+               For protein polymer entities, this is the three-letter code for
+               the amino acid.
+
+               For nucleic acid polymer entities, this is the one-letter code
+               for the base.
+;
+    loop_
+    _item.name
+    _item.category_id
+    _item.mandatory_code
+        '_chem_comp.id'                             chem_comp            yes
+        '_chem_comp.mon_nstd_parent_comp_id'        chem_comp            no
+        '_chem_comp_atom.comp_id'                   chem_comp_atom       yes
+        '_chem_comp_angle.comp_id'                  chem_comp_angle      yes
+        '_chem_comp_bond.comp_id'                   chem_comp_bond       yes
+        '_chem_comp_chir.comp_id'                   chem_comp_chir       yes
+        '_chem_comp_chir_atom.comp_id'              chem_comp_chir_atom  yes
+        '_chem_comp_plane.comp_id'                  chem_comp_plane      yes
+        '_chem_comp_plane_atom.comp_id'             chem_comp_plane_atom yes
+        '_chem_comp_tor.comp_id'                    chem_comp_tor        yes
+        '_chem_comp_tor_value.comp_id'              chem_comp_tor_value  yes
+    loop_
+    _item_linked.child_name
+    _item_linked.parent_name
+         '_chem_comp.mon_nstd_parent_comp_id'       '_chem_comp.id'
+         '_chem_comp_atom.comp_id'                  '_chem_comp.id'
+         '_chem_comp_chir.comp_id'                  '_chem_comp.id'
+         '_chem_comp_chir_atom.comp_id'             '_chem_comp.id'
+         '_chem_comp_plane.comp_id'                 '_chem_comp.id'
+         '_chem_comp_plane_atom.comp_id'            '_chem_comp.id'
+         '_chem_comp_angle.comp_id'                 '_chem_comp_atom.comp_id'
+         '_chem_comp_bond.comp_id'                  '_chem_comp_atom.comp_id'
+         '_chem_comp_tor.comp_id'                   '_chem_comp_atom.comp_id'
+         '_chem_comp_tor_value.comp_id'             '_chem_comp_atom.comp_id'
+    _item_type.code               ucode
+    loop_
+    _item_examples.case          'ala'
+                                 'val'
+                                 'A'
+                                 'C'
+     save_
+
+save__chem_comp.model_details
+    _item_description.description
+;              A description of special aspects of the generation of the
+               coordinates for the model of the component.
+;
+    _item.name                  '_chem_comp.model_details'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+    _item_examples.case          'geometry idealized but not minimized'
+     save_
+
+save__chem_comp.model_erf
+    _item_description.description
+;              A pointer to an external reference file from which the atomic
+               description of the component is taken.
+;
+    _item.name                  '_chem_comp.model_erf'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               line
+     save_
+
+save__chem_comp.model_source
+    _item_description.description
+;              The source of the coordinates for the model of the component.
+;
+    _item.name                  '_chem_comp.model_source'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+    loop_
+    _item_examples.case          'CSD entry ABCDEF'
+                                 'built using Quanta/Charmm'
+     save_
+
+save__chem_comp.mon_nstd_class
+    _item_description.description
+;              A description of the class of a nonstandard monomer if the
+               nonstandard monomer represents a modification of a
+               standard monomer.
+;
+    _item.name                  '_chem_comp.mon_nstd_class'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+    loop_
+    _item_examples.case          'iodinated base'
+                                 'phosphorylated amino acid'
+                                 'brominated base'
+                                 'modified amino acid'
+                                 'glycosylated amino acid'
+     save_
+
+save__chem_comp.mon_nstd_details
+    _item_description.description
+;              A description of special details of a nonstandard monomer.
+;
+    _item.name                  '_chem_comp.mon_nstd_details'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+     save_
+
+save__chem_comp.mon_nstd_flag
+    _item_description.description
+;              'yes' indicates that this is a 'standard' monomer, 'no'
+               indicates that it is 'nonstandard'. Nonstandard monomers
+               should be described in more detail using the
+               _chem_comp.mon_nstd_parent, _chem_comp.mon_nstd_class and
+               _chem_comp.mon_nstd_details data items.
+;
+    _item.name                  '_chem_comp.mon_nstd_flag'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    _item_default.value           no
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      no   'the monomer is nonstandard'
+                                  n    'abbreviation for "no"'
+                                  yes  'the monomer is standard'
+                                  y    'abbreviation for "yes"'
+     save_
+
+save__chem_comp.mon_nstd_parent
+    _item_description.description
+;              The name of the parent monomer of the nonstandard monomer,
+               if the nonstandard monomer represents a modification of a
+               standard monomer.
+;
+    _item.name                  '_chem_comp.mon_nstd_parent'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               code
+    loop_
+    _item_examples.case          'tyrosine'
+                                 'cytosine'
+     save_
+
+save__chem_comp.mon_nstd_parent_comp_id
+    _item_description.description
+;              The identifier for the parent component of the nonstandard
+               component.
+
+               This data item is a pointer to _chem_comp.id in the CHEM_COMP
+               category.
+;
+    _item.name                  '_chem_comp.mon_nstd_parent_comp_id'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               ucode
+     save_
+
+save__chem_comp.name
+    _item_description.description
+;              The full name of the component.
+;
+    _item.name                  '_chem_comp.name'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               line
+    loop_
+    _item_examples.case          'alanine'
+                                 'valine'
+                                 'adenine'
+                                 'cytosine'
+     save_
+
+save__chem_comp.number_atoms_all
+    _item_description.description
+;              The total number of atoms in the component.
+;
+    _item.name                  '_chem_comp.number_atoms_all'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    loop_
+    _item_range.maximum
+    _item_range.minimum           .   1
+                                  1   1
+    _item_type.code               int
+     save_
+
+save__chem_comp.number_atoms_nh
+    _item_description.description
+;              The number of non-hydrogen atoms in the component.
+;
+    _item.name                  '_chem_comp.number_atoms_nh'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    loop_
+    _item_range.maximum
+    _item_range.minimum           .   1
+                                  1   1
+    _item_type.code               int
+     save_
+
+save__chem_comp.one_letter_code
+    _item_description.description
+;              For standard polymer components, the one-letter code for
+               the component. If there is not a standard one-letter code
+               for this component, or if this is a non-polymer
+               component, the one-letter code should be given as 'X'.
+               This code may be preceded by a '+' character to indicate
+               that the component is a modification of a standard
+               component.
+;
+    _item.name                  '_chem_comp.one_letter_code'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               uchar1
+    loop_
+    _item_examples.case
+    _item_examples.detail         A  'alanine or adenine'
+                                  B  'ambiguous asparagine/aspartic acid'
+                                  R  'arginine'
+                                  N  'asparagine'
+                                  D  'aspartic acid'
+                                  C  'cysteine or cystine or cytosine'
+                                  Q  'glutamine'
+                                  E  'glutamic acid'
+                                  Z  'ambiguous glutamine/glutamic acid'
+                                  G  'glycine or guanine'
+                                  H  'histidine'
+                                  I  'isoleucine'
+                                  L  'leucine'
+                                  K  'lysine'
+                                  M  'methionine'
+                                  F  'phenylalanine'
+                                  P  'proline'
+                                  S  'serine'
+                                  T  'threonine or thymine'
+                                  W  'tryptophan'
+                                  Y  'tyrosine'
+                                  V  'valine'
+                                  U  'uracil'
+                                  O  'water'
+                                  X  'other'
+     save_
+
+save__chem_comp.three_letter_code
+    _item_description.description
+;              For standard polymer components, the three-letter code for
+               the component. If there is not a standard three-letter code
+               for this component, or if this is a non-polymer
+               component, the three-letter code should be given as 'UNK'.
+               This code may be preceded by a '+' character to indicate
+               that the component is a modification of a standard
+               component.
+;
+    _item.name                  '_chem_comp.three_letter_code'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               uchar3
+    loop_
+    _item_examples.case
+    _item_examples.detail         ALA  'alanine'
+                                  ARG  'arginine'
+                                  ASN  'asparagine'
+                                  ASP  'aspartic acid'
+                                  ASX  'ambiguous asparagine/aspartic acid'
+                                  CYS  'cysteine'
+                                  GLN  'glutamine'
+                                  GLU  'glutamic acid'
+                                  GLY  'glycine'
+                                  GLX  'ambiguous glutamine/glutamic acid'
+                                  HIS  'histidine'
+                                  ILE  'isoleucine'
+                                  LEU  'leucine'
+                                  LYS  'lysine'
+                                  MET  'methionine'
+                                  PHE  'phenylalanine'
+                                  PRO  'proline'
+                                  SER  'serine'
+                                  THR  'threonine'
+                                  TRP  'tryptophan'
+                                  TRY  'tyrosine'
+                                  VAL  'valine'
+                                  1MA  '1-methyladenosine'
+                                  5MC  '5-methylcytosine'
+                                  OMC  '2(prime)-O-methylcytodine'
+                                  1MG  '1-methylguanosine'
+                                  2MG  'N(2)-methylguanosine'
+                                  M2G  'N(2)-dimethylguanosine'
+                                  7MG  '7-methylguanosine'
+                                  0MG  '2(prime)-O-methylguanosine'
+                                  H2U  'dihydrouridine'
+                                  5MU  'ribosylthymidine'
+                                  PSU  'pseudouridine'
+                                  ACE  'acetic acid'
+                                  FOR  'formic acid'
+                                  HOH  'water'
+                                  UNK  'other'
+     save_
+
+save__chem_comp.type
+    _item_description.description
+;              For standard polymer components, the type of the monomer.
+               Note that monomers that will form polymers are of three types:
+               linking monomers, monomers with some type of N-terminal (or 5')
+               cap and monomers with some type of C-terminal (or 3') cap.
+;
+    loop_
+    _item.name
+    _item.category_id
+    _item.mandatory_code
+        '_chem_comp.type'              chem_comp       yes
+        '_chem_comp_link.type_comp_1'  chem_comp_link  yes
+        '_chem_comp_link.type_comp_2'  chem_comp_link  yes
+    loop_
+    _item_linked.child_name
+    _item_linked.parent_name
+        '_chem_comp_link.type_comp_1'  '_chem_comp.type'
+        '_chem_comp_link.type_comp_2'  '_chem_comp.type'
+    _item_type.code               uline
+    loop_
+    _item_enumeration.value      'D-peptide linking'
+                                 'L-peptide linking'
+                                 'D-peptide NH3 amino terminus'
+                                 'L-peptide NH3 amino terminus'
+                                 'D-peptide COOH carboxy terminus'
+                                 'L-peptide COOH carboxy terminus'
+                                 'DNA linking'
+                                 'RNA linking'
+                                 'DNA OH 5 prime terminus'
+                                 'RNA OH 5 prime terminus'
+                                 'DNA OH 3 prime terminus'
+                                 'RNA OH 3 prime terminus'
+                                 'D-saccharide 1,4 and 1,4 linking'
+                                 'L-saccharide 1,4 and 1,4 linking'
+                                 'D-saccharide 1,4 and 1,6 linking'
+                                 'L-saccharide 1,4 and 1,6 linking'
+                                 'L-saccharide'
+                                 'D-saccharide'
+                                 'saccharide'
+                                 'non-polymer'
+                                 'other'
+     save_
+
+
+
+
+####################
+## CHEM_COMP_ATOM ##
+####################
+
+save_chem_comp_atom
+    _category.description
+;              Data items in the CHEM_COMP_ATOM category record details about
+               the atoms in a chemical component. Specifying the atomic
+               coordinates for the components in this category is an
+               alternative to specifying the structure of the component
+               via bonds, angles, planes etc. in the appropriate
+               CHEM_COMP subcategories.
+;
+    _category.id                  chem_comp_atom
+    _category.mandatory_code      no
+    loop_
+    _category_key.name          '_chem_comp_atom.comp_id'
+                                '_chem_comp_atom.atom_id'
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 - based on PDB entry 5HVP and laboratory records for the
+                structure corresponding to PDB entry 5HVP.
+;
+;
+    loop_
+    _chem_comp_atom.comp_id
+    _chem_comp_atom.atom_id
+    _chem_comp_atom.type_symbol
+    _chem_comp_atom.substruct_code
+    _chem_comp_atom.model_Cartn_x
+    _chem_comp_atom.model_Cartn_y
+    _chem_comp_atom.model_Cartn_z
+      phe  N    N  main   1.20134   0.84658   0.00000
+      phe  CA   C  main   0.00000   0.00000   0.00000
+      phe  C    C  main  -1.25029   0.88107   0.00000
+      phe  O    O  main  -2.18525   0.66029  -0.78409
+      phe  CB   C  side   0.00662  -1.03603   1.11081
+      phe  CG   C  side   0.03254  -0.49711   2.50951
+      phe  CD1  C  side  -1.15813  -0.12084   3.13467
+      phe  CE1  C  side  -1.15720   0.38038   4.42732
+      phe  CZ   C  side   0.05385   0.51332   5.11032
+      phe  CE2  C  side   1.26137   0.11613   4.50975
+      phe  CD2  C  side   1.23668  -0.38351   3.20288
+      val  N    N  main   1.20134   0.84658   0.00000
+      val  CA   C  main   0.00000   0.00000   0.00000
+      val  C    C  main  -1.25029   0.88107   0.00000
+      val  O    O  main  -2.18525   0.66029  -0.78409
+      val  CB   C  side   0.05260  -0.99339   1.17429
+      val  CG1  C  side  -0.13288  -0.31545   2.52668
+      val  CG2  C  side  -0.94265  -2.12930   0.99811
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+save__chem_comp_atom.alt_atom_id
+    _item_description.description
+;              An alternative identifier for the atom. This data item would be
+               used in cases where alternative nomenclatures exist for labelling
+               atoms in a group.
+;
+    _item.name                  '_chem_comp_atom.alt_atom_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               line
+     save_
+
+save__chem_comp_atom.atom_id
+    _item_description.description
+;              The value of _chem_comp_atom.atom_id must uniquely identify
+               each atom in each monomer in the CHEM_COMP_ATOM list.
+
+               The atom identifiers need not be unique over all atoms in the
+               data block; they need only be unique for each atom in a
+               component.
+
+               Note that this item need not be a number; it can be any unique
+               identifier.
+;
+    loop_
+    _item.name
+    _item.category_id
+    _item.mandatory_code
+        '_chem_comp_atom.atom_id'                   chem_comp_atom        yes
+        '_chem_comp_angle.atom_id_1'                chem_comp_angle       yes
+        '_chem_comp_angle.atom_id_2'                chem_comp_angle       yes
+        '_chem_comp_angle.atom_id_3'                chem_comp_angle       yes
+        '_chem_comp_bond.atom_id_1'                 chem_comp_bond        yes
+        '_chem_comp_bond.atom_id_2'                 chem_comp_bond        yes
+        '_chem_comp_chir.atom_id'                   chem_comp_chir        yes
+        '_chem_comp_chir_atom.atom_id'              chem_comp_chir_atom   yes
+        '_chem_comp_plane_atom.atom_id'             chem_comp_plane_atom  yes
+        '_chem_comp_tor.atom_id_1'                  chem_comp_tor         yes
+        '_chem_comp_tor.atom_id_2'                  chem_comp_tor         yes
+        '_chem_comp_tor.atom_id_3'                  chem_comp_tor         yes
+        '_chem_comp_tor.atom_id_4'                  chem_comp_tor         yes
+    loop_
+    _item_linked.child_name
+    _item_linked.parent_name
+        '_chem_comp_angle.atom_id_1'               '_chem_comp_atom.atom_id'
+        '_chem_comp_angle.atom_id_2'               '_chem_comp_atom.atom_id'
+        '_chem_comp_angle.atom_id_3'               '_chem_comp_atom.atom_id'
+        '_chem_comp_bond.atom_id_1'                '_chem_comp_atom.atom_id'
+        '_chem_comp_bond.atom_id_2'                '_chem_comp_atom.atom_id'
+        '_chem_comp_chir.atom_id'                  '_chem_comp_atom.atom_id'
+        '_chem_comp_chir_atom.atom_id'             '_chem_comp_atom.atom_id'
+        '_chem_comp_plane_atom.atom_id'            '_chem_comp_atom.atom_id'
+        '_chem_comp_tor.atom_id_1'                 '_chem_comp_atom.atom_id'
+        '_chem_comp_tor.atom_id_2'                 '_chem_comp_atom.atom_id'
+        '_chem_comp_tor.atom_id_3'                 '_chem_comp_atom.atom_id'
+        '_chem_comp_tor.atom_id_4'                 '_chem_comp_atom.atom_id'
+    _item_type.code               atcode
+     save_
+
+save__chem_comp_atom.charge
+    _item_description.description
+;              The net integer charge assigned to this atom. This is the
+               formal charge assignment normally found in chemical diagrams.
+;
+    _item.name                  '_chem_comp_atom.charge'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_default.value           0
+    loop_
+    _item_range.maximum
+    _item_range.minimum           8    8
+                                  8   -8
+                                 -8   -8
+    _item_type.code               int
+    loop_
+    _item_examples.case
+    _item_examples.detail         1   'for an ammonium nitrogen'
+                                  -1  'for a chloride ion'
+     save_
+
+save__chem_comp_atom.model_Cartn_x
+    _item_description.description
+;              The x component of the coordinates for this atom in this
+               component specified as orthogonal angstroms. The choice of
+               reference axis frame for the coordinates is arbitrary.
+
+               The set of coordinates input for the entity here is intended to
+               correspond to the atomic model used to generate restraints for
+               structure refinement, not to atom sites in the ATOM_SITE
+               list.
+;
+    _item.name                  '_chem_comp_atom.model_Cartn_x'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.model_Cartn_y'
+                                '_chem_comp_atom.model_Cartn_z'
+    _item_related.related_name  '_chem_comp_atom.model_Cartn_x_esd'
+    _item_related.function_code   associated_esd
+    _item_sub_category.id         cartesian_coordinate
+    _item_type.code               float
+    _item_type_conditions.code    esd
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_atom.model_Cartn_x_esd
+    _item_description.description
+;              The standard uncertainty (estimated standard deviation)
+               of _chem_comp_atom.model_Cartn_x.
+;
+    _item.name                  '_chem_comp_atom.model_Cartn_x_esd'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+#    _item_default.value           0.0
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.model_Cartn_y_esd'
+                                '_chem_comp_atom.model_Cartn_z_esd'
+    _item_related.related_name  '_chem_comp_atom.model_Cartn_x'
+    _item_related.function_code   associated_value
+    _item_sub_category.id         cartesian_coordinate_esd
+    _item_type.code               float
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_atom.model_Cartn_y
+    _item_description.description
+;              The y component of the coordinates for this atom in this
+               component specified as orthogonal angstroms. The choice of
+               reference axis frame for the coordinates is arbitrary.
+
+               The set of coordinates input for the entity here is intended to
+               correspond to the atomic model used to generate restraints for
+               structure refinement, not to atom sites in the ATOM_SITE
+               list.
+;
+    _item.name                  '_chem_comp_atom.model_Cartn_y'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.model_Cartn_x'
+                                '_chem_comp_atom.model_Cartn_z'
+    _item_related.related_name  '_chem_comp_atom.model_Cartn_y_esd'
+    _item_related.function_code   associated_esd
+    _item_sub_category.id         cartesian_coordinate
+    _item_type.code               float
+    _item_type_conditions.code    esd
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_atom.model_Cartn_y_esd
+    _item_description.description
+;              The standard uncertainty (estimated standard deviation)
+               of _chem_comp_atom.model_Cartn_y.
+;
+    _item.name                  '_chem_comp_atom.model_Cartn_y_esd'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+#    _item_default.value           0.0
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.model_Cartn_x_esd'
+                                '_chem_comp_atom.model_Cartn_z_esd'
+    _item_related.related_name  '_chem_comp_atom.model_Cartn_y'
+    _item_related.function_code   associated_value
+    _item_sub_category.id         cartesian_coordinate_esd
+    _item_type.code               float
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_atom.model_Cartn_z
+    _item_description.description
+;              The z component of the coordinates for this atom in this
+               component specified as orthogonal angstroms. The choice of
+               reference axis frame for the coordinates is arbitrary.
+
+               The set of coordinates input for the entity here is intended to
+               correspond to the atomic model used to generate restraints for
+               structure refinement, not to atom sites in the ATOM_SITE
+               list.
+;
+    _item.name                  '_chem_comp_atom.model_Cartn_z'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.model_Cartn_x'
+                                '_chem_comp_atom.model_Cartn_y'
+    _item_related.related_name  '_chem_comp_atom.model_Cartn_z_esd'
+    _item_related.function_code   associated_esd
+    _item_sub_category.id         cartesian_coordinate
+    _item_type.code               float
+    _item_type_conditions.code    esd
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_atom.model_Cartn_z_esd
+    _item_description.description
+;              The standard uncertainty (estimated standard deviation)
+               of _chem_comp_atom.model_Cartn_z.
+;
+    _item.name                  '_chem_comp_atom.model_Cartn_z_esd'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+#    _item_default.value           0.0
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.model_Cartn_x_esd'
+                                '_chem_comp_atom.model_Cartn_y_esd'
+    _item_related.related_name  '_chem_comp_atom.model_Cartn_z'
+    _item_related.function_code   associated_value
+    _item_sub_category.id         cartesian_coordinate_esd
+    _item_type.code               float
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_atom.comp_id
+    _item_description.description
+;              This data item is a pointer to _chem_comp.id in the CHEM_COMP
+               category.
+;
+    _item.name                  '_chem_comp_atom.comp_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          yes
+    _item_type.code               ucode
+     save_
+
+save__chem_comp_atom.partial_charge
+    _item_description.description
+;              The partial charge assigned to this atom.
+;
+    _item.name                  '_chem_comp_atom.partial_charge'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               float
+     save_
+
+save__chem_comp_atom.substruct_code
+    _item_description.description
+;              This data item assigns the atom to a substructure of the
+               component, if appropriate.
+;
+    _item.name                  '_chem_comp_atom.substruct_code'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      main   'main chain of an amino acid'
+                                  side   'side chain of an amino acid'
+                                  base   'base of a nucleic acid'
+                                  phos   'phosphate of a nucleic acid'
+                                  sugar  'sugar of a nucleic acid'
+                                  none   'not appropriate for this monomer'
+     save_
+
+#save_chem_comp_atom.type_energy
+#    _item_description.description
+#;              This data item is a pointer to _atom_type_energy.type in the
+#               ATOM_TYPE_ENERGY category.
+#;
+#     save_
+
+save__chem_comp_atom.type_symbol
+    _item_description.description
+;              This data item is a pointer to _atom_type.symbol in the
+               ATOM_TYPE category.
+;
+    _item.name                  '_chem_comp_atom.type_symbol'
+    _item.mandatory_code          yes
+    _item_type.code               code
+     save_
+
+####################
+## CHEM_COMP_BOND ##
+####################
+
+save_chem_comp_bond
+    _category.description
+;              Data items in the CHEM_COMP_BOND category record details about
+               the bonds between atoms in a chemical component. Target values
+               may be specified as bond orders, as a distance between the two
+               atoms, or both.
+;
+    _category.id                  chem_comp_bond
+    _category.mandatory_code      no
+    loop_
+    _category_key.name          '_chem_comp_bond.comp_id'
+                                '_chem_comp_bond.atom_id_1'
+                                '_chem_comp_bond.atom_id_2'
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 - based on PDB entry 5HVP and laboratory records for the
+                structure corresponding to PDB entry 5HVP.
+;
+;
+    loop_
+    _chem_comp_bond.comp_id
+    _chem_comp_bond.atom_id_1
+    _chem_comp_bond.atom_id_2
+    _chem_comp_bond.value_order
+      phe  N    CA   sing
+      phe  CA   C    sing
+      phe  C    O    doub
+      phe  CB   CA   sing
+      phe  CB   CG   sing
+      phe  CG   CD1  arom
+      phe  CD1  CE1  arom
+      phe  CE1  CZ   arom
+      phe  CZ   CE2  arom
+      phe  CE2  CD2  arom
+      phe  CD2  CG   arom
+      val  N    CA   sing
+      val  CA   C    sing
+      val  C    O    doub
+      val  CB   CA   sing
+      val  CB   CG1  sing
+      val  CB   CG2  sing
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+save__chem_comp_bond.atom_id_1
+    _item_description.description
+;              The ID of the first of the two atoms that define the bond.
+
+               This data item is a pointer to _chem_comp_atom.atom_id in the
+               CHEM_COMP_ATOM category.
+;
+    _item.name                  '_chem_comp_bond.atom_id_1'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          yes
+    _item_type.code               atcode
+    _item_dependent.dependent_name
+                                '_chem_comp_bond.atom_id_2'
+     save_
+
+save__chem_comp_bond.atom_id_2
+    _item_description.description
+;              The ID of the second of the two atoms that define the bond.
+
+               This data item is a pointer to _chem_comp_atom.atom_id in the
+               CHEM_COMP_ATOM category.
+;
+    _item.name                  '_chem_comp_bond.atom_id_2'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          yes
+    _item_type.code               atcode
+    _item_dependent.dependent_name
+                                '_chem_comp_bond.atom_id_1'
+     save_
+
+save__chem_comp_bond.comp_id
+    _item_description.description
+;              This data item is a pointer to _chem_comp.id in the CHEM_COMP
+               category.
+;
+    _item.name                  '_chem_comp_bond.comp_id'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          yes
+    _item_type.code               ucode
+     save_
+
+save__chem_comp_bond.value_order
+    _item_description.description
+;              The value that should be taken as the target for the chemical
+               bond associated with the specified atoms, expressed as a bond
+               order.
+;
+    _item.name                  '_chem_comp_bond.value_order'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    _item_default.value           sing
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      sing  'single bond'
+                                  doub  'double bond'
+                                  trip  'triple bond'
+                                  quad  'quadruple bond'
+                                  arom  'aromatic bond'
+                                  poly  'polymeric bond'
+                                  delo  'delocalized double bond'
+                                  pi    'pi bond'
+     save_
+
+save__chem_comp_bond.value_dist
+    _item_description.description
+;              The value that should be taken as the target for the chemical
+               bond associated with the specified atoms, expressed as a
+               distance.
+;
+    _item.name                  '_chem_comp_bond.value_dist'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    loop_
+    _item_range.maximum
+    _item_range.minimum            .    0.0
+                                  0.0   0.0
+    _item_related.related_name  '_chem_comp_bond.value_dist_esd'
+    _item_related.function_code   associated_esd
+    _item_type.code               float
+    _item_type_conditions.code    esd
+    _item_units.code              angstroms
+     save_
+
+save__chem_comp_bond.value_dist_esd
+    _item_description.description
+;              The standard uncertainty (estimated standard deviation)
+               of _chem_comp_bond.value_dist.
+;
+    _item.name                  '_chem_comp_bond.value_dist_esd'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    loop_
+    _item_range.maximum
+    _item_range.minimum            .    0.0
+                                  0.0   0.0
+    _item_related.related_name  '_chem_comp_bond.value_dist'
+    _item_related.function_code   associated_value
+    _item_type.code               float
+    _item_units.code              angstroms
+     save_
+
+
+###########################################################################
+#
+# File:  mmcif_pdbx-def-13.dic                                             
+# 
+#                      PDB Exchange Data Dictionary
+#
+# This data dictionary contains extensions used by RCSB for describing
+# chemical components.
+#
+#                           Definition Section 13
+#                            
+#                                                                        
+###########################################################################
+
+
+save__chem_comp.pdbx_synonyms
+    _item_description.description
+;              Synonym list for the component.
+;
+    _item.name                  '_chem_comp.pdbx_synonyms'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               line
+    _item_examples.case           ATP
+    _item_aliases.alias_name     '_chem_comp.ndb_synonyms'
+    _item_aliases.dictionary     'cif_rcsb.dic'
+    _item_aliases.version        1.1
+
+     save_
+
+save__chem_comp.pdbx_modification_details
+    _item_description.description
+;             For nonstandard components a text description 
+              of modification of the parent component.
+;
+    _item.name                  '_chem_comp.pdbx_modification_details'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               line
+    _item_examples.case           ATP
+    _item_aliases.alias_name     '_chem_comp.rcsb_modification_details'
+    _item_aliases.dictionary     'cif_rcsb.dic'
+    _item_aliases.version        1.1
+
+     save_
+
+save__chem_comp.pdbx_component_no
+    _item_description.description
+;              A serial number used by PDB in the FORMUL record.
+;
+    _item.name                  '_chem_comp.pdbx_component_no'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               int
+    _item_examples.case           3
+    _item_aliases.alias_name     '_chem_comp.ndb_component_no'
+    _item_aliases.dictionary     'cif_rcsb.dic'
+    _item_aliases.version        1.1
+
+     save_
+
+save__chem_comp.pdbx_type
+    _item_description.description
+;              A preliminary classification used by PDB.
+;
+    _item.name                   '_chem_comp.pdbx_type'
+    _item.category_id            chem_comp
+    _item.mandatory_code         no
+    _item_type.code               uline
+     save_
+
+save__chem_comp.pdbx_ambiguous_flag
+    _item_description.description
+;              A preliminary classification used by PDB to indicate
+               that the chemistry of this component while described
+               as clearly as possible is still ambiguous.  Software
+               tools may not be able to process this component 
+               definition.
+;
+    _item.name                  '_chem_comp.pdbx_ambiguous_flag'
+    _item.category_id            chem_comp
+    _item.mandatory_code         no
+    _item_type.code              code
+     save_
+
+save__chem_comp.pdbx_replaced_by
+    _item_description.description
+;              Identifies the _chem_comp.id of the component that 
+               has replaced this component.  
+;
+    _item.name                  '_chem_comp.pdbx_replaced_by'
+    _item.category_id            chem_comp
+    _item.mandatory_code         no
+    _item_type.code               ucode
+    loop_
+    _item_examples.case          'q11'
+                                 'tvx'
+
+     save_
+
+save__chem_comp.pdbx_replaces
+    _item_description.description
+;              Identifies the _chem_comp.id's of the components 
+               which have been replaced by this component. 
+               Multiple id codes should be separated by commas.
+;
+    _item.name                  '_chem_comp.pdbx_replaces'
+    _item.category_id            chem_comp
+    _item.mandatory_code         no
+    _item_type.code               uline
+    loop_
+    _item_examples.case          'q11'
+                                 'tvx,atv'
+
+     save_
+
+save__chem_comp.pdbx_formal_charge
+    _item_description.description
+;              The net integer charge assigned to this component. This is the
+               formal charge assignment normally found in chemical diagrams.
+;
+    _item.name                  '_chem_comp.pdbx_formal_charge'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_default.value           0
+    _item_type.code               int
+     save_
+
+save__chem_comp_atom.pdbx_align
+    _item_description.description
+;              Atom name alignment offset in PDB atom field.
+;
+    _item.name                  '_chem_comp_atom.pdbx_align'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               int
+     save_
+
+save__chem_comp_atom.pdbx_ordinal
+    _item_description.description
+;              Ordinal index for the component atom list.
+;
+    _item.name                  '_chem_comp_atom.pdbx_ordinal'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               int
+     save_
+
+
+save__chem_comp_bond.pdbx_ordinal
+    _item_description.description
+;              Ordinal index for the component bond list.
+;
+    _item.name                  '_chem_comp_bond.pdbx_ordinal'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    _item_type.code               int
+     save_
+
+
+###
+
+
+save__chem_comp.pdbx_model_coordinates_details
+    _item_description.description
+;              This data item identifies the source of the model coordinates in the
+               component definition. 
+;
+    _item.name                  '_chem_comp.pdbx_model_coordinates_details'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+     save_
+
+save__chem_comp.pdbx_ideal_coordinates_details
+    _item_description.description
+;              This data item identifies the source of the ideal coordinates in the
+               component definition. 
+;
+    _item.name                  '_chem_comp.pdbx_ideal_coordinates_details'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               text
+     save_
+
+save__chem_comp.pdbx_ideal_coordinates_missing_flag
+    _item_description.description
+;              This data item identifies if ideal coordinates are missing in this definition. 
+;
+    _item.name                  '_chem_comp.pdbx_ideal_coordinates_missing_flag'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      'Y'  'ideal coordinates are not provided or incomplete'
+                                  'N'  'ideal coordinates are provided'
+    _item_default.value           'N'
+     save_
+
+save__chem_comp.pdbx_model_coordinates_missing_flag
+    _item_description.description
+;              This data item identifies if model coordinates are missing in this definition. 
+;
+    _item.name                  '_chem_comp.pdbx_model_coordinates_missing_flag'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      'Y'  'model coordinates are not provided or incomplete'
+                                  'N'  'model coordinates are provided'
+    _item_default.value           'N'
+     save_
+
+save__chem_comp_atom.pdbx_alt_atom_id
+    _item_description.description
+;              An alternative identifier for the atom. This data item would be
+               used in cases where alternative nomenclatures exist for labelling
+               atoms in a group.
+;
+    _item.name                  '_chem_comp_atom.pdbx_alt_atom_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               atcode
+     save_
+
+
+save__chem_comp_atom.pdbx_alt_comp_id
+    _item_description.description
+;              An alternative identifier for the atom. This data item would be
+               used in cases where alternative nomenclatures exist for labelling
+               atoms in a group.
+;
+    _item.name                  '_chem_comp_atom.pdbx_alt_comp_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               ucode
+     save_
+
+
+save__chem_comp_atom.pdbx_model_Cartn_x_ideal
+    _item_description.description
+;              An alternative x component of the coordinates for this atom in this
+               component specified as orthogonal angstroms. 
+;
+    _item.name                  '_chem_comp_atom.pdbx_model_Cartn_x_ideal'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               float
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.pdbx_model_Cartn_y_ideal'
+                                '_chem_comp_atom.pdbx_model_Cartn_z_ideal'
+    _item_sub_category.id         cartesian_coordinate
+    _item_units.code              angstroms
+
+     save_
+
+
+save__chem_comp_atom.pdbx_model_Cartn_y_ideal
+    _item_description.description
+;              An alternative y component of the coordinates for this atom in this
+               component specified as orthogonal angstroms. 
+;
+    _item.name                  '_chem_comp_atom.pdbx_model_Cartn_y_ideal'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               float
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.pdbx_model_Cartn_x_ideal'
+                                '_chem_comp_atom.pdbx_model_Cartn_z_ideal'
+    _item_sub_category.id         cartesian_coordinate
+    _item_units.code              angstroms
+
+     save_
+
+
+save__chem_comp_atom.pdbx_model_Cartn_z_ideal
+    _item_description.description
+;              An alternative z component of the coordinates for this atom in this
+               component specified as orthogonal angstroms. 
+;
+    _item.name                  '_chem_comp_atom.pdbx_model_Cartn_z_ideal'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               float
+    loop_
+    _item_dependent.dependent_name
+                                '_chem_comp_atom.pdbx_model_Cartn_x_ideal'
+                                '_chem_comp_atom.pdbx_model_Cartn_y_ideal'
+    _item_sub_category.id         cartesian_coordinate
+    _item_units.code              angstroms
+
+     save_
+
+
+
+save__chem_comp_atom.pdbx_stereo_config
+    _item_description.description
+;              The chiral configuration of the atom that is a chiral center.
+;
+    _item.name                  '_chem_comp_atom.pdbx_stereo_config'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      R  'rectus - right handed configuration'
+                                  S  'sinister - left handed configuration'
+                                  N  'none'
+     save_
+
+save__chem_comp_atom.pdbx_aromatic_flag
+    _item_description.description
+;              A flag indicating an aromatic atom.
+;
+    _item.name                  '_chem_comp_atom.pdbx_aromatic_flag'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      Y  'Yes - an aromatic atom'
+                                  N  'No  - not an aromatic atom'
+     save_
+
+save__chem_comp_atom.pdbx_leaving_atom_flag
+    _item_description.description
+;              A flag indicating a leaving atom.
+;
+    _item.name                  '_chem_comp_atom.pdbx_leaving_atom_flag'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      Y  'Yes - a leaving atom'
+                                  N  'No  - not a leaving atom'
+     save_
+
+save__chem_comp_bond.pdbx_stereo_config
+    _item_description.description
+;              Stereochemical configuration across a double bond.
+;
+    _item.name                  '_chem_comp_bond.pdbx_stereo_config'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      E  'zusammen for together'
+                                  Z  'entgegen for opposite'
+                                  N  'none'
+     save_
+
+save__chem_comp_bond.pdbx_aromatic_flag
+    _item_description.description
+;              A flag indicating an aromatic bond.
+;
+    _item.name                  '_chem_comp_bond.pdbx_aromatic_flag'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      Y  'Yes - an aromatic bond'
+                                  N  'No  - not an aromatic bond'
+     save_
+
+
+
+###############################
+## PDBX_CHEM_COMP_DESCRIPTOR ##
+###############################
+
+save_pdbx_chem_comp_descriptor
+    _category.description
+;              Data items in the CHEM_COMP_DESCRIPTOR category provide
+               string descriptors of component chemical structure.
+;
+    _category.id                  pdbx_chem_comp_descriptor
+    _category.mandatory_code      no
+     loop_
+    _category_key.name          '_pdbx_chem_comp_descriptor.comp_id'
+                                '_pdbx_chem_comp_descriptor.type'
+                                '_pdbx_chem_comp_descriptor.program'
+				'_pdbx_chem_comp_descriptor.program_version'
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+                                 'pdbx_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 - 
+;
+;
+    loop_
+    _pdbx_chem_comp_descriptor.comp_id
+    _pdbx_chem_comp_descriptor.descriptor
+    _pdbx_chem_comp_descriptor.type
+    _pdbx_chem_comp_descriptor.program
+    _pdbx_chem_comp_descriptor.program_version
+     . . . . .
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+save__pdbx_chem_comp_descriptor.comp_id
+    _item_description.description
+;              This data item is a pointer to _chem_comp.id in the CHEM_COMP
+               category.
+;
+    _item.name                  '_pdbx_chem_comp_descriptor.comp_id'
+    _item.category_id             pdbx_chem_comp_descriptor
+    _item.mandatory_code          yes
+    _item_type.code               ucode
+    _item_linked.child_name     '_pdbx_chem_comp_descriptor.comp_id'
+    _item_linked.parent_name    '_chem_comp.id'
+     save_
+
+save__pdbx_chem_comp_descriptor.descriptor
+    _item_description.description
+;              This data item contains the descriptor value for this 
+               component.
+;
+    _item.name                  '_pdbx_chem_comp_descriptor.descriptor'
+    _item.category_id             pdbx_chem_comp_descriptor
+    _item.mandatory_code          yes
+    _item_type.code               text
+     save_
+
+save__pdbx_chem_comp_descriptor.type
+    _item_description.description
+;              This data item contains the descriptor type. 
+;
+    _item.name                  '_pdbx_chem_comp_descriptor.type'
+    _item.category_id             pdbx_chem_comp_descriptor
+    _item.mandatory_code          yes
+    _item_type.code               line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      
+        SMILES_CANNONICAL  'deprecated'
+        SMILES_CANONICAL   'Canonical SMILES descriptor'
+        SMILES             'SMILES descriptor'
+        SMILES             'SMILES descriptor'
+        INCHI              'InChi descriptor'
+        INCHI_MAIN         'InChi descriptor- main layer'
+        INCHI_MAIN_FORMULA 'InChi descriptor- main layer - chemical formula sub-layer'
+        INCHI_MAIN_CONNECT 'InChi descriptor- main layer - atom connection sub-layer'
+        INCHI_MAIN_HATOM   'InChi descriptor- main layer - hydrogen atom sub-layer'
+        INCHI_CHARGE       'InChi descriptor- charge layer'
+        INCHI_STEREO       'InChi descriptor- stereochemical layer'
+        INCHI_ISOTOPE      'InChi descriptor- isotopic layer'
+        INCHI_FIXEDH       'InChi descriptor- fixed hydrogren layer'
+        INCHI_RECONNECT    'InChi descriptor- reconnected layer'
+     save_
+
+save__pdbx_chem_comp_descriptor.program
+    _item_description.description
+;              This data item contains the name of the program
+               or library used to compute the descriptor. 
+;
+    _item.name                  '_pdbx_chem_comp_descriptor.program'
+    _item.category_id             pdbx_chem_comp_descriptor
+    _item.mandatory_code          yes
+    _item_type.code               line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      
+           OECHEM      'OpenEye OECHEM library' 
+           CACTVS      'CACTVS  program library' 
+           DAYLIGHT    'Daylight program library' 
+           OTHER       'Other program or library'
+     save_
+
+save__pdbx_chem_comp_descriptor.program_version
+    _item_description.description
+;              This data item contains the version of the program
+               or library used to compute the descriptor. 
+;
+    _item.name                  '_pdbx_chem_comp_descriptor.program_version'
+    _item.category_id             pdbx_chem_comp_descriptor
+    _item.mandatory_code          yes
+    _item_type.code               line
+     save_
+
+save__pdbx_chem_comp_descriptor.ordinal
+    _item_description.description
+;              Ordinal index for this category.
+;
+    _item.name                  '_pdbx_chem_comp_descriptor.ordinal'
+    _item.category_id             pdbx_chem_comp_descriptor
+    _item.mandatory_code          no
+    _item_type.code               int
+     save_
+
+###############################
+## PDBX_CHEM_COMP_IDENTIFIER ##
+###############################
+
+save_pdbx_chem_comp_identifier
+    _category.description
+;              Data items in the CHEM_COMP_IDENTIFIER category provide
+               identifiers for chemical components.
+;
+    _category.id                  pdbx_chem_comp_identifier
+    _category.mandatory_code      no
+     loop_
+    _category_key.name          '_pdbx_chem_comp_identifier.comp_id'
+                                '_pdbx_chem_comp_identifier.type'
+                                '_pdbx_chem_comp_identifier.program'
+                                '_pdbx_chem_comp_identifier.program_version'
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+                                 'chem_comp_dictionary_group'
+                                 'pdbx_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 - 
+;
+;
+    loop_
+    _pdbx_chem_comp_identifier.comp_id
+    _pdbx_chem_comp_identifier.identifier
+    _pdbx_chem_comp_identifier.type
+    _pdbx_chem_comp_identifier.program
+    _pdbx_chem_comp_identifier.program_version
+     ATP       "adenosine 5'-(tetrahydrogen triphosphate)" 
+        "SYSTEMATIC NAME" ACDLabs              10.04 
+
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+save__pdbx_chem_comp_identifier.comp_id
+    _item_description.description
+;              This data item is a pointer to _chem_comp.id in the CHEM_COMP
+               category.
+;
+    _item.name                  '_pdbx_chem_comp_identifier.comp_id'
+    _item.category_id             pdbx_chem_comp_identifier
+    _item.mandatory_code          yes
+    _item_type.code               ucode
+    _item_linked.child_name     '_pdbx_chem_comp_identifier.comp_id'
+    _item_linked.parent_name    '_chem_comp.id'
+     save_
+
+save__pdbx_chem_comp_identifier.identifier
+    _item_description.description
+;              This data item contains the identifier value for this 
+               component.
+;
+    _item.name                  '_pdbx_chem_comp_identifier.identifier'
+    _item.category_id             pdbx_chem_comp_identifier
+    _item.mandatory_code          yes
+    _item_type.code               text
+     save_
+
+save__pdbx_chem_comp_identifier.type
+    _item_description.description
+;              This data item contains the identifier type. 
+;
+    _item.name                  '_pdbx_chem_comp_identifier.type'
+    _item.category_id             pdbx_chem_comp_identifier
+    _item.mandatory_code          yes
+    _item_type.code               line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      
+ 	'COMMON NAME'         'Common chemical name'
+        'SYSTEMATIC NAME'     'Systematic chemical name'
+        'CAS REGISTRY NUMBER' 'Chemical Abstracts Registry Number'
+        'PUBCHEM Identifier'  'PubChem accession number'
+        'MDL Identifier'      'Molecular Design Limited Identifier'
+     save_
+
+save__pdbx_chem_comp_identifier.program
+    _item_description.description
+;              This data item contains the name of the program
+               or library used to compute the identifier. 
+;
+    _item.name                  '_pdbx_chem_comp_identifier.program'
+    _item.category_id             pdbx_chem_comp_identifier
+    _item.mandatory_code          yes
+    _item_type.code               line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      
+           OECHEM      'OpenEye OECHEM program' 
+           DAYLIGHT    'Daylight program library' 
+           ACD         'Advanced Chemistry Development Naming Program'
+           AUTONOM     'Belstein AutoNom Naming Program'
+           PUBCHEM_CID 'Compound  identifier'
+           PUBCHEM_SID 'Substance identifier'
+           OTHER       'Other program or library'
+     save_
+
+save__pdbx_chem_comp_identifier.program_version
+    _item_description.description
+;              This data item contains the version of the program
+               or library used to compute the identifier. 
+;
+    _item.name                  '_pdbx_chem_comp_identifier.program_version'
+    _item.category_id             pdbx_chem_comp_identifier
+    _item.mandatory_code          yes
+    _item_type.code               line
+     save_
+
+save__pdbx_chem_comp_identifier.ordinal
+    _item_description.description
+;              Ordinal index for this category.
+;
+    _item.name                  '_pdbx_chem_comp_identifier.ordinal'
+    _item.category_id             pdbx_chem_comp_identifier
+    _item.mandatory_code          no
+    _item_type.code               int
+     save_
+
+
+
+save__chem_comp.pdbx_model_coordinates_db_code
+    _item_description.description
+;              This data item identifies the PDB database code from which the heavy 
+               atom model coordinates were obtained.
+;
+    _item.name                  '_chem_comp.pdbx_model_coordinates_db_code'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               line
+     save_
+
+save__chem_comp.pdbx_subcomponent_list
+    _item_description.description
+;              The list of subcomponents contained in this component.
+;
+    _item.name                  '_chem_comp.pdbx_subcomponent_list'
+    _item.category_id            chem_comp
+    _item.mandatory_code         no
+    _item_type.code              text
+     loop_
+    _item_examples.case          
+     'TSM DPH HIS CHF EMR'
+
+     save_
+
+
+save__chem_comp.pdbx_release_status
+    _item_description.description
+;              This data item holds the current release status for the component.
+;
+    _item.name                  '_chem_comp.pdbx_release_status'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      
+     REL   'Released'
+     HOLD  'On hold until yyyy-mm-dd'
+     HPUB  'On hold until publication'
+     OBS   'Entry has been obsoleted and replaced by another entry'
+     DEL   'Entry has been deleted'
+     save_
+##
+save__chem_comp.pdbx_processing_site
+    _item_description.description
+;  This data item identifies the deposition site that processed
+   this chemical component defintion.
+;
+    _item.name                 '_chem_comp.pdbx_processing_site'
+    _item.category_id            chem_comp
+    _item.mandatory_code         no
+    _item_type.code              code
+     loop_
+    _item_enumeration.value 
+     'PDBE'   
+     'EBI'
+     'PDBJ'
+     'RCSB'
+    save_
+
+##
+save__chem_comp.pdbx_initial_date
+    _item_description.description
+;              Date component was added to database.
+;
+    _item.name                  '_chem_comp.pdbx_initial_date'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               yyyy-mm-dd
+    _item_aliases.alias_name     '_chem_comp.rcsb_initial_date'
+    _item_aliases.dictionary     'cif_rcsb.dic'
+    _item_aliases.version        1.1
+     save_
+
+save__chem_comp.pdbx_modified_date
+    _item_description.description
+;              Date component was last modified.
+;
+    _item.name                  '_chem_comp.pdbx_modified_date'
+    _item.category_id             chem_comp
+    _item.mandatory_code          no
+    _item_type.code               yyyy-mm-dd
+    _item_aliases.alias_name     '_chem_comp.rcsb_modified_date'
+    _item_aliases.dictionary     'cif_rcsb.dic'
+    _item_aliases.version        1.1
+
+     save_
+
+
+save__chem_comp_atom.pdbx_component_comp_id
+    _item_description.description
+;              The component identifier for the subcomponent where a
+               larger component has been divided subcomponents.
+;
+    _item.name                  '_chem_comp_atom.pdbx_component_comp_id'
+    _item.category_id            chem_comp_atom
+    _item.mandatory_code         no
+    _item_type.code              ucode
+     loop_
+    _item_examples.case
+      'HIS' 'PRO'
+     save_
+
+save__chem_comp_atom.pdbx_residue_numbering
+    _item_description.description
+;              Preferred residue numbering in the BIRD definition.
+;
+    _item.name                  '_chem_comp_atom.pdbx_residue_numbering'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               int
+    save_
+
+save__chem_comp_atom.pdbx_component_atom_id
+    _item_description.description
+;              The atom identifier in the subcomponent where a
+               larger component has been divided subcomponents.
+;
+    _item.name                  '_chem_comp_atom.pdbx_component_atom_id'
+    _item.category_id            chem_comp_atom
+    _item.mandatory_code         no
+    _item_type.code              atcode
+     loop_
+    _item_examples.case
+     'CB' 'CA' 'CG'
+     save_
+
+save__chem_comp_atom.pdbx_polymer_type
+    _item_description.description
+;              Is the atom in a polymer or non-polymer subcomponent in the BIRD definition.
+;
+    _item.name                  '_chem_comp_atom.pdbx_polymer_type'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               line
+     loop_
+    _item_enumeration.value   polymer non-polymer
+    save_
+
+save__chem_comp_atom.pdbx_ref_id
+    _item_description.description
+;              A reference to _pdbx_reference_entity_list.ref_entity_id
+;
+    _item.name                  '_chem_comp_atom.pdbx_ref_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    save_
+
+save__chem_comp_atom.pdbx_component_id
+    _item_description.description
+;              A reference to _pdbx_reference_entity_list.component_id
+;
+    _item.name                  '_chem_comp_atom.pdbx_component_id'
+    _item.category_id             chem_comp_atom
+    _item.mandatory_code          no
+    _item_type.code               int
+    save_
