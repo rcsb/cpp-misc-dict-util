@@ -38,6 +38,7 @@ struct Args
     bool iCheckIn;
     bool iReorder;
     bool iRename;
+    bool iRetainExtra;
     string idOpt;
     bool iCheckOut;
     bool iStrip;
@@ -147,6 +148,7 @@ static void usage(const string& pname)
       << "         usage = -dicSdb <filename>" << endl
       << "                 -op in|out -v (verbose)" << endl
       << "                 -inlist <filename> | -input <inputFileName> " << endl
+      << "                 [-pdbxDicSdb <filename>]" << endl
       << "                 [-output <outFileName>] " <<   endl
       << "                 [-indiaglog <inDiagLogFileName>] " <<   endl
       << "                 -pdbids | -ndbids | -rcsbids " <<   endl
@@ -154,6 +156,7 @@ static void usage(const string& pname)
       << "                 -checkin  " <<   endl
       << "                 -checkout  " <<   endl
       << "                 -rename  " <<   endl
+      << "                 -retain_extra_blocks  " <<   endl      
       << "  Data integration data files: " << endl 
       << "                 -cit <cit_filename>  " <<   endl
       << "                 -nam <nam_filename>  " <<   endl;
@@ -175,6 +178,7 @@ static void GetArgs(Args& args, int argc, char* argv[])
     args.iCheckOut = false;
     args.iReorder = false;
     args.iRename = false;
+    args.iRetainExtra = false;    
     args.iStrip = false;
     args.idOpt = "PDB";
 
@@ -261,6 +265,10 @@ static void GetArgs(Args& args, int argc, char* argv[])
         else if (argVal == "-checkout")
         {
             args.iCheckOut = true;
+        }
+        else if (argVal == "-retain_extra_blocks")
+        {
+            args.iRetainExtra = true;
         }
         else if (argVal == "-strip")
         {
@@ -606,6 +614,10 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
               blockNamesIn.size() << " is " << blockNamesIn[ib] << endl;
         }
 
+	if (!args.iRetainExtra && ib > 0) {
+	  cerr << "INFO - Skip block as iRetainExtra fals" << endl;
+	  continue;
+	}
         ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt);
     }
 
