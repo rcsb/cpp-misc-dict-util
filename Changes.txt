@@ -1,0 +1,1 @@
+2022-05-12  EP  cifexch2 will strip out second and subsequent datablocks (unless optional -retain_extra_blocks used)
