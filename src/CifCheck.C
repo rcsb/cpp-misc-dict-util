@@ -29,6 +29,7 @@ class CmdLineOpts
     string ddlFileName;
     bool extraCifChecks;
     string progName;
+    bool checkFirstBlockOnly;
 
     CmdLineOpts(unsigned int argc, char* argv[]);
 
@@ -139,7 +140,20 @@ int main(int argc, char *argv[])
             cout << "Checking the CIF file " << localFileName <<
               " against the dictionary ..." << endl;
 
-            CheckCif(cifFileP, dictFileP, localFileName, opts.extraCifChecks);
+	    vector<string> skipBlockNames;
+
+	    if (opts.checkFirstBlockOnly) {
+	      // Add all but first datablock name
+	      vector<string> blockNames;
+	      cifFileP->GetBlockNames(blockNames);
+
+	      if (blockNames.size() > 1) {
+		for (unsigned int blockI = 1; blockI < blockNames.size(); ++blockI) // start at 1 - keep first
+		  skipBlockNames.push_back(blockNames[blockI]);
+	      }
+	    }
+
+            CheckCif(cifFileP, dictFileP, localFileName, opts.extraCifChecks, skipBlockNames);
 
             delete (cifFileP);
 
@@ -218,6 +232,7 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
     }
 
     extraCifChecks = false;
+    checkFirstBlockOnly = false;
 
     for (unsigned int i = 1; i < argc; ++i)
     {
@@ -251,6 +266,10 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
             else if (strcmp(argv[i], "-ec_pdbx") == 0)
             {
                 extraCifChecks = true;
+            }
+            else if (strcmp(argv[i], "-checkFirstBlock") == 0)
+            {
+                checkFirstBlockOnly = true;
             }
             else
             {
@@ -304,5 +323,6 @@ void CmdLineOpts::Usage()
     cerr << "  -dictSdb <dictionary SDB file> | "
       << endl;
     cerr << "  -dict <dictionary ASCII file> -ddl <DDL ASCII file>" << endl;
+    cerr << "  [-checkFirstBlock]" << endl;
 }
 
