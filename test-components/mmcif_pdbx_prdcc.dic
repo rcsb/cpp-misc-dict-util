@@ -976,7 +976,7 @@ save__chem_comp.three_letter_code
     _item.name                  '_chem_comp.three_letter_code'
     _item.category_id             chem_comp
     _item.mandatory_code          no
-    _item_type.code               uchar3
+    _item_type.code               uchar5
     loop_
     _item_examples.case
     _item_examples.detail         ALA  'alanine'
