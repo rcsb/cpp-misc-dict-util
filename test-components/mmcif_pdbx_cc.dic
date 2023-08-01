@@ -3395,6 +3395,58 @@ save__chem_comp_atom.pdbx_stnd_atom_id
     _pdbx_item_context.item_name  '_chem_comp_atom.pdbx_stnd_atom_id'
      save_
 
+#
+save__chem_comp_atom.pdbx_backbone_atom_flag
+   _item_description.description  "              A flag indicating the backbone atoms in polypeptide units."
+   #
+   _item.name            "_chem_comp_atom.pdbx_backbone_atom_flag"
+   _item.category_id     chem_comp_atom
+   _item.mandatory_code  no
+   #
+   _item_type.code  ucode
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     Y  "Yes - a part of the polypeptide backbone"  
+     N  "No  - not part of the polypeptide backbone"  
+   #
+save_
+#
+save__chem_comp_atom.pdbx_n_terminal_atom_flag
+   _item_description.description  "              A flag indicating the N-terminal amino-group atoms in polypeptide units."
+   #
+   _item.name            "_chem_comp_atom.pdbx_n_terminal_atom_flag"
+   _item.category_id     chem_comp_atom
+   _item.mandatory_code  no
+   #
+   _item_type.code  ucode
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     Y  "Yes - a part of the N-terminal group"  
+     N  "No  - not part of the N-terminal group"  
+   #
+save_
+#
+save__chem_comp_atom.pdbx_c_terminal_atom_flag
+   _item_description.description  "              A flag indicating the C-terminal carboxyl-group atoms in polypeptide units."
+   #
+   _item.name            "_chem_comp_atom.pdbx_c_terminal_atom_flag"
+   _item.category_id     chem_comp_atom
+   _item.mandatory_code  no
+   #
+   _item_type.code  ucode
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     Y  "Yes - a part of the C-terminal group"  
+     N  "No  - not part of the C-terminal group"  
+   #
+save_
+
 
 ##############################
 ## PDBX_CHEM_COMP_BOND_EDIT ##
