@@ -46,6 +46,7 @@ struct Args
     string namFile;
     string srcFile;
     bool verbose;
+    bool private_ctx;  // By default - no context implies private
 };
 
 
@@ -109,18 +110,19 @@ static string pdbxDictVersion;
 
 static void PrepareQueries(const string& op);
 static void ProcessBlock(CifFile* fobjIn, const string& blockName,
-  CifFile* fobjOut, const string& idOpt);
-static bool SkipTable(const string& tableName, ConditionalContext &cctx);
+			 CifFile* fobjOut, const string& idOpt, bool private_ctx);
+static bool SkipTable(const string& tableName, ConditionalContext &cctx, bool private_ctx);
 static bool IsCatDefinedInRef(const string& catName, ISTable& catTable);
 static bool IsItemDefinedInRef(const string& itemName, ISTable& refItemTable);
-static void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx);
+static void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx, bool private_ctx);
 //static void GetDataIntegrationFiles(CifFile*& fobjCit, CifFile*& fobjNam,
 //  CifFile*& fobjSrc, const string& citFile, const string& namFile,
 //  const string& srcFile);
 static CifFile* ProcessInOut(const Args& args, CifFile& inCifFile);
 //static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
 //  CifFile* fobjSrc);
-
+static bool catHasEmdbPublicAttrs(const string& tableName);
+  
 /*
 static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
   const string& dataAttrib, const string& targetCategory,
@@ -151,7 +153,8 @@ static void usage(const string& pname)
       << "                 [-pdbxDicSdb <filename>]" << endl
       << "                 [-output <outFileName>] " <<   endl
       << "                 [-indiaglog <inDiagLogFileName>] " <<   endl
-      << "                 -pdbids | -ndbids | -rcsbids " <<   endl
+      << "                 -pdbids | -ndbids | -rcsbids | -emdbids" <<   endl
+      << "                 -privatectx" <<   endl
       << "                 -reorder  " <<   endl
       << "                 -checkin  " <<   endl
       << "                 -checkout  " <<   endl
@@ -180,6 +183,7 @@ static void GetArgs(Args& args, int argc, char* argv[])
     args.iRename = false;
     args.iRetainExtra = false;    
     args.iStrip = false;
+    args.private_ctx = false;
     args.idOpt = "PDB";
 
     for (unsigned int i = 1; i < (unsigned int)argc; ++i)
@@ -262,7 +266,12 @@ static void GetArgs(Args& args, int argc, char* argv[])
         {
             args.idOpt = "EMDB";
         }
-        else if (argVal == "-checkout")
+        else if (argVal == "-privatectx")
+        {
+	    // Default context on everything is private
+	    args.private_ctx = true;  
+        }
+	else if (argVal == "-checkout")
         {
             args.iCheckOut = true;
         }
@@ -618,7 +627,7 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
 	  cerr << "INFO - Skip block as iRetainExtra fals" << endl;
 	  continue;
 	}
-        ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt);
+        ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt, args.private_ctx);
     }
 
 /*
@@ -659,7 +668,7 @@ void PrepareQueries(const string& op)
 
 
 void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
-  const string& idOpt)
+		  const string& idOpt, bool private_ctx)
 {
     Block& inBlock = fobjIn->GetBlock(blockName);
 
@@ -687,9 +696,9 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
     {
         ISTable* inTableP = inBlock.GetTablePtr(tableList[it]);
 
-        if (!SkipTable(inTableP->GetName(), cctx))
+        if (!SkipTable(inTableP->GetName(), cctx, private_ctx))
         {
-	    ProcessTable(*inTableP, outBlock, cctx);
+ 	    ProcessTable(*inTableP, outBlock, cctx, private_ctx);
         }
         else
         {
@@ -700,7 +709,7 @@ void ProcessBlock(CifFile* fobjIn, const string& blockName, CifFile* fobjOut,
 }
 
 
-bool SkipTable(const string& tableName, ConditionalContext &cctx)
+bool SkipTable(const string& tableName, ConditionalContext &cctx, bool private_ctx)
 {
     cerr << "INFO - Process table \"" << tableName <<
       "\"" << endl;
@@ -717,7 +726,7 @@ bool SkipTable(const string& tableName, ConditionalContext &cctx)
     // See if the category is local
 
     // ConditionalCOntext
-    if (cctx.HaveConditionalTableContext(tableName)) {
+    if (!private_ctx && cctx.HaveConditionalTableContext(tableName)) {
       if (cctx.SkipTable(tableName)) {
 	cerr << "INFO - Category " << tableName << " is skipped due to ConditionalContext" << endl;
 	return true;
@@ -735,9 +744,44 @@ bool SkipTable(const string& tableName, ConditionalContext &cctx)
     unsigned int queryResult1 = pdbxCatContext->FindFirst(queryTarget1,
       QueryCat);
 
+    if (private_ctx) {
+      // For private contexts - assume private unless indicates public or sub attributes
+      if (queryResult1 != pdbxCatContext->GetNumRows()) {
+        const string& type = (*pdbxCatContext)(queryResult1, "type");
+
+	if (type.find("EMDB_PUBLIC") != string::npos) {
+	  // Allow through
+	  cerr << "INFO - Category " << tableName << " is defined"	\
+	    " public." << endl;
+	  return false;
+	}
+	// Need to decide if item contexts for this category present for any...
+	if (catHasEmdbPublicAttrs(tableName)) {
+	    cerr << "INFO - Attributes of Category " << tableName << " is defined"	\
+	      " public." << endl;
+	    return false;
+	  }
+      } else {
+	// Category has no context.... See if public sub attributes
+	if (catHasEmdbPublicAttrs(tableName)) {
+	    cerr << "INFO - Attributes of Category " << tableName << " is defined"	\
+	      " public." << endl;
+	    return false;
+	}
+
+	cerr << "INFO - Category " << tableName << " does not have context." \
+	  " Treated as private." << endl;
+	return true;
+      }
+    } // private_ctx
+
+    
     if (queryResult1 != pdbxCatContext->GetNumRows())
     {
+
         const string& type = (*pdbxCatContext)(queryResult1, "type");
+
+	//	std::cout << "SEARCHING FOR " << QueryCat << " " << std::endl;
 
         if ((type.find("LOCAL") != string::npos) ||
           (type.find("DEPRECATED") != string::npos))
@@ -759,8 +803,28 @@ bool SkipTable(const string& tableName, ConditionalContext &cctx)
     return (false);
 }
 
+static bool catHasEmdbPublicAttrs(const string& tableName) {
+  // Determines if any attribute in category tableName is public for EMDB
 
-void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
+  unsigned int i;
+  for (unsigned i = 0 ; i < pdbxItemContext->GetNumRows(); i++) {
+    string type = (*pdbxItemContext)(i, "type");
+    if (type.find("EMDB_PUBLIC") != string::npos) {
+      string itemName = (*pdbxItemContext)(i, "item_name");
+      string catName;
+      CifString::GetCategoryFromCifItem(catName, itemName);
+
+      if (catName == tableName) {
+	cerr << "Partial public context for " << catName << endl;
+	return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx, bool private_ctx)
 {
     if (Verbose)
     {
@@ -770,6 +834,26 @@ void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
     const vector<string>& colNames = inTable.GetColumnNames();
 
     std::set<unsigned int> delRow; // Rows to delete at end - unique list
+
+    // Determine if public category for private context
+    bool pub_cat = false;
+    if (private_ctx) {
+      vector<string> queryTargetCat;
+      queryTargetCat.push_back(inTable.GetName());
+
+      unsigned int queryResult1 = pdbxCatContext->FindFirst(queryTargetCat,
+							    QueryCat);
+      if (queryResult1 != pdbxCatContext->GetNumRows()) {
+        const string& type = (*pdbxCatContext)(queryResult1, "type");
+
+	if (type.find("EMDB_PUBLIC") != string::npos) {
+	  cerr << "INFO - Process Table Category " << inTable.GetName() << " is treated as public" << endl;
+	  pub_cat = true;
+	}
+      }
+    }
+
+
 
     for (unsigned int colInd = 0; colInd < colNames.size(); ++colInd)
     {
@@ -832,30 +916,74 @@ void ProcessTable(ISTable& inTable, Block& outBlock, ConditionalContext &cctx)
 	if (!haveConditionalCtx) {
 	  unsigned int queryResult1 = pdbxItemContext->FindFirst(queryTarget1,
 								 QueryItem);
+	  
+	  if (private_ctx) {
 
-	  if (queryResult1 != pdbxItemContext->GetNumRows())
-	    {
-	      const string& type = (*pdbxItemContext)(queryResult1, "type");
-
-	      if ((type.find("LOCAL") != string::npos) ||
-		  (type.find("DEPRECATED") != string::npos))
+	    // Private context - filter out by default
+	    if (!pub_cat) {
+	      // Not full public category
+	      if (queryResult1 != pdbxItemContext->GetNumRows())
 		{
-		  // Local
-		  cerr << "INFO - Item " << itemName << " is defined"	\
-		    " local or deprecated. " << endl;
-		  continue;
-		}
-	      else
-                cerr << "INFO - Item " << itemName << " is defined public." \
-		     << endl;
-	    }
+		  const string& type = (*pdbxItemContext)(queryResult1, "type");
 
-	  cerr << "INFO - Item " << itemName << " does not have context." \
-	    " Treated as public." << endl;
-	}
+		  if ((type.find("EMDB_PUBLIC") != string::npos))
+		    {
+		      cerr << "INFO - Item " << itemName << " is defined public." \
+			   << endl;
+		    }
+		  else
+		    {
+		      cerr << "INFO - Item " << itemName << " is defined private." \
+			   << endl;
+		      continue; // skip
+		    }
+		} else {
+		cerr << "INFO - Item " << itemName << " does not have context." \
+		  " Treated as private." << endl;
+		continue;  // skip
+	      }
+	    } else {
+	      // Category is public - but we need to remove deprecated
+	      if (queryResult1 != pdbxItemContext->GetNumRows())
+		{
+		  const string& type = (*pdbxItemContext)(queryResult1, "type");
+
+		  if ((type.find("DEPRECATED") != string::npos))
+		    {
+		      cerr << "INFO - Item " << itemName << " is deprecated but category public." \
+			   << endl;
+		      continue;
+		    }
+		}
+
+	    } // !pub_cat
+	    
+	  } // !private_ctx
+	  else {
+	    // Normal case
+	    if (queryResult1 != pdbxItemContext->GetNumRows())
+	      {
+		const string& type = (*pdbxItemContext)(queryResult1, "type");
+
+		if ((type.find("LOCAL") != string::npos) ||
+		    (type.find("DEPRECATED") != string::npos))
+		  {
+		    // Local
+		    cerr << "INFO - Item " << itemName << " is defined"	\
+		      " local or deprecated. " << endl;
+		    continue;
+		  }
+		else
+		  cerr << "INFO - Item " << itemName << " is defined public." \
+		       << endl;
+	      }
+	    cerr << "INFO - Item " << itemName << " does not have context." \
+	      " Treated as public." << endl;
+	  }
+
+	} // !haveConditionalCtx
 
         // All other cases are public.
-
         vector<string> inCol;
         inTable.GetColumn(inCol, colNames[colInd]);
 
@@ -1471,6 +1599,7 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     fobj->SetAttributeValue(blockId, "database", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "database_PDB_matrix", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "ebi_soln_scatter", "entry_id", idName);
+    fobj->SetAttributeValue(blockId, "em_admin", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_2d_projection_selection", "entry_id",
       idName);
     fobj->SetAttributeValue(blockId, "em_3d_fitting", "entry_id", idName);
@@ -1489,6 +1618,7 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
     fobj->SetAttributeValue(blockId, "em_experiment", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_image_scans", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_imaging", "entry_id", idName);
+    fobj->SetAttributeValue(blockId, "em_map", "entry_id", idName);
     fobj->SetAttributeValue(blockId, "em_sample_preparation", "entry_id",
       idName);
     fobj->SetAttributeValue(blockId, "em_single_particle_entity", "entry_id", idName);
