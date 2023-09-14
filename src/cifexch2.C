@@ -16,6 +16,7 @@
 #include "DicFile.h"
 #include "CifFileUtil.h"
 #include "ConditionalContext.h"
+#include "ParseOneDep.h"
 
 
 using std::exception;
@@ -131,6 +132,9 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
 
 */
 static void update_entry_ids(CifFile* fobj, const string& blockId,
+  const string& idName);
+
+static void update_em_map_ids(CifFile* fobj, const string& blockId,
   const string& idName);
 
 //static void GetCatAndAttr(string& rCatName, string& rColName,
@@ -515,6 +519,7 @@ int main(int argc, char* argv[])
             }
 
             update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
+	    update_em_map_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
 
             string outFileCif;
 
@@ -1736,6 +1741,83 @@ void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
 
 }
 
+void update_em_map_ids(CifFile* fobj, const string& blockId, const string& id)
+{
+    // If em_map category present - we need to update filename -> EM public names
+    string idName, idNameUC;
+    String::UpperCase(id, idNameUC);
+
+    
+    String::LowerCase(id, idName);
+    // We use underscore in filename insteadof hyphen
+
+    size_t pos;
+    while ((pos = idName.find("-")) != std::string::npos) {
+        idName.replace(pos, 1, "_");
+    }
+
+
+    Block& block = fobj->GetBlock(blockId);
+
+    ISTable* t = block.GetTablePtr("em_map");
+
+    std::string attr = "file";
+    std::string attr2 = "label";
+    
+    if (t == NULL)
+    {
+        return;
+    }
+    cerr << "INFO - Updating em_map file names" << endl;
+
+    unsigned int numRows = t->GetNumRows();
+    if (numRows == 0)
+    {
+        return;
+    }
+
+    if (!t->IsColumnPresent(attr) || !t->IsColumnPresent(attr2)) 
+    {
+      cerr << "BBBBBB" << endl;
+        return;
+    }
+
+    for (unsigned int rowI = 0; rowI < numRows; ++rowI)
+        {
+	  std::string val = (*t)(rowI, attr);
+
+	  std::vector<std::string> out;
+	  parse_onedep(val, out);
+
+	  if (out.size() != 4) {
+	    cerr << "INFO - could not parse " << val << endl;
+	    continue;
+	  }
+	  const std::string content = out[1];
+	  const std::string part = out[2];
+	  const std::string fmt = out[3];
+
+	  // cerr << val << " " << content << " " << fmt << endl;
+
+	  std::string outval = val;  // Default
+	  if (content == "em-volume") {
+	    outval = idName + ".map.gz";
+	  } else if (content == "em-half-volume") {
+	    outval = idName + "_half_map_" + part + ".map.gz";
+	  } else if (content == "em-additional-volume") {
+	    outval = idName + "_additional_" + part + ".map.gz";
+	  } else if (content == "em-mask-volume") {
+	    outval = idName + "_msk_" + part + ".map";
+	  }
+	  else {
+	    cerr << "INFO - Do not know how to map " << content << endl;
+	  }
+	  t->UpdateCell(rowI, attr, outval);
+
+	  // Fix label
+	  t->UpdateCell(rowI, attr2, "::::EMDATABANK.org::::" + idNameUC + "::::");
+        }
+}
 
 bool IsCatDefinedInRef(const string& catName, ISTable& catTable)
 {
