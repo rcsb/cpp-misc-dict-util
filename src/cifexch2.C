@@ -9,6 +9,7 @@
 #include <exception>
 #include <iostream>
 #include <set>
+#include <map>
 
 #include "RcsbFile.h"
 #include "CifString.h"
@@ -59,38 +60,51 @@ static const char* skip_categories[] =
 };
 */
 
-static const char* category_name[] =
-{
-    "entry", "audit", "audit_conform", "database", "database_2",
+static const char * category_name_early[] =
+  {
+    "entry", "audit", "audit_conform", "database", "database_2", 
+    "pdbx_audit_revision_history", "pdbx_audit_revision_details", "pdbx_audit_revision_group",
+    "pdbx_audit_revision_category", "pdbx_audit_revision_item",
     "database_PDB_rev", "database_PDB_rev_record",
-    "pdbx_database_PDB_obs_spr", "pdbx_database_related",
-    "pdbx_database_status", "pdbx_database_proc", "audit_contact_author",
-    "audit_author", "citation", "citation_author", "citation_editor", "cell",
-    "symmetry", "entity", "entity_keywords", "entity_name_com",
-    "entity_name_sys", "entity_poly", "entity_poly_seq", "entity_src_gen",
-    "entity_src_nat", "pdbx_entity_src_syn", "entity_link", "struct_ref",
-    "struct_ref_seq", "struct_ref_seq_dif", "chem_comp", "pdbx_nmr_exptl",
-    "pdbx_nmr_exptl_sample_conditions", "pdbx_nmr_sample_details",
-    "pdbx_nmr_spectrometer", "pdbx_nmr_refine", "pdbx_nmr_details",
-    "pdbx_nmr_ensemble", "pdbx_nmr_representative", "pdbx_nmr_software",
-    "exptl", "exptl_crystal", "exptl_crystal_grow",
-    "exptl_crystal_grow_comp", "diffrn", "diffrn_detector",
-    "diffrn_radiation", "diffrn_radiation_wavelength", "diffrn_source",
-    "reflns", "reflns_shell", "computing", "refine", "refine_analyze",
-    "refine_hist", "refine_ls_restr", "refine_ls_restr_ncs",
-    "refine_ls_shell", "pdbx_refine", "pdbx_xplor_file", "struct_ncs_oper",
-    "struct_ncs_dom", "struct_ncs_dom_lim", "struct_ncs_ens",
-    "struct_ncs_ens_gen", "struct", "struct_keywords", "struct_asym",
-    "struct_biol", "struct_biol_gen", "struct_biol_view", "struct_conf",
-    "struct_conf_type", "struct_conn", "struct_conn_type",
-    "struct_mon_prot_cis", "struct_sheet", "struct_sheet_order",
-    "struct_sheet_range", "struct_sheet_hbond", "pdbx_struct_sheet_hbond",
-    "struct_site", "struct_site_gen", "database_PDB_matrix", "atom_sites",
-    "atom_sites_alt", "atom_sites_footnote", "atom_type", "atom_site",
-    "atom_site_anisotrop", "database_PDB_caveat", "database_PDB_remark",
-    "pdbx_poly_seq_scheme", ""
-};
+    "database_PDB_caveat", "pdbx_database_PDB_obs_spr",
+    "pdbx_database_status", "pdbx_database_related", "pdbx_database_proc",
+    "pdbx_contact_author", "audit_contact_author", 
+    "audit_author", "citation", "citation_author", "citation_editor", "database_PDB_remark", 
+    "entity", "entity_keywords", "entity_name_com", 
+    "entity_name_sys", "entity_poly", "pdbx_entity_nonpoly", "entity_poly_seq", "entity_src_gen", 
+    "entity_src_nat", "pdbx_entity_src_syn", "entity_link",
+    "pdbx_entity_branch", "pdbx_entity_branch_descriptor", "pdbx_entity_branch_link", "chem_comp",
+    "pdbx_chem_comp_identifier", "pdbx_poly_seq_scheme", "pdbx_branch_scheme", "pdbx_nonpoly_scheme", "pdbx_unobs_or_zero_occ_atoms", 
+    "software", "computing", "cell", "symmetry", 
+    "exptl", "exptl_crystal", "exptl_crystal_grow", 
+    "exptl_crystal_grow_comp", "diffrn", "diffrn_detector", 
+    "diffrn_radiation", "diffrn_radiation_wavelength", "diffrn_source", 
+    "reflns", "reflns_shell", "refine", "refine_analyze", 
+    "refine_hist", "refine_ls_restr", "refine_ls_restr_ncs", 
+    "refine_ls_shell", "pdbx_refine", "pdbx_xplor_file", "struct_ncs_oper", 
+    "struct_ncs_dom", "struct_ncs_dom_lim", "struct_ncs_ens", 
+    "struct_ncs_ens_gen", "database_PDB_matrix", 
+    "struct", "struct_keywords", "struct_asym","struct_ref", 
+    "struct_ref_seq", "struct_ref_seq_dif",
+    "pdbx_struct_assembly", "pdbx_struct_assembly_prop", "pdbx_struct_assembly_gen", "pdbx_struct_assembly_auth_evidence", "pdbx_struct_assembly_auth_classification",
+    "pdbx_struct_oper_list",
+    "struct_biol", "struct_biol_gen", "struct_biol_view", "struct_conf", 
+    "struct_conf_type", "struct_conn", "struct_conn_type", "pdbx_struct_conn_angle",
+    "struct_mon_prot_cis", "struct_sheet", "struct_sheet_order", 
+    "struct_sheet_range", "struct_sheet_hbond", "pdbx_struct_sheet_hbond", 
+    "struct_site", "struct_site_gen",
+    "pdbx_validate_close_contact", "pdbx_validate_symm_contact", "pdbx_validate_rmsd_bond", "pdbx_validate_rmsd_angle",
+    "pdbx_validate_torsion", "pdbx_validate_peptide_omega", "pdbx_validate_chiral", "pdbx_validate_planes", "pdbx_validate_planes_atom", "pdbx_validate_main_chain_plane", 
+    "pdbx_validate_polymer_linkage", ""
+  };
 
+// Must terminat in empty string
+static const char *category_name_last[] =
+  {
+    "atom_sites", "atom_sites_alt", "atom_sites_footnote", "atom_type", "atom_site", 
+    "atom_site_anisotrop", ""
+  };
+  
 static ISTable* items = NULL;
 static ISTable* aliases = NULL;
 
@@ -1206,11 +1220,60 @@ void WriteOutFile(CifFile* fobjOut, const string& outFileCif,
         }
 
         vector<string> catList;
+	
+	// We will generate order based on the first block
+	Block& block = fobjOut->GetBlock(fobjOut->GetFirstBlockName());
+	vector<string> tableList;
+	block.GetTableNames(tableList);
+	std::map<std::string, bool> processedNames;
+
+	for (unsigned int i=0; i < tableList.size(); i++) {
+	  processedNames[tableList[i]] = false;
+	}
+
+		
         for (unsigned int i = 0; true; ++i)
         {
-            if (strlen(category_name[i]) > 0)
+            if (strlen(category_name_early[i]) > 0)
             {
-                catList.push_back(category_name[i]);
+                catList.push_back(category_name_early[i]);
+		if (block.IsTablePresent(category_name_early[i]))
+		  {
+		    processedNames[category_name_early[i]] = true;
+		  }
+            }
+            else
+                break;
+        }
+
+	// Register the "late ones"
+	for (unsigned int i = 0; true; ++i)
+        {
+            if (strlen(category_name_last[i]) > 0)
+            {
+		if (block.IsTablePresent(category_name_last[i]))
+		  {
+		    processedNames[category_name_last[i]] = true;
+		  }
+            }
+            else
+                break;
+        }
+
+	// Now to handle in the middle
+	for (unsigned int i=0; i < tableList.size(); i++) {
+	  if (!processedNames[tableList[i]]) {
+                catList.push_back(tableList[i]);
+	  }
+	    
+	}
+
+	// Add the late categories.  Will not be doubled as accounted for
+	for (unsigned int i = 0; true; ++i)
+        {
+            if (strlen(category_name_last[i]) > 0)
+            {
+                catList.push_back(category_name_last[i]);
             }
             else
                 break;
