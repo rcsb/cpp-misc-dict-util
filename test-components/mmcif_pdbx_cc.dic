@@ -3447,6 +3447,24 @@ save__chem_comp_atom.pdbx_c_terminal_atom_flag
    #
 save_
 
+save__chem_comp.pdbx_pcm
+   _item_description.description  "              A flag to indicate if the CCD can be used to represent a protein modification."
+   #
+   _item.name            "_chem_comp.pdbx_pcm"
+   _item.category_id     chem_comp
+   _item.mandatory_code  no
+   #
+   _item_type.code  code
+   #
+   _item_examples.case  Y
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     Y  "Yes - Can be used to represent a protein modification"  
+     N  "No - Should never be used to represent a protein modification"  
+   #
+save_
 
 ##############################
 ## PDBX_CHEM_COMP_BOND_EDIT ##
@@ -4232,3 +4250,427 @@ save__pdbx_chem_comp_feature.source
         'PUBCHEM'
      save_
 
+########################
+## PDBX_CHEM_COMP_PCM ##
+########################
+
+save_pdbx_chem_comp_pcm
+   _category.description     
+;              Data items in the PDBX_CHEM_COMP_PCM category provide 
+               information about the protein modifications that are described 
+               by the chemical component.
+;
+
+   _category.id              pdbx_chem_comp_pcm
+   _category.mandatory_code  no
+   #
+   _category_key.name  "_pdbx_chem_comp_pcm.pcm_id"
+   #
+   loop_
+   _category_group.id
+     inclusive_group             
+     chem_comp_dictionary_group  
+     chem_comp_group             
+     pdbx_group                  
+   #
+   loop_
+   _category_examples.detail
+   _category_examples.case
+     
+;
+    An example of the category for the phosphoserine (SEP) chemical component.
+;
+  
+;
+    loop_
+    _pdbx_chem_comp_pcm.pcm_id                                        
+    _pdbx_chem_comp_pcm.comp_id 			
+    _pdbx_chem_comp_pcm.modified_residue_id
+    _pdbx_chem_comp_pcm.type                                             
+    _pdbx_chem_comp_pcm.category                                      
+    _pdbx_chem_comp_pcm.position                             
+    _pdbx_chem_comp_pcm.polypeptide_position 
+    _pdbx_chem_comp_pcm.comp_id_linking_atom
+    _pdbx_chem_comp_pcm.modified_residue_id_linking_atom
+    _pdbx_chem_comp_pcm.uniprot_specific_ptm_accession
+    _pdbx_chem_comp_pcm.uniprot_generic_ptm_accession
+    1 SEP SER Phosphorylation "Named protein modification" "Amino-acid side chain" "Any position" . . PTM-0253 ?
+;
+  
+     
+;
+    An example of the category for the Alpha-L-fucopyranose (FUC) chemical component.
+;
+  
+;
+    loop_
+    _pdbx_chem_comp_pcm.pcm_id                                        
+    _pdbx_chem_comp_pcm.comp_id 			
+    _pdbx_chem_comp_pcm.modified_residue_id
+    _pdbx_chem_comp_pcm.type                                             
+    _pdbx_chem_comp_pcm.category                                      
+    _pdbx_chem_comp_pcm.position                             
+    _pdbx_chem_comp_pcm.polypeptide_position 
+    _pdbx_chem_comp_pcm.comp_id_linking_atom
+    _pdbx_chem_comp_pcm.modified_residue_id_linking_atom
+    _pdbx_chem_comp_pcm.uniprot_specific_ptm_accession
+    _pdbx_chem_comp_pcm.uniprot_generic_ptm_accession
+    1 FUC SER None Carbohydrate "Amino-acid side chain" "Any position" C1 OG  ? ?
+    2 FUC THR None Carbohydrate "Amino-acid side chain" "Any position" C1 OG1 ? ?
+;
+  
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.pcm_id
+   _item_description.description  "          An ordinal index for this category."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.pcm_id"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  yes
+   #
+   _item_type.code  int
+   #
+   _item_examples.case  1
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.comp_id
+   _item_description.description  "          Chemical component identifier for the CCD that contains the modification group."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.comp_id"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  yes
+   #
+   _item_linked.child_name   "_pdbx_chem_comp_pcm.comp_id"
+   _item_linked.parent_name  "_chem_comp.id"
+   #
+   _item_type.code  ucode
+   #
+   _item_examples.case  SEP
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.modified_residue_id
+   _item_description.description  "          Chemical component identifier for the amino acid residue that is being modified."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.modified_residue_id"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  no
+   #
+   _item_type.code  uline
+   #
+   _item_examples.case  SER
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.type
+   _item_description.description  "          The type of protein modification."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.type"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  yes
+   #
+   _item_type.code  line
+   #
+   _item_examples.case  Phosphorylation
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     12-Hydroxyfarnesylation                            .  
+     12-Oxomyristoylation                               .  
+     12R-Hydroxymyristoylation                          .  
+     "14-Hydroxy-10,13-dioxo-7-heptadecenoic acid"      .  
+     "(3-Aminopropyl)(5'-adenosyl)phosphono amidation"  .  
+     2-Aminoadipylation                                 .  
+     2-Aminoethylphosphorylation                        .  
+     2-Cholinephosphorylation                           .  
+     2-Hydroxyisobutyrylation                           .  
+     2-Oxo-5,5-dimethylhexanoylation                    .  
+     "2-Oxobutanoic acid"                               .  
+     2,3-Dicarboxypropylation                           .  
+     3-Oxoalanine                                       .  
+     "3-Phenyllactic acid"                              .  
+     (3R)-3-Hydroxybutyrylation                         .  
+     4-Phosphopantetheine                               .  
+     ADP-ribosylation                                   .  
+     ADP-riboxanation                                   .  
+     AMPylation                                         .  
+     Acetamidation                                      .  
+     Acetamidomethylation                               .  
+     Acetylation                                        .  
+     Allysine                                           .  
+     Amination                                          .  
+     Arachidoylation                                    .  
+     Archaeol                                           .  
+     Arsenylation                                       .  
+     Bacillithiolation                                  .  
+     Benzoylation                                       .  
+     Benzylation                                        .  
+     "Beta-amino acid"                                  .  
+     Beta-hydroxybutyrylation                           .  
+     Beta-lysylation                                    .  
+     Beta-mercaptoethanol                               .  
+     Biotinylation                                      .  
+     Bromination                                        .  
+     Butyrylation                                       .  
+     Carbamoylation                                     .  
+     Carboxyethylation                                  .  
+     Carboxylation                                      .  
+     Carboxymethylation                                 .  
+     cGMPylation                                        .  
+     Chlorination                                       .  
+     Cholesterylation                                   .  
+     Citrullination                                     .  
+     Crotonylation                                      .  
+     Cyanation                                          .  
+     "D-amino acid"                                     .  
+     Deamidation                                        .  
+     Decanoylation                                      .  
+     Decarboxylation                                    .  
+     "Dehydroamino acid"                                .  
+     Dehydrocoelenterazination                          .  
+     Dehydrogenation                                    .  
+     Dehydroxylation                                    .  
+     Deoxidation                                        .  
+     Deoxyhypusine                                      .  
+     Diacylglycerol                                     .  
+     Dihydroxyacetonation                               .  
+     Diphosphorylation                                  .  
+     Diphthamide                                        .  
+     "Dipyrromethane methylation"                       .  
+     D-lactate                                          .  
+     Dopaminylation                                     .  
+     Ethylation                                         .  
+     Ethylsulfanylation                                 .  
+     Farnesylation                                      .  
+     Fluorination                                       .  
+     Formylation                                        .  
+     GMPylation                                         .  
+     Geranylgeranylation                                .  
+     Glutarylation                                      .  
+     Glutathionylation                                  .  
+     Glycerophosphorylation                             .  
+     Glycerylphosphorylethanolamination                 .  
+     Heptanoylation                                     .  
+     Hexanoylation                                      .  
+     Histaminylation                                    .  
+     Hydrogenation                                      .  
+     Hydroperoxylation                                  .  
+     Hydroxyamination                                   .  
+     Hydroxyethylation                                  .  
+     Hydroxylation                                      .  
+     Hydroxymethylation                                 .  
+     Hydroxysulfanylation                               .  
+     Hypusine                                           .  
+     Iodination                                         .  
+     Lactoylation                                       .  
+     Laurylation                                        .  
+     Lipoylation                                        .  
+     L-lactate                                          .  
+     Malonylation                                       .  
+     Methoxylation                                      .  
+     Methylamination                                    .  
+     Methylation                                        .  
+     Methylsulfanylation                                .  
+     Methylsulfation                                    .  
+     Myristoylation                                     .  
+     "N-pyruvic acid 2-iminylation"                     .  
+     N-methylcarbamoylation                             .  
+     Nitration                                          .  
+     Nitrosylation                                      .  
+     None                                               .  
+     Noradrenylation                                    .  
+     Norleucine                                         .  
+     Norvaline                                          .  
+     Octanoylation                                      .  
+     Oleoylation                                        .  
+     Ornithine                                          .  
+     Oxidation                                          .  
+     Palmitoleoylation                                  .  
+     Palmitoylation                                     .  
+     Pentadecanoylation                                 .  
+     Pentanoylation                                     .  
+     "Phosphatidylethanolamine amidation"               .  
+     Phosphoenolpyruvate                                .  
+     Phosphorylation                                    .  
+     Propionylation                                     .  
+     "Pyridoxal phosphate"                              .  
+     "Pyrrolidone carboxylic acid"                      .  
+     "Pyruvic acid"                                     .  
+     Retinoylation                                      .  
+     Selanylation                                       .  
+     Selenomethionine                                   .  
+     Serotonylation                                     .  
+     Stearoylation                                      .  
+     Stereoisomerisation                                .  
+     "Succinamide ring"                                 .  
+     Succination                                        .  
+     Succinylation                                      .  
+     Sulfanylmethylation                                .  
+     Sulfation                                          .  
+     Sulfhydration                                      .  
+     Tert-butylation                                    .  
+     Tert-butyloxycarbonylation                         .  
+     Thyroxine                                          .  
+     Triiodothyronine                                   .  
+     UMPylation                                         .  
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.category
+   _item_description.description  "          The category of protein modification."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.category"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  yes
+   #
+   _item_type.code  line
+   #
+   _item_examples.case  "Named protein modification"
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     ADP-Ribose                        "ADP-ribose protein modifications"  
+     Biotin                            "Biotin protein modifications"  
+     Carbohydrate                      "Carbohydrate protein modifications"  
+     Chromophore/chromophore-like      "Chromophore or chromophore-like protein modifications"  
+     "Covalent chemical modification"  "A diverse range of chemical compounds that form covalent bonds with amino acids. Not covered by any of the other modification categories"  
+     Crosslinker                       "Chemical modifications which covalently link two amino-acid residues. Excludes reaction intermediates and modifications covered by other modification categories"  
+     "Disulfide bridge"                "Disulfide bridge protein modifications"  
+     Flavin                            "Flavin protein modifications"  
+     Heme/heme-like                    "Heme or heme-like protein modifications"  
+     "Isopeptide bond"                 "Isopeptide bond protein modifications"  
+     Lipid/lipid-like                  "Lipid or lipid-like protein modifications"  
+     "Named protein modification"      "All protein modifications that are well defined into known types, have limited diversity, and are not explicitly covered by any other category. It includes PTMs, PCMs, rare amino acids and unnatural amino acids"  
+     "Non-standard linkage"            "Non-standard covalent chemical linkages directly between two polypeptide residues"  
+     "Non-standard residue"            "A diverse range of non-standard polypeptide residues that are not considered to be 'Named protein modifications'. These cannot be practically split into two CCDs, which describe the standard polypeptide residue and the modification group, and are not covered by any of the other modification categories"  
+     "Nucleotide monophosphate"        "Nucleotide monophosphate protein modifications"  
+     "Terminal acetylation"            "Terminal acetylation protein modification"  
+     "Terminal amidation"              "Terminal amidation protein modification"  
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.position
+   _item_description.description  "          The position of the modification on the amino acid."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.position"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  yes
+   #
+   _item_type.code  line
+   #
+   _item_examples.case  "Amino acid side chain"
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     "Amino-acid side chain"               "Protein modification occurs on the amino acid side chain"  
+     "Amino-acid backbone"                 "Protein modification occurs on the amino acid backbone"  
+     "Amino-acid side chain and backbone"  "Protein modification occurs on both the amino acid side chain and backbone"  
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.polypeptide_position
+   _item_description.description  "          The position of the modification on the polypeptide."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.polypeptide_position"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  yes
+   #
+   _item_type.code  line
+   #
+   _item_examples.case  "Any position"
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     C-terminal      "Protein modification can only occur on C-terminus"  
+     N-terminal      "Protein modification can only occur on N-terminus"  
+     "Any position"  "Protein modification can occur in any position of the polypeptide sequence"  
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.comp_id_linking_atom
+   _item_description.description  
+;              The atom on the modification group that covalently links the 
+               modification to the residue that is being modified. This is 
+               only added when the protein modification is linked and so the 
+               amino acid group and the modification group are described by 
+               separate CCDs.
+;
+
+   #
+   _item.name            "_pdbx_chem_comp_pcm.comp_id_linking_atom"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  no
+   #
+   _item_type.code  atcode
+   #
+   _item_examples.case  C1
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.modified_residue_id_linking_atom
+   _item_description.description  
+;              The atom on the polypeptide residue group that covalently links 
+               the modification to the residue that is being modified. This is 
+               only added when the protein modification is linked and so the 
+               amino acid group and the modification group are described by 
+               separate CCDs.
+;
+
+   #
+   _item.name            "_pdbx_chem_comp_pcm.modified_residue_id_linking_atom"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  no
+   #
+   _item_type.code  atcode
+   #
+   _item_examples.case  OG
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.uniprot_specific_ptm_accession
+   _item_description.description  "          The UniProt PTM accession code that is an exact match for the protein modification."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.uniprot_specific_ptm_accession"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  no
+   #
+   _item_type.code  uniprot_ptm_id
+   #
+   _item_examples.case  PTM-0253
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.uniprot_generic_ptm_accession
+   _item_description.description  "          The UniProt PTM accession code that describes the group of PTMs of which this protein modification is a member."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.uniprot_generic_ptm_accession"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  no
+   #
+   _item_type.code  uniprot_ptm_id
+   #
+   _item_examples.case  PTM-0252
+   #
+save_
+#
+save__pdbx_chem_comp_pcm.first_instance_model_db_code
+   _item_description.description  "          The PDB Entry ID for the first model that contains the protein modification."
+   #
+   _item.name            "_pdbx_chem_comp_pcm.first_instance_model_db_code"
+   _item.category_id     pdbx_chem_comp_pcm
+   _item.mandatory_code  no
+   #
+   _item_type.code  line
+   #
+   _item_examples.case  4PEP
+   #
+   _pdbx_item_context.type       WWPDB_LOCAL
+   _pdbx_item_context.item_name  "_pdbx_chem_comp_pcm.first_instance_model_db_code"
+   #
+save_
