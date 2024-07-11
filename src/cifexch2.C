@@ -74,7 +74,8 @@ static const char * category_name_early[] =
     "entity_name_sys", "entity_poly", "pdbx_entity_nonpoly", "entity_poly_seq", "entity_src_gen", 
     "entity_src_nat", "pdbx_entity_src_syn", "entity_link",
     "pdbx_entity_branch", "pdbx_entity_branch_descriptor", "pdbx_entity_branch_link", "chem_comp",
-    "pdbx_chem_comp_identifier", "pdbx_poly_seq_scheme", "pdbx_branch_scheme", "pdbx_nonpoly_scheme", "pdbx_unobs_or_zero_occ_atoms", 
+    "pdbx_chem_comp_identifier", "pdbx_poly_seq_scheme", "pdbx_branch_scheme",
+    "pdbx_entity_instance_feature", "pdbx_nonpoly_scheme", "pdbx_unobs_or_zero_occ_atoms", 
     "software", "computing", "cell", "symmetry", 
     "exptl", "exptl_crystal", "exptl_crystal_grow", 
     "exptl_crystal_grow_comp", "diffrn", "diffrn_detector", 
@@ -92,7 +93,7 @@ static const char * category_name_early[] =
     "struct_conf_type", "struct_conn", "struct_conn_type", "pdbx_struct_conn_angle",
     "struct_mon_prot_cis", "struct_sheet", "struct_sheet_order", 
     "struct_sheet_range", "struct_sheet_hbond", "pdbx_struct_sheet_hbond", 
-    "struct_site", "struct_site_gen",
+    "struct_site", "struct_site_gen", "pdbx_entry_details",
     "pdbx_validate_close_contact", "pdbx_validate_symm_contact", "pdbx_validate_rmsd_bond", "pdbx_validate_rmsd_angle",
     "pdbx_validate_torsion", "pdbx_validate_peptide_omega", "pdbx_validate_chiral", "pdbx_validate_planes", "pdbx_validate_planes_atom", "pdbx_validate_main_chain_plane", 
     "pdbx_validate_polymer_linkage", ""
