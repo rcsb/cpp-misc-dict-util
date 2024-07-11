@@ -91,6 +91,7 @@ static const char * category_name_early[] =
     "pdbx_struct_oper_list",
     "struct_biol", "struct_biol_gen", "struct_biol_view", "struct_conf", 
     "struct_conf_type", "struct_conn", "struct_conn_type", "pdbx_struct_conn_angle",
+    "pdbx_modification_feature",
     "struct_mon_prot_cis", "struct_sheet", "struct_sheet_order", 
     "struct_sheet_range", "struct_sheet_hbond", "pdbx_struct_sheet_hbond", 
     "struct_site", "struct_site_gen", "pdbx_entry_details",
