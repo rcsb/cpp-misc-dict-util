@@ -42,6 +42,7 @@ struct Args
     bool iRename;
     bool iRetainExtra;
     string idOpt;
+    bool extendedId;  // Use extended id from database_2
     bool iCheckOut;
     bool iStrip;
     string citFile;
@@ -148,7 +149,7 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
 
 */
 static void update_entry_ids(CifFile* fobj, const string& blockId,
-  const string& idName);
+			     const string& idName, bool ucaseEntry);
 
 static void update_em_map_ids(CifFile* fobj, const string& blockId,
   const string& idName);
@@ -174,6 +175,7 @@ static void usage(const string& pname)
       << "                 [-output <outFileName>] " <<   endl
       << "                 [-indiaglog <inDiagLogFileName>] " <<   endl
       << "                 -pdbids | -ndbids | -rcsbids | -emdbids" <<   endl
+      << "                 -extendedids" << endl
       << "                 -privatectx" <<   endl
       << "                 -reorder  " <<   endl
       << "                 -checkin  " <<   endl
@@ -204,6 +206,7 @@ static void GetArgs(Args& args, int argc, char* argv[])
     args.iRetainExtra = false;    
     args.iStrip = false;
     args.private_ctx = false;
+    args.extendedId = false;
     args.idOpt = "PDB";
 
     for (unsigned int i = 1; i < (unsigned int)argc; ++i)
@@ -285,6 +288,10 @@ static void GetArgs(Args& args, int argc, char* argv[])
         else if (argVal == "-emdbids")
         {
             args.idOpt = "EMDB";
+        }
+        else if (argVal == "-extendedids")
+        {
+    	    args.extendedId = true;
         }
         else if (argVal == "-privatectx")
         {
@@ -517,8 +524,12 @@ int main(int argc, char* argv[])
 
             const string& blockName = fobjOut->GetFirstBlockName();
 
+	    string dbcode = "database_code";
+	    if (args.extendedId) {
+	        dbcode = "pdbx_database_accession";
+	    }
             fobjIn->GetAttributeValueIf(idCode, blockName, "database_2",
-              "database_code", "database_id", args.idOpt);
+              dbcode, "database_id", args.idOpt);
             if (idCode.empty())
             {
                 cerr << "ERROR - Cannot get " << args.idOpt <<
@@ -526,15 +537,21 @@ int main(int argc, char* argv[])
                 continue;
             }
 
-            String::UpperCase(idCode);
-
+	    // For extended ids, we want to leave lowercase - as in file
+	    if (args.extendedId) {
+	        String::LowerCase(idCode);
+	    } else {
+	        String::UpperCase(idCode);
+	    }
+	    
             if (Verbose)
             {
                 cerr << "INFO - idCode is " << idCode << " block name " <<
                   blockName << endl;
             }
 
-            update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
+            update_entry_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode,
+			     !args.extendedId);
 	    update_em_map_ids(fobjOut, fobjOut->GetFirstBlockName(), idCode);
 
             string outFileCif;
@@ -1653,10 +1670,15 @@ static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobjData,
 }
 */
 
-void update_entry_ids(CifFile* fobj, const string& blockId, const string& id)
+void update_entry_ids(CifFile* fobj, const string& blockId, const string& id,
+		      bool ucaseEntry)
 {
     string idName;
-    String::UpperCase(id, idName);
+    if (ucaseEntry) {
+        String::UpperCase(id, idName);
+    } else {
+        String::LowerCase(id, idName);
+    }
 
     fobj->SetAttributeValue(blockId, "entry", "id", idName, true);    
 
