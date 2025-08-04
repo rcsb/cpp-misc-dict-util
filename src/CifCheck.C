@@ -29,6 +29,8 @@ class CmdLineOpts
     string ddlFileName;
     bool extraCifChecks;
     bool secKeyChecks;
+    bool condMandatoryCatChecks;
+    bool condMandatoryItemChecks;
     string progName;
     bool checkFirstBlockOnly;
 
@@ -154,7 +156,7 @@ int main(int argc, char *argv[])
 	      }
 	    }
 
-            CheckCif(cifFileP, dictFileP, localFileName, opts.extraCifChecks, skipBlockNames, opts.secKeyChecks);
+            CheckCif(cifFileP, dictFileP, localFileName, opts.extraCifChecks, skipBlockNames, opts.secKeyChecks, opts.condMandatoryCatChecks, opts.condMandatoryItemChecks);
 
             delete (cifFileP);
 
@@ -235,6 +237,8 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
     extraCifChecks = false;
     checkFirstBlockOnly = false;
     secKeyChecks = true;
+    condMandatoryCatChecks = true;
+    condMandatoryItemChecks = true;
 
     for (unsigned int i = 1; i < argc; ++i)
     {
@@ -276,6 +280,14 @@ CmdLineOpts::CmdLineOpts(unsigned int argc, char* argv[])
             else if (strcmp(argv[i], "-disableSecKeyChecks") == 0)
             {
                 secKeyChecks = false;
+            }
+            else if (strcmp(argv[i], "-disableCondMandatoryCatChecks") == 0)
+            {
+                condMandatoryCatChecks = false;
+            }
+            else if (strcmp(argv[i], "-disableCondMandatoryItemChecks") == 0)
+            {
+                condMandatoryItemChecks = false;
             }
             else
             {
