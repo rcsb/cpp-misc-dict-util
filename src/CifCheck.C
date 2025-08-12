@@ -342,5 +342,8 @@ void CmdLineOpts::Usage()
       << endl;
     cerr << "  -dict <dictionary ASCII file> -ddl <DDL ASCII file>" << endl;
     cerr << "  [-checkFirstBlock]" << endl;
+    cerr << "  [-disableSecKeyChecks]" << endl;
+    cerr << "  [-disableCondMandatoryCatChecks]" << endl;
+    cerr << "  [-disableCondMandatoryItemChecks]" << endl;
 }
 
