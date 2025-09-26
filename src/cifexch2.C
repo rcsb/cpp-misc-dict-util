@@ -27,6 +27,7 @@ using std::cerr;
 using std::getline;
 using std::endl;
 
+# define PREP_BETA 1
 
 struct Args
 {
@@ -50,6 +51,10 @@ struct Args
     string srcFile;
     bool verbose;
     bool private_ctx;  // By default - no context implies private
+#ifdef PREP_BETA
+    bool prep_beta; // prepare beta archive by setting accepted T&C attribute
+                    // to keep pdbx_contact_author
+#endif
 };
 
 
@@ -140,7 +145,10 @@ static CifFile* ProcessInOut(const Args& args, CifFile& inCifFile);
 //static void add_stuff(CifFile* fobjIn, CifFile* fobjCit, CifFile* fobjNam,
 //  CifFile* fobjSrc);
 static bool catHasEmdbPublicAttrs(const string& tableName);
-  
+#ifdef PREP_BETA
+static void CorrectBetaBlock(CifFile* fobjIn, const string& blockName);
+#endif
+
 /*
 static void ReplaceAttributeByEntity(CifFile *fobjIn, CifFile *fobData,
   const string& dataAttrib, const string& targetCategory,
@@ -185,6 +193,11 @@ static void usage(const string& pname)
       << "  Data integration data files: " << endl 
       << "                 -cit <cit_filename>  " <<   endl
       << "                 -nam <nam_filename>  " <<   endl;
+#ifdef PREP_BETA
+    cerr
+      << "  Prepaing beta archive: " << endl 
+      << "                 -prep_beta  " << endl;
+#endif
 }
 
 
@@ -208,7 +221,10 @@ static void GetArgs(Args& args, int argc, char* argv[])
     args.private_ctx = false;
     args.extendedId = false;
     args.idOpt = "PDB";
-
+#ifdef PREP_BETA
+    args.prep_beta = false;
+#endif
+    
     for (unsigned int i = 1; i < (unsigned int)argc; ++i)
     {
         string argVal = string(argv[i]);
@@ -332,6 +348,12 @@ static void GetArgs(Args& args, int argc, char* argv[])
             argVal = string(argv[i]);
             args.namFile = argVal;
         }
+#ifdef PREP_BETA
+        else if (argVal == "-prep_beta")
+        {
+	    args.prep_beta = true;
+	}
+#endif
         else
         {
             usage(pname);
@@ -653,6 +675,8 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
         cerr << "INFO -   idOpt =  " << args.idOpt << endl;
     }
 
+    
+    
     for (unsigned int ib = 0; ib < blockNamesIn.size(); ++ib)
     {
         if (Verbose)
@@ -662,9 +686,16 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
         }
 
 	if (!args.iRetainExtra && ib > 0) {
-	  cerr << "INFO - Skip block as iRetainExtra fals" << endl;
+	  cerr << "INFO - Skip block as iRetainExtra false" << endl;
 	  continue;
 	}
+#ifdef PREP_BETA
+	if (args.prep_beta && ib == 0) {
+	  cerr << "INFO - prep beta!!!! " << endl;
+	  CorrectBetaBlock(&inCifFile, blockNamesIn[ib]);
+	}
+#endif
+	
         ProcessBlock(&inCifFile, blockNamesIn[ib], fobjOut, args.idOpt, args.private_ctx);
     }
 
@@ -675,6 +706,22 @@ CifFile* ProcessInOut(const Args& args, CifFile& inCifFile)
     }
 */
 
+#ifdef PREP_BETA
+    if (args.prep_beta) {
+	Block& block0 = inCifFile.GetBlock(inCifFile.GetFirstBlockName());
+
+	ISTable* cobj = block0.GetTablePtr("audit_conform");
+	if (cobj != NULL) {
+	    cerr << "INFO - copying dictionary version from input if present" << endl;
+	    if (cobj->IsColumnPresent("dict_version")) {
+	      string newvers = (*cobj)(0, "dict_version");
+	      if (newvers != "." && newvers != "?") {
+		pdbxDictVersion = newvers;
+	      }
+	    }
+	}
+    }
+#endif 
     add_audit_conform(fobjOut, pdbxDictVersion);
 
     if (args.iStrip)
@@ -1963,3 +2010,50 @@ bool IsItemDefinedInRef(const string& itemName, ISTable& refItemTable)
 
 }
 
+#ifdef PREP_BETA
+static void CorrectBetaBlock(CifFile* fobjIn, const string& blockName)
+{
+  /* To ensure pdbx_contact_author is copied for the beta archive,
+     then if pdbx_contact_author is present in incoming block, then
+     pdbx_database_state.date_accepted_terms_and_conditions = 2021-09-25
+     needs to be present
+  */
+
+  
+    
+  Block& block = fobjIn->GetBlock(blockName);
+  bool contact_pres = block.IsTablePresent("pdbx_contact_author");
+  if (!contact_pres) {
+      cerr << "INFO - Category _pdbx_context_author not present for beta prep - noop" << endl;
+      return;
+  }
+
+  std::string cat = "pdbx_database_status";
+  std::string attr = "date_accepted_terms_and_conditions";
+  std::string date_acc = "2021-09-25";
+
+  ISTable* isTableP = block.GetTablePtr(cat);
+
+
+  /* SetAttributeValue will create category if need be or set if need be */
+    
+  if (isTableP == NULL) {
+      cerr << "INFO - Instantiate " << cat << endl;
+      ISTable& t = block.AddTable(cat);
+      t.AddColumn(attr);
+      t.AddRow();
+      t.UpdateCell(0, attr, date_acc);
+  } else {
+      if (isTableP->IsColumnPresent(attr)) {
+	  cerr << "INFO - " << attr << " is present - forcing value"  << endl;;
+	  isTableP->UpdateCell(0, attr, date_acc);
+      } else {
+	cerr << "INFO - Adding column " << attr << endl;
+	  isTableP->AddColumn(attr);
+	  isTableP->UpdateCell(0, attr, date_acc);
+      }
+
+  }
+  
+} 
+#endif
