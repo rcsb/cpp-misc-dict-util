@@ -4674,3 +4674,520 @@ save__pdbx_chem_comp_pcm.first_instance_model_db_code
    _pdbx_item_context.item_name  "_pdbx_chem_comp_pcm.first_instance_model_db_code"
    #
 save_
+
+####### chem-comp-metallo-extension v0.13
+
+
+####################################
+# pdbx_chem_comp_atom_coordination #
+####################################
+save_pdbx_chem_comp_atom_coordination
+    _category.description
+;             Data items in the PDBX_CHEM_COMP_ATOM_COORDINATION category provide
+              coordination information on selected atoms
+;
+    _category.id                  pdbx_chem_comp_atom_coordination
+    _category.mandatory_code      no
+    loop_
+    _category_key.name           '_pdbx_chem_comp_atom_coordination.geometry_id'
+                                 '_pdbx_chem_comp_atom_coordination.provenance'
+	   
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+                                 'pdbx_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 -
+;
+;
+    loop_
+    _pdbx_chem_comp_atom_coordination.geometry_id
+    _pdbx_chem_comp_atom_coordination.comp_id
+    _pdbx_chem_comp_atom_coordination.atom_id
+    _pdbx_chem_comp_atom_coordination.number
+    _pdbx_chem_comp_atom_coordination.geometry_calculated
+    _pdbx_chem_comp_atom_coordination.geometry_generic
+    _pdbx_chem_comp_atom_coordination.provenance
+    _pdbx_chem_comp_atom_coordination.geometry_abbr
+    _pdbx_chem_comp_atom_coordination.representative_entry_id
+    1 VO4 V 4 tetrahedron           tetrahedral             FindGeo     TET  1VNH
+    1 VO4 V 4 tetrahedral           tetrahedral             MetalCoord  TET  1VNH
+    2 VO4 V 5 'trigonal bipyramid' 'trigonal bipyramidal'   FindGeo     TBP  1RPT
+    2 VO4 V 5 trigonal-bipyramid   'trigonal bipyramidal'   MetalCoord  TBP  1RPT
+;
+;
+    Example 2 -
+;
+;
+    loop_
+    _pdbx_chem_comp_atom_coordination.geometry_id
+    _pdbx_chem_comp_atom_coordination.comp_id
+    _pdbx_chem_comp_atom_coordination.atom_id
+    _pdbx_chem_comp_atom_coordination.number
+    _pdbx_chem_comp_atom_coordination.geometry_calculated
+    _pdbx_chem_comp_atom_coordination.geometry_generic
+    _pdbx_chem_comp_atom_coordination.provenance
+    _pdbx_chem_comp_atom_coordination.geometry_abbr
+    _pdbx_chem_comp_atom_coordination.representative_entry_id
+    1 SF4 FE1 4 tetrahedron tetrahedral FindGeo    TET  7NPA    
+    1 SF4 FE1 4 tetrahedral tetrahedral MetalCoord TET  2C42 
+    2 SF4 FE2 4 tetrahedron tetrahedral FindGeo    TET  7NPA    
+    2 SF4 FE2 4 tetrahedral tetrahedral MetalCoord TET  8RIU 
+    3 SF4 FE3 4 tetrahedron tetrahedral FindGeo    TET  1GTE    
+    3 SF4 FE3 4 tetrahedral tetrahedral MetalCoord TET  7NPA  
+    4 SF4 FE4 4 tetrahedron tetrahedral FindGeo    TET  2FD2    
+    4 SF4 FE4 4 tetrahedral tetrahedral MetalCoord TET  2FD2
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+     save_
+
+save__pdbx_chem_comp_atom_coordination.geometry_id
+   #
+   _item_description.description
+;    This data item is used to group together equivalent geometries coming from different
+     software programs. For instance, if one program has an output of 'tetrahedral' and
+     another has an output of 'tetrahedron' for the same atom, these two records will
+     have the same geometry_id because these two outputs represent the same coordination geometry.
+;
+   #
+   _item.name                     '_pdbx_chem_comp_atom_coordination.geometry_id'
+   _item.category_id              pdbx_chem_comp_atom_coordination
+   _item.mandatory_code           yes
+   #
+   _item_type.code                int
+save_
+
+save__pdbx_chem_comp_atom_coordination.comp_id
+   #
+   _item_description.description
+;              This data item is a pointer to _chem_comp_atom.comp_id in the CHEM_COMP
+               category.
+;
+   #
+   _item.name                   '_pdbx_chem_comp_atom_coordination.comp_id'
+   _item.category_id              pdbx_chem_comp_atom_coordination
+   _item.mandatory_code           yes
+    _item_linked.child_name     '_pdbx_chem_comp_atom_coordination.comp_id'
+    _item_linked.parent_name    '_chem_comp_atom.comp_id'
+   _item_type.code                ucode
+save_
+
+save__pdbx_chem_comp_atom_coordination.atom_id
+    _item_description.description
+;              The identifier for the target atom to which the feature is assigned.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination.atom_id'
+    _item.category_id             pdbx_chem_comp_atom_coordination
+    _item.mandatory_code          yes
+    _item_type.code               atcode
+    _item_linked.child_name     '_pdbx_chem_comp_atom_coordination.atom_id'
+    _item_linked.parent_name    '_chem_comp_atom.atom_id'
+     save_
+
+save__pdbx_chem_comp_atom_coordination.number
+    _item_description.description
+;              The coordination number of the target atom.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination.number'
+    _item.category_id             pdbx_chem_comp_atom_coordination
+    _item.mandatory_code          yes
+    _item_type.code               int
+    loop_
+    _item_range.maximum
+    _item_range.minimum
+                                  24  24
+				  24   2
+                                   2   2
+				   
+    loop_
+    _pdbx_item_range.maximum
+    _pdbx_item_range.minimum
+                                  10  10
+				  10   2
+                                   2   2
+				   
+     save_
+
+save__pdbx_chem_comp_atom_coordination.geometry_calculated
+    _item_description.description
+;              This data item contains the geometry output from a software program (for example, FindGeo or MetalCoord).
+               The geometry derived from observed geometries in atomic coordinate files.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination.geometry_calculated'
+    _item.category_id             pdbx_chem_comp_atom_coordination
+    _item.mandatory_code          yes
+    _item_type.code               line
+    save_
+
+save__pdbx_chem_comp_atom_coordination.geometry_generic
+    _item_description.description
+;              This data item translates the geometry output from a software program (for example, FindGeo or MetalCoord) into
+               a unified naming scheme. As software programs sometimes have different names for the same geometry (for instance,
+	       'tetrahedral' and 'tetrahedron' correspond to the same geometry), this data item provides a name for
+	       the geometry that is consistent regardless of the provenance to enhance findability. The geometry derived
+	       from observed geometries in atomic coordinate files.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination.geometry_generic'
+    _item.category_id             pdbx_chem_comp_atom_coordination
+    _item.mandatory_code          yes
+    _item_type.code               line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail
+          'linear'                                  ?
+          'bent'                                    ?
+          'trigonal planar'                         ?
+          'pyramidal'                               ?
+          't shape'                                 ?
+          'linear monocapped'                       ?
+          'tetrahedral'                             ?
+          'square planar'                           ?
+          'trigonal pyramidal'                      ?
+          'trigonal bipyramidal with vacancy'       ?
+          'square pyramidal with vacancy'           ?
+          'trigonal planar monocapped'              ?
+          'linear bicapped'                         ?
+          'square non-planar'                       ?
+          'square pyramidal'                        ?
+          'trigonal bipyramidal'                    ?
+          'trigonal prismatic with vacancy'         ?
+          'square planar monocapped'                ?
+          'trigonal planar bicapped'                ?
+          'trigonal planar tricapped'               ?
+          'octahedral'                              ?
+          'trigonal prismatic'                      ?
+          'pentagonal bipyramidal with vacancy'     ?
+          'octahedral monocapped with vacancy'      ?
+          'trigonal prismatic monocapped with vacancy'  ?
+          'sandwich 4h 2'                           ?
+          'sandwich 4 2'                            ?
+          'sandwich 5 1'                            ?
+          'square planar bicapped'                  ?
+          'hexagonal planar'                        ?
+          'pentagonal bipyramidal'                  ?
+          'trigonal prismatic monocapped'           ?
+          'octahedral monocapped'                   ?
+          'hexagonal bipyramidal with vacancy'      ?
+          'cubic with vacancy'                      ?
+          'square antiprismatic with vacancy'       ?
+          'sandwich 6 1'                            ?
+          'sandwich 4 3'                            ?
+          'sandwich 4h 3'                           ?
+          'sandwich 5 2'                            ?
+          'hexagonal bipyramidal'                   ?
+          'cubic'                                   ?
+          'square antiprismatic'                    ?
+          'octahedral bicapped'                     ?
+          'trigonal prismatic bicapped'             ?
+          'sandwich 4h 4h'                          ?
+          'sandwich 7 1'                            ?
+          'sandwich 4h 4'                           ?
+          'sandwich 5 capped 1'                     ?
+          'sandwich 5 3'                            ?
+          'sandwich 5h 3'                           ?
+          'sandwich 6 2'                            ?
+          'dodecahedral'                            ?
+          'trigonal prism tricapped'                ?
+          'square antiprismatic monocapped'         ?
+          'sandwich 7 2'                            ?
+          'sandwich 5 tricapped i'                  ?
+          'sandwich 5 4h'                           ?
+          'sandwich 5 4'                            ?
+          'sandwich 6 3'                            ?
+          'pentagonal prismatic'                    ?
+          'square antiprismatic bicapped'           ?
+          'sandwich 5 5o'                           ?
+          'sandwich 6 trigonal pyramidal'           ?
+          'sandwich 6 4'                            ?                          
+          'sandwich 5 4 i'                          ?
+          'pentagonal antiprismatic'                ?
+          'sandwich 7 3'                            ?
+          'sandwich 5 tricapped v'                  ?
+          'sandwich 5 square pyramidal'             ?
+          'sandwich 5 5'                            ?
+          'sandwich 5 pentagonal pyramidal'         ?
+          'trigonal prismatic all face capped'      ?
+          'sandwich 5 square pyramidal monocapped'  ?
+          'sandwich 8 3'                            ?
+          'sandwich 5 4h v'                         ?
+          'sandwich 5 5 i'                          ?
+          'sandwich 6 5'                            ?
+          'seamine'                                 ?
+          'cuboctahedral'                           ?
+          'sandwich 5 hexagonal pyramidal'          ?
+          'sandwich 8 4'                            ?
+          'paired octahedral'                       ?
+          'sandwich 7 5'                            ?
+          'sandwich 6 6'                            ?
+          'sandwich 5 5 v'                          ?
+          'sandwich 6 5 v'                          ?
+          'sandwich 8 5'                            ?
+          'sandwich 5 5 v i'                        ?
+          'sandwich 5 5 v v 3d'                     ?
+          'sandwich 6 6 v'                          ?
+          'sandwich c5 5 i'                         ?
+          'sandwich 5 5 v v'                        ?
+          'sandwich 8 5 i'                          ?
+          'sandwich 5 5 4'                          ?
+          'sandwich 6 6 triangle'                   ?
+          'sandwich 5 5 star'                       ?
+          'penta trigonal planar'                   ?
+          'penta trigonal planar i'                 ?
+          'sandwich 8 8'                            ?
+          'penta trigonal planar v'                 ?
+          'penta trigonal planar i i'               ?
+          'sandwich 8 8 i'                          ?
+          'sandwich 8 8 v'                          ?
+          'ball'                                    ?
+	  'irregular'                               ?
+     save_
+
+save__pdbx_chem_comp_atom_coordination.geometry_abbr
+    _item_description.description
+;              This data item lists the abbreviated name of the geometry, as specified in the
+               _pdbx_chem_comp_atom_coordination_sphere.descriptor. For instance, square planar
+	       is abbreviated to SPL. The geometry derived from observed geometries in atomic coordinate files.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination.geometry_abbr'
+    _item.category_id             pdbx_chem_comp_atom_coordination
+    _item.mandatory_code          no
+    _item_type.code               code
+    save_
+    
+save__pdbx_chem_comp_atom_coordination.provenance
+    _item_description.description
+;              The provenance of the feature assigned to this atom.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination.provenance'
+    _item.category_id             pdbx_chem_comp_atom_coordination
+    _item.mandatory_code          yes
+    _item_type.code               ucode # XXXX- might need line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail
+      PDB        ?
+      FindGeo    ?
+      MetalCoord ?
+      Author     ?
+     save_
+
+save__pdbx_chem_comp_atom_coordination.representative_entry_id
+   #
+   _item_description.description  'The representative entry for this set'
+   #
+   _item.name                     '_pdbx_chem_comp_atom_coordination.representative_entry_id'
+   _item.category_id              pdbx_chem_comp_atom_coordination
+   _item.mandatory_code           no
+   #
+   _item_type.code                ucode
+
+   _pdbx_item_context.type        CHEM_COMP_INT
+   _pdbx_item_context.item_name   '_pdbx_chem_comp_atom_coordination.representative_entry_id'
+save_
+
+
+###########################################
+# pdbx_chem_comp_atom_coordination_sphere #
+###########################################
+save_pdbx_chem_comp_atom_coordination_sphere
+    _category.description
+;             Data items in the PDBX_CHEM_COMP_ATOM_COORDINATION_SPHERE category provide
+              geometric coordination information on selected atoms
+;
+    _category.id                  pdbx_chem_comp_atom_coordination_sphere
+    _category.mandatory_code      no
+    loop_
+    _category_key.name           '_pdbx_chem_comp_atom_coordination_sphere.id'
+
+    loop_
+    _category_group.id           'inclusive_group'
+                                 'chem_comp_group'
+                                 'pdbx_group'
+    loop_
+    _category_examples.detail
+    _category_examples.case
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+    Example 1 -
+;
+;
+    loop_
+    _pdbx_chem_comp_atom_coordination_sphere.id
+    _pdbx_chem_comp_atom_coordination_sphere.geometry_id
+    _pdbx_chem_comp_atom_coordination_sphere.comp_id
+    _pdbx_chem_comp_atom_coordination_sphere.atom_id
+    _pdbx_chem_comp_atom_coordination_sphere.descriptor
+    _pdbx_chem_comp_atom_coordination_sphere.provenance
+    _pdbx_chem_comp_atom_coordination_sphere.representative_entry_id
+    1 1 VO4 V @TET{V,O,O,O,O}   MetalCoord  1VNH
+    2 2 VO4 V @TBP{V,N,O,O,O,O} MetalCoord  1RPT
+;
+;
+    Example 2 -
+;
+;
+    loop_
+    _pdbx_chem_comp_atom_coordination_sphere.id
+    _pdbx_chem_comp_atom_coordination_sphere.geometry_id
+    _pdbx_chem_comp_atom_coordination_sphere.comp_id
+    _pdbx_chem_comp_atom_coordination_sphere.atom_id
+    _pdbx_chem_comp_atom_coordination_sphere.descriptor
+    _pdbx_chem_comp_atom_coordination_sphere.provenance
+    _pdbx_chem_comp_atom_coordination_sphere.representative_entry_id
+    1    1  SF4  FE1  @TET{Fe,S,S,S,S}   MetalCoord  2C42    
+    2    1  SF4  FE1  @TET{Fe,N,S,S,S}   MetalCoord  7LJT  
+    3    1  SF4  FE1  @TET{Fe,O,S,S,S}   MetalCoord  8VPO    
+    4    2  SF4  FE2  @TET{Fe,S,S,S,S}   MetalCoord  8RIU     
+    5    2  SF4  FE2  @TET{Fe,N,S,S,S}   MetalCoord  6Z7R 
+    6    2  SF4  FE2  @TET{Fe,O,S,S,S}   MetalCoord  8RIU     
+    7    2  SF4  FE2  @TET{Fe,S,S,S,Cl}  MetalCoord  8CP4 
+    8    3  SF4  FE3  @TET{Fe,S,S,S,S}   MetalCoord  7NPA    
+    9    3  SF4  FE3  @TET{Fe,N,S,S,S}   MetalCoord  6GAL 
+    10   3  SF4  FE3  @TET{Fe,O,S,S,S}   MetalCoord  7M31    
+    11   3  SF4  FE3  @TET{Fe,S,S,S,Cl}  MetalCoord  7P4M  
+    12   4  SF4  FE4  @TET{Fe,S,S,S,S}   MetalCoord  2FD2    
+    13   4  SF4  FE4  @TET{Fe,N,S,S,S}   MetalCoord  8POW 
+    14   4  SF4  FE4  @TET{Fe,O,S,S,S}   MetalCoord  5EXJ    
+    15   4  SF4  FE4  @TET{Fe,S,S,S,Cl}  MetalCoord  4S28
+;
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     save_
+
+
+save__pdbx_chem_comp_atom_coordination_sphere.id
+   #
+   _item_description.description  'An ordinal index for this category'
+   #
+   _item.name                     '_pdbx_chem_comp_atom_coordination_sphere.id'
+   _item.category_id              pdbx_chem_comp_atom_coordination_sphere
+   _item.mandatory_code           yes
+   #
+   _item_type.code                int
+save_
+
+save__pdbx_chem_comp_atom_coordination_sphere.geometry_id
+   #
+   _item_description.description
+;    This data item is a foreign key to _pdbx_chem_comp_atom_coordination.geometry_id. This item maps the
+     coordination descriptor to a specific geometry described in the pdbx_chem_comp_atom_coordination category.
+;
+   #
+   _item.name                     '_pdbx_chem_comp_atom_coordination_sphere.geometry_id'
+   _item.category_id              pdbx_chem_comp_atom_coordination_sphere
+   _item.mandatory_code           yes
+   #
+   _item_type.code                int
+   _item_linked.child_name      '_pdbx_chem_comp_atom_coordination_sphere.geometry_id'
+   _item_linked.parent_name     '_pdbx_chem_comp_atom_coordination.geometry_id'
+save_
+
+save__pdbx_chem_comp_atom_coordination_sphere.comp_id
+   #
+   _item_description.description
+;              This data item is a pointer to _chem_comp_atom.comp_id in the CHEM_COMP
+               category.
+;
+   #
+   _item.name                   '_pdbx_chem_comp_atom_coordination_sphere.comp_id'
+   _item.category_id              pdbx_chem_comp_atom_coordination_sphere
+   _item.mandatory_code           yes
+   _item_linked.child_name      '_pdbx_chem_comp_atom_coordination_sphere.comp_id'
+   _item_linked.parent_name     '_chem_comp_atom.comp_id'
+   _item_type.code                ucode
+save_
+
+save__pdbx_chem_comp_atom_coordination_sphere.atom_id
+    _item_description.description
+;              The identifier for the target atom to which the feature is assigned.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination_sphere.atom_id'
+    _item.category_id             pdbx_chem_comp_atom_coordination_sphere
+    _item.mandatory_code          yes
+    _item_type.code               atcode
+    _item_linked.child_name     '_pdbx_chem_comp_atom_coordination_sphere.atom_id'
+    _item_linked.parent_name    '_chem_comp_atom.atom_id'
+     save_
+
+save__pdbx_chem_comp_atom_coordination_sphere.descriptor
+    _item_description.description
+;              This data item contains a descriptor of the coordination environment of
+               an atom. The descriptor is derived from observed coordination environments
+	       in atomic coordinate files.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination_sphere.descriptor'
+    _item.category_id             pdbx_chem_comp_atom_coordination_sphere
+    _item.mandatory_code          yes
+    _item_type.code               line
+     save_
+
+
+save__pdbx_chem_comp_atom_coordination_sphere.provenance
+    _item_description.description
+;              The provenance of the feature assigned to this atom.
+;
+    _item.name                  '_pdbx_chem_comp_atom_coordination_sphere.provenance'
+    _item.category_id             pdbx_chem_comp_atom_coordination_sphere
+    _item.mandatory_code          yes
+    _item_type.code               ucode # XXXX- might need line
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail
+      PDB        ?
+      FindGeo    ?
+      MetalCoord ?
+     save_
+
+save__pdbx_chem_comp_atom_coordination_sphere.representative_entry_id
+   #
+   _item_description.description  'The representative entry for this set'
+   #
+   _item.name                     '_pdbx_chem_comp_atom_coordination_sphere.representative_entry_id'
+   _item.category_id              pdbx_chem_comp_atom_coordination_sphere
+   _item.mandatory_code           no
+   #
+   _item_type.code                ucode
+
+   _pdbx_item_context.type        CHEM_COMP_INT
+   _pdbx_item_context.item_name   '_pdbx_chem_comp_atom_coordination.representative_entry_id'
+save_
+
+
+####################
+## CHEM_COMP_BOND ## 
+####################
+save__chem_comp_bond.pdbx_metal_pi_flag
+    _item_description.description
+;              This data item identifies if this is a bond between a metal and a pi system (alkene, arene, etc).
+;
+    _item.name                  '_chem_comp_bond.pdbx_metal_pi_flag'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      'Y'  .
+                                  'N'  .
+     save_
+
+save__chem_comp_bond.pdbx_metal_coordination_flag
+    _item_description.description
+;              This data item identifies if this is a bond between a metal and its coordinating group, otherwise
+               referred to as a dative or coordinate covalent bond. This flag is used for all bonds between
+	       metals and non-metals, including metal-pi bonds and all other metal coordination bonds.
+;
+    _item.name                  '_chem_comp_bond.pdbx_metal_coordination_flag'
+    _item.category_id             chem_comp_bond
+    _item.mandatory_code          no
+    _item_type.code               ucode
+    loop_
+    _item_enumeration.value
+    _item_enumeration.detail      'Y'  .
+                                  'N'  .
+     save_
+
+
