@@ -5190,4 +5190,28 @@ save__chem_comp_bond.pdbx_metal_coordination_flag
                                   'N'  .
      save_
 
+######### chem_comp extension
 
+save__chem_comp.pdbx_comp_type
+   _item_description.description  "A type classification of this chemical component."
+   #
+   _item.name            "_chem_comp.pdbx_comp_type"
+   _item.category_id     chem_comp
+   _item.mandatory_code  no
+   #
+   _item_type.code  line
+   #
+   loop_
+   _item_enumeration.value
+   _item_enumeration.detail
+     "metal cation"             .  
+     "metal-containing ligand"  .  
+   #
+   _item_aliases.alias_name  "_chem_comp.ndb_comp_type"
+   _item_aliases.dictionary  cif_rcsb.dic
+   _item_aliases.version     1.1
+   #
+   _pdbx_item_context.type       WWPDB_LOCAL
+   _pdbx_item_context.item_name  "_chem_comp.pdbx_comp_type"
+   #
+save_
